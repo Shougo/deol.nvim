@@ -12,14 +12,19 @@ function! deol#start(command) abort
     return
   endif
 
-  let t:deol = deol#_new()
+  let cwd = input('Current directory: ', getcwd(), 'dir')
+  if cwd == ''
+    return
+  endif
+
+  let t:deol = deol#_new(cwd)
   execute 'lcd' fnameescape(t:deol.cwd)
   execute 'terminal' a:command
 endfunction
 
-function! deol#_new() abort
+function! deol#_new(cwd) abort
   return {
         \ 'bufnr': bufnr('%'),
-        \ 'cwd': input('Current directory: ', getcwd(), 'dir'),
+        \ 'cwd': fnamemodify(a:cwd, ':p'),
         \ }
 endfunction
