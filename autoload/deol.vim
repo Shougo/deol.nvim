@@ -20,6 +20,7 @@ function! deol#start(command) abort
   let t:deol = deol#_new(cwd)
   execute 'lcd' fnameescape(t:deol.cwd)
   execute 'terminal' a:command
+  setlocal bufhidden=hide
 endfunction
 
 function! deol#_new(cwd) abort
