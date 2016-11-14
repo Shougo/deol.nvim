@@ -13,19 +13,34 @@ function! deol#start(command) abort
   endif
 
   let cwd = input('Current directory: ', getcwd(), 'dir')
-  if cwd == ''
+  if cwd == '' || !isdirectory(cwd)
     return
   endif
 
-  let t:deol = deol#_new(cwd)
-  execute 'lcd' fnameescape(t:deol.cwd)
-  execute 'terminal' a:command
-  setlocal bufhidden=hide
+  let t:deol = deol#_new(cwd, a:command)
+  call t:deol.init_buffer()
 endfunction
 
-function! deol#_new(cwd) abort
-  return {
-        \ 'bufnr': bufnr('%'),
-        \ 'cwd': fnamemodify(a:cwd, ':p'),
-        \ }
+function! deol#_new(cwd, command) abort
+  let deol = copy(s:deol)
+  let deol.command = a:command
+  let deol.bufnr = bufnr('%')
+  call deol.cd(a:cwd)
+  return deol
+endfunction
+
+let s:deol = {}
+
+function! s:deol.cd(directory) abort
+  let self.cwd = fnamemodify(a:directory, ':p')
+  execute 'lcd' fnameescape(self.cwd)
+  if exists('b:terminal_job_id')
+    call jobsend(b:terminal_job_id,
+          \ "\<C-u>cd " . fnameescape(self.cwd) . "\<CR>")
+  endif
+endfunction
+
+function! s:deol.init_buffer() abort
+  execute 'terminal' self.command
+  setlocal bufhidden=hide
 endfunction
