@@ -21,6 +21,12 @@ function! deol#start(command) abort
   call t:deol.init_buffer()
 endfunction
 
+function! deol#cd(directory) abort
+  if exists('t:deol')
+    call t:deol.cd(a:directory)
+  endif
+endfunction
+
 function! deol#_new(cwd, command) abort
   let deol = copy(s:deol)
   let deol.command = a:command
