@@ -37,8 +37,7 @@ function! deol#_new(cwd, command) abort
   if executable('nvr')
     let editor_command =
           \ printf('nvr %s --remote-tab-wait-silent',
-          \ progname, (v:servername == '' ? '' :
-          \            ' --servername='.v:servername))
+          \   (v:servername == '' ? '' : ' --servername='.v:servername))
     let $EDITOR = editor_command
     let $GIT_EDITOR = editor_command
   endif
