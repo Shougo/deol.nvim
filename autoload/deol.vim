@@ -32,6 +32,17 @@ function! deol#_new(cwd, command) abort
   let deol.command = a:command
   let deol.bufnr = bufnr('%')
   call deol.cd(a:cwd)
+
+  " Set $EDITOR.
+  if executable('nvr')
+    let editor_command =
+          \ printf('nvr %s --remote-tab-wait-silent',
+          \ progname, (v:servername == '' ? '' :
+          \            ' --servername='.v:servername))
+    let $EDITOR = editor_command
+    let $GIT_EDITOR = editor_command
+  endif
+
   return deol
 endfunction
 
