@@ -34,9 +34,9 @@ function! deol#_new(cwd, command) abort
   call deol.cd(a:cwd)
 
   " Set $EDITOR.
-  if executable('nvr')
+  if executable('gvim')
     let editor_command =
-          \ printf('nvr %s --remote-tab-wait-silent',
+          \ printf('gvim %s --remote-tab-wait-silent',
           \   (v:servername == '' ? '' : ' --servername='.v:servername))
     let $EDITOR = editor_command
     let $GIT_EDITOR = editor_command
