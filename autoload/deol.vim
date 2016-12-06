@@ -49,7 +49,7 @@ let s:deol = {}
 
 function! s:deol.cd(directory) abort
   let self.cwd = fnamemodify(a:directory, ':p')
-  execute 'lcd' fnameescape(self.cwd)
+  execute (exists(':tchdir') ? 'tchdir' : 'lcd') fnameescape(self.cwd)
   if exists('b:terminal_job_id')
     call jobsend(b:terminal_job_id,
           \ "\<C-u>cd " . fnameescape(self.cwd) . "\<CR>")
