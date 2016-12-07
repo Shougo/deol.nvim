@@ -33,6 +33,11 @@ INTERFACE						*deol-interface*
 COMMANDS 						*deol-commands*
 
 :Deol [{command}]					*:Deol*
+	Create deol buffer using {command}.
+	If deol buffer exists in the current tab, will switch to the buffer.
+
+:DeolCd {directory}					*:DeolCd*
+	Change deol buffer directory to {directory}.
 
 ==============================================================================
 FAQ							*deol-faq*

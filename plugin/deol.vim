@@ -11,3 +11,5 @@ let g:loaded_deol = 1
 
 command! -nargs=* -range -complete=shellcmd
       \ Deol call deol#start(<q-args>)
+command! -nargs=1 -range -complete=dir
+      \ DeolCd call deol#cd(<q-args>)
