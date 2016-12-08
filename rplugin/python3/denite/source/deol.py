@@ -17,9 +17,14 @@ class Source(Base):
 
     def gather_candidates(self, context):
         return [{
-            'word': '{}: {} ({})'.format(
-                x.number,
-                x.vars['deol']['command'],
-                x.vars['deol']['cwd']),
-            'action__command': 'tabnext ' + str(x.number)}
-                for x in self.vim.tabpages if x.valid and 'deol' in x.vars]
+            'word': (
+                '{}: {} ({})'.format(
+                    x.number,
+                    x.vars['deol']['command'],
+                    x.vars['deol']['cwd'])
+                if 'deol' in x.vars
+                else '{}: [new denite]'.format(x.number)),
+            'action__command': (
+                'tabnext ' + str(x.number) +
+                ('' if 'deol' in x.vars else '| Deol'))}
+                for x in self.vim.tabpages if x.valid]
