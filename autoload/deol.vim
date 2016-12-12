@@ -12,7 +12,7 @@ function! deol#start(command) abort
     return
   endif
 
-  let cwd = input('Current directory: ', getcwd(), 'dir')
+  let cwd = expand(input('Current directory: ', getcwd(), 'dir'))
   if cwd == '' || !isdirectory(cwd)
     return
   endif
