@@ -66,6 +66,20 @@ KEY MAPPINGS 						*deol-key-mappings*
 		Move to next prompt from cursor.
 		Note: |g:deol#prompt_pattern| must be set.
 
+						*<Plug>(deol_paste_prompt)*
+<Plug>(deol_paste_prompt)
+		Paste the history to the command line.
+		Note: |g:deol#prompt_pattern| must be set.
+
+
+						*deol-default_key_mappings*
+{lhs}			{rhs}
+--------		-----------------------------
+<CR>			<Plug>(deol_execute_line)
+<C-p>			<Plug>(deol_previous_prompt)
+<C-n>			<Plug>(deol_next_prompt)
+<C-y>			<Plug>(deol_paste_prompt)
+
 ==============================================================================
 FAQ							*deol-faq*
 

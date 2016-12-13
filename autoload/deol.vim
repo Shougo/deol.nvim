@@ -73,10 +73,13 @@ function! s:deol.init_buffer() abort
         \ :<C-u>call <SID>search_prompt('bWn')<CR>
   nnoremap <buffer><silent> <Plug>(deol_next_prompt)
         \ :<C-u>call <SID>search_prompt('Wn')<CR>
+  nnoremap <buffer><silent> <Plug>(deol_paste_prompt)
+        \ :<C-u>call <SID>paste_prompt()<CR>
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
   nmap <buffer> <C-p> <Plug>(deol_previous_prompt)
   nmap <buffer> <C-n> <Plug>(deol_next_prompt)
+  nmap <buffer> <C-y> <Plug>(deol_paste_prompt)
 endfunction
 
 function! s:execute_line() abort
@@ -104,4 +107,15 @@ function! s:search_prompt(flag) abort
   else
     call cursor(0, col)
   endif
+endfunction
+
+function! s:paste_prompt() abort
+  if g:deol#prompt_pattern == ''
+    return
+  endif
+
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let cmdline = substitute(getline('.'), pattern, '', '')
+  call jobsend(b:terminal_job_id, "\<C-u>" . cmdline)
+  startinsert
 endfunction
