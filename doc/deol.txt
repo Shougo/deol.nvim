@@ -12,6 +12,7 @@ Install			|deol-install|
 Examples		|deol-examples|
 Interface		|deol-interface|
   Commands		  |deol-commands|
+  Key mappings		  |deol-key-mappings|
 FAQ			|deol-faq|
 
 ==============================================================================
@@ -38,6 +39,19 @@ COMMANDS 						*deol-commands*
 
 :DeolCd {directory}					*:DeolCd*
 	Change deol buffer directory to {directory}.
+
+------------------------------------------------------------------------------
+KEY MAPPINGS 						*deol-key-mappings*
+
+<Plug>(deol_execute_line)			*<Plug>(deol_execute_line)*
+		Execute the command line.
+
+						*<Plug>(deol_previous_prompt)*
+<Plug>(deol_previous_prompt)
+		Move to previous prompt from cursor.
+
+<Plug>(deol_next_prompt)			*<Plug>(deol_next_prompt)*
+		Move to next prompt from cursor.
 
 ==============================================================================
 FAQ							*deol-faq*

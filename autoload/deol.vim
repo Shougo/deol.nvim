@@ -4,6 +4,8 @@
 " License: MIT license
 "=============================================================================
 
+let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
+
 function! deol#start(command) abort
   if exists('t:deol')
     execute 'buffer' t:deol.bufnr
@@ -64,4 +66,34 @@ endfunction
 function! s:deol.init_buffer() abort
   execute 'terminal' self.command
   setlocal bufhidden=hide
+
+  nnoremap <buffer><silent> <Plug>(deol_execute_line)
+        \ :<C-u>call <SID>execute_line()<CR>
+  nnoremap <buffer><silent> <Plug>(deol_previous_prompt)
+        \ :<C-u>call <SID>search_prompt('bWn')<CR>
+  nnoremap <buffer><silent> <Plug>(deol_next_prompt)
+        \ :<C-u>call <SID>search_prompt('Wn')<CR>
+
+  nmap <buffer> <CR> <Plug>(deol_execute_line)
+  nmap <buffer> <C-p> <Plug>(deol_previous_prompt)
+  nmap <buffer> <C-n> <Plug>(deol_next_prompt)
+endfunction
+
+function! s:execute_line() abort
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let cmdline = substitute(getline('.'), pattern, '', '')
+  call jobsend(b:terminal_job_id, cmdline . "\<CR>")
+  startinsert
+endfunction
+
+function! s:search_prompt(flag) abort
+  let col = col('.')
+  call cursor(0, 1)
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\).\?'
+  let pos = searchpos(pattern, a:flag)
+  if pos[0] != 0
+    call cursor(pos[0], matchend(getline(pos[0]), pattern))
+  else
+    call cursor(0, col)
+  endif
 endfunction
