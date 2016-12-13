@@ -12,6 +12,7 @@ Install			|deol-install|
 Examples		|deol-examples|
 Interface		|deol-interface|
   Commands		  |deol-commands|
+  Variables		  |deol-variables|
   Key mappings		  |deol-key-mappings|
 FAQ			|deol-faq|
 
@@ -41,17 +42,29 @@ COMMANDS 						*deol-commands*
 	Change deol buffer directory to {directory}.
 
 ------------------------------------------------------------------------------
+VARIABLES 						*deol-variables*
+
+g:deol#prompt_pattern				*g:deol#prompt_pattern*
+
+	Sets the pattern which matches the shell prompt. >
+
+		let g:deol#prompt_pattern = '% \|%$'
+
+------------------------------------------------------------------------------
 KEY MAPPINGS 						*deol-key-mappings*
 
 <Plug>(deol_execute_line)			*<Plug>(deol_execute_line)*
 		Execute the command line.
+		Note: |g:deol#prompt_pattern| must be set.
 
 						*<Plug>(deol_previous_prompt)*
 <Plug>(deol_previous_prompt)
 		Move to previous prompt from cursor.
+		Note: |g:deol#prompt_pattern| must be set.
 
 <Plug>(deol_next_prompt)			*<Plug>(deol_next_prompt)*
 		Move to next prompt from cursor.
+		Note: |g:deol#prompt_pattern| must be set.
 
 ==============================================================================
 FAQ							*deol-faq*

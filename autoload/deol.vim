@@ -80,6 +80,10 @@ function! s:deol.init_buffer() abort
 endfunction
 
 function! s:execute_line() abort
+  if g:deol#prompt_pattern == ''
+    return
+  endif
+
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   let cmdline = substitute(getline('.'), pattern, '', '')
   call jobsend(b:terminal_job_id, cmdline . "\<CR>")
@@ -87,6 +91,10 @@ function! s:execute_line() abort
 endfunction
 
 function! s:search_prompt(flag) abort
+  if g:deol#prompt_pattern == ''
+    return
+  endif
+
   let col = col('.')
   call cursor(0, 1)
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\).\?'
