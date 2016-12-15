@@ -7,19 +7,27 @@
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
 
 function! deol#start(command) abort
+  call deol#open(expand(input('Current directory: ', getcwd(), 'dir')), a:command)
+endfunction
+
+function! deol#open(cwd, command) abort
+  if a:cwd == '' || !isdirectory(a:cwd)
+    return
+  endif
+
   if exists('t:deol')
-    execute 'buffer' t:deol.bufnr
-    execute 'lcd' fnameescape(t:deol.cwd)
+    let winnr = bufwinnr(t:deol.bufnr)
+    if winnr != -1
+      execute printf('%swincmd w', winnr)
+    else
+      execute printf('buffer%s', t:deol.bufnr)
+    endif
+    call t:deol.cd(a:cwd)
     startinsert
     return
   endif
 
-  let cwd = expand(input('Current directory: ', getcwd(), 'dir'))
-  if cwd == '' || !isdirectory(cwd)
-    return
-  endif
-
-  let t:deol = deol#_new(cwd, a:command)
+  let t:deol = deol#_new(a:cwd, a:command)
   call t:deol.init_buffer()
 endfunction
 
@@ -32,7 +40,7 @@ endfunction
 function! deol#_new(cwd, command) abort
   let deol = copy(s:deol)
   let deol.command = a:command
-  let deol.bufnr = bufnr('%')
+  let deol.prev_bufnr = bufnr('%')
   call deol.cd(a:cwd)
 
   " Set $EDITOR.
@@ -65,6 +73,8 @@ endfunction
 
 function! s:deol.init_buffer() abort
   execute 'terminal' self.command
+  let self.bufnr = bufnr('%')
+  setlocal filetype=deol
   setlocal bufhidden=hide
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
@@ -119,3 +129,4 @@ function! s:paste_prompt() abort
   call jobsend(b:terminal_job_id, "\<C-u>" . cmdline)
   startinsert
 endfunction
+
