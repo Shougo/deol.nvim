@@ -6,20 +6,37 @@
 
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
 
-function! deol#start(command) abort
+function! deol#start(options) abort
   if exists('t:deol')
-    execute 'buffer' t:deol.bufnr
-    execute 'lcd' fnameescape(t:deol.cwd)
+    let id = win_findbuf(t:deol.bufnr)
+    if empty(id)
+      execute 'buffer' t:deol.bufnr
+    else
+      call win_gotoid(id[0])
+    endif
+    if has_key(a:options, 'cwd')
+      call t:deol.cd(a:options.cwd)
+    else
+      call s:cd(t:deol.cwd)
+    endif
     startinsert
     return
   endif
 
-  let cwd = expand(input('Current directory: ', getcwd(), 'dir'))
-  if cwd == '' || !isdirectory(cwd)
+  let options = copy(a:options)
+  if get(options, 'command', '') == ''
+    let options.command = &shell
+  endif
+  if get(options, 'cwd', '') == ''
+    let options.cwd = input('Current directory: ', getcwd(), 'dir')
+  endif
+
+  let cwd = expand(options.cwd)
+  if !isdirectory(cwd)
     return
   endif
 
-  let t:deol = deol#_new(cwd, a:command)
+  let t:deol = deol#_new(cwd, options.command)
   call t:deol.init_buffer()
 endfunction
 
@@ -51,11 +68,15 @@ function! deol#_new(cwd, command) abort
   return deol
 endfunction
 
+function! s:cd(directory) abort
+  execute (exists(':tchdir') ? 'tchdir' : 'lcd') fnameescape(a:directory)
+endfunction
+
 let s:deol = {}
 
 function! s:deol.cd(directory) abort
   let self.cwd = fnamemodify(a:directory, ':p')
-  execute (exists(':tchdir') ? 'tchdir' : 'lcd') fnameescape(self.cwd)
+  call s:cd(self.cwd)
   if exists('b:terminal_job_id')
     call jobsend(b:terminal_job_id,
           \ "\<C-u>cd " . fnameescape(self.cwd) . "\<CR>")
@@ -65,6 +86,7 @@ endfunction
 function! s:deol.init_buffer() abort
   execute 'terminal' self.command
   setlocal bufhidden=hide
+  setlocal filetype=deol
   let self.bufnr = bufnr('%')
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
