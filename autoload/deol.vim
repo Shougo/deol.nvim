@@ -32,7 +32,6 @@ endfunction
 function! deol#_new(cwd, command) abort
   let deol = copy(s:deol)
   let deol.command = a:command
-  let deol.bufnr = bufnr('%')
   call deol.cd(a:cwd)
 
   " Set $EDITOR.
@@ -66,6 +65,7 @@ endfunction
 function! s:deol.init_buffer() abort
   execute 'terminal' self.command
   setlocal bufhidden=hide
+  let self.bufnr = bufnr('%')
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
         \ :<C-u>call <SID>execute_line()<CR>
