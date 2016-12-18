@@ -40,6 +40,20 @@ function! deol#start(options) abort
   call t:deol.init_buffer()
 endfunction
 
+function! deol#new(options) abort
+  let options = copy(a:options)
+  if get(options, 'cwd', '') == ''
+    let options.cwd = input('Current directory: ', getcwd(), 'dir')
+  endif
+
+  if options.cwd == ''
+    return
+  endif
+
+  tabnew
+  return deol#start(options)
+endfunction
+
 function! deol#cd(directory) abort
   if exists('t:deol')
     call t:deol.cd(a:directory)
