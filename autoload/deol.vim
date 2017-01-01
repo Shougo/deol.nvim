@@ -54,6 +54,14 @@ function! deol#new(options) abort
   return deol#start(options)
 endfunction
 
+function! deol#send(string) abort
+  if !exists('t:deol')
+    return
+  endif
+
+  call jobsend(t:deol.jobid, "\<C-u>" . a:string . "\<CR>")
+endfunction
+
 function! deol#cd(directory) abort
   if exists('t:deol')
     call t:deol.cd(a:directory)
@@ -102,6 +110,7 @@ function! s:deol.init_buffer() abort
   setlocal bufhidden=hide
   setlocal filetype=deol
   let self.bufnr = bufnr('%')
+  let self.jobid = b:terminal_job_id
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
         \ :<C-u>call <SID>execute_line()<CR>
