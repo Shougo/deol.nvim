@@ -4,6 +4,7 @@
 " License: MIT license
 "=============================================================================
 
+let g:deol#_prev_deol = -1
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
 
 function! deol#start(options) abort
@@ -19,6 +20,7 @@ function! deol#start(options) abort
     else
       call s:cd(t:deol.cwd)
     endif
+    let g:deol#_prev_deol = win_getid()
     startinsert
     return
   endif
@@ -68,6 +70,11 @@ function! deol#cd(directory) abort
   endif
 endfunction
 
+function! deol#kill_editor() abort
+  bdelete
+  call win_gotoid(g:deol#_prev_deol)
+endfunction
+
 function! deol#_new(cwd, command) abort
   let deol = copy(s:deol)
   let deol.command = a:command
@@ -111,6 +118,7 @@ function! s:deol.init_buffer() abort
   setlocal filetype=deol
   let self.bufnr = bufnr('%')
   let self.jobid = b:terminal_job_id
+  let g:deol#_prev_deol = win_getid()
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
         \ :<C-u>call <SID>execute_line()<CR>
