@@ -79,7 +79,21 @@ function! deol#edit() abort
   if !has_key(t:deol, 'bufedit')
     call t:deol.init_edit_buffer()
   endif
-  startinsert
+
+  " Set the current command line
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val != ''")
+  if !empty(buflines)
+    let cmdline = substitute(buflines[-1], pattern, '', '')
+    if getline('$') == ''
+      call setline('$', cmdline)
+    else
+      call append('$', cmdline)
+    endif
+  endif
+
+  call cursor(line('$'), 0)
+  startinsert!
 endfunction
 
 function! deol#kill_editor() abort
@@ -168,7 +182,7 @@ function! s:deol.init_edit_buffer() abort
 endfunction
 
 function! s:send_editor() abort
-  call jobsend(t:deol.jobid, getline('.') . "\<CR>")
+  call jobsend(t:deol.jobid, "\<C-u>" . getline('.') . "\<CR>")
 endfunction
 
 function! s:execute_line() abort
