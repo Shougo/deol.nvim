@@ -39,7 +39,7 @@ function! deol#start(options) abort
   endif
 
   let t:deol = deol#_new(cwd, options.command)
-  call t:deol.init_buffer()
+  call t:deol.init_deol_buffer()
 endfunction
 
 function! deol#new(options) abort
@@ -68,6 +68,18 @@ function! deol#cd(directory) abort
   if exists('t:deol')
     call t:deol.cd(a:directory)
   endif
+endfunction
+
+function! deol#edit() abort
+  if !exists('t:deol')
+    Deol
+  endif
+
+  split deol-edit
+  if !has_key(t:deol, 'bufedit')
+    call t:deol.init_edit_buffer()
+  endif
+  startinsert
 endfunction
 
 function! deol#kill_editor() abort
@@ -112,7 +124,7 @@ function! s:deol.cd(directory) abort
   endif
 endfunction
 
-function! s:deol.init_buffer() abort
+function! s:deol.init_deol_buffer() abort
   execute 'terminal' self.command
   setlocal bufhidden=hide
   setlocal filetype=deol
@@ -128,11 +140,35 @@ function! s:deol.init_buffer() abort
         \ :<C-u>call <SID>search_prompt('Wn')<CR>
   nnoremap <buffer><silent> <Plug>(deol_paste_prompt)
         \ :<C-u>call <SID>paste_prompt()<CR>
+  nnoremap <buffer><silent> <Plug>(deol_edit)
+        \ :<C-u>call deol#edit()<CR>
 
-  nmap <buffer> <CR> <Plug>(deol_execute_line)
+  nmap <buffer> e     <Plug>(deol_edit)
+  nmap <buffer> <CR>  <Plug>(deol_execute_line)
   nmap <buffer> <C-p> <Plug>(deol_previous_prompt)
   nmap <buffer> <C-n> <Plug>(deol_next_prompt)
   nmap <buffer> <C-y> <Plug>(deol_paste_prompt)
+endfunction
+
+function! s:deol.init_edit_buffer() abort
+  setlocal hidden
+  setlocal bufhidden=hide
+  setlocal buftype=nofile
+  setlocal filetype=zsh
+  let self.bufedit = bufnr('%')
+
+  nnoremap <buffer><silent> <Plug>(deol_execute_line)
+        \ :<C-u>call <SID>send_editor()<CR>
+  inoremap <buffer><silent> <Plug>(deol_execute_line)
+        \ <ESC>:call <SID>send_editor()<CR>o
+
+  nmap <buffer> <CR> <Plug>(deol_execute_line)
+  nmap <buffer> q :<C-u>close!<CR>
+  imap <buffer> <CR> <Plug>(deol_execute_line)
+endfunction
+
+function! s:send_editor() abort
+  call jobsend(t:deol.jobid, getline('.') . "\<CR>")
 endfunction
 
 function! s:execute_line() abort
