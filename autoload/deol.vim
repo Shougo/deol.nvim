@@ -79,6 +79,7 @@ function! deol#edit() abort
   if !has_key(t:deol, 'bufedit')
     call t:deol.init_edit_buffer()
   endif
+  resize 5
 
   " Set the current command line
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
