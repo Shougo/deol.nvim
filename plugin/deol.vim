@@ -13,3 +13,4 @@ command! -nargs=* -range -complete=shellcmd
       \ Deol call deol#start({'command': <q-args>})
 command! -nargs=1 -range -complete=dir
       \ DeolCd call deol#cd(<q-args>)
+command! DeolEdit call deol#edit()

@@ -41,17 +41,32 @@ COMMANDS 						*deol-commands*
 :DeolCd {directory}					*:DeolCd*
 	Change deol buffer directory to {directory}.
 
+:DeolEdit						*:DeolEdit*
+	Open deol edit buffer.
+	You can edit and execute the deol command line in the buffer.
+	The buffer filetype is "zsh" and you can use Vim auto completion
+	feature.
+	Note: deoplete + deoplete-zsh is recommended.
+	https://github.com/Shougo/deoplete.nvim
+	https://github.com/zchee/deoplete-zsh
+
 ------------------------------------------------------------------------------
 VARIABLES 						*deol-variables*
 
 g:deol#prompt_pattern				*g:deol#prompt_pattern*
 
-	Sets the pattern which matches the shell prompt. >
-
+	Sets the pattern which matches the shell prompt.
+	Note: The right prompt is not supported.
+>
 		let g:deol#prompt_pattern = '% \|%$'
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deol-key-mappings*
+
+						*<Plug>(deol_edit)*
+<Plug>(deol_edit)
+		Open the edit buffer.
+		Note: |g:deol#prompt_pattern| must be set.
 
 <Plug>(deol_execute_line)			*<Plug>(deol_execute_line)*
 		Execute the command line.
@@ -71,7 +86,6 @@ KEY MAPPINGS 						*deol-key-mappings*
 		Paste the history to the command line.
 		Note: |g:deol#prompt_pattern| must be set.
 
-
 						*deol-default_key_mappings*
 {lhs}			{rhs}
 --------		-----------------------------
@@ -79,9 +93,15 @@ KEY MAPPINGS 						*deol-key-mappings*
 <C-p>			<Plug>(deol_previous_prompt)
 <C-n>			<Plug>(deol_next_prompt)
 <C-y>			<Plug>(deol_paste_prompt)
+e			<Plug>(deol_edit)
 
 ==============================================================================
 FAQ							*deol-faq*
+
+Q: What is the difference neoterm and deol.nvim?
+
+A: neoterm is specialized for interpreter execution in the buffer.
+deol.nvim is specialized for shell environment in each tab.
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:
