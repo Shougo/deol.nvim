@@ -169,7 +169,21 @@ function! s:deol.init_edit_buffer() abort
   setlocal hidden
   setlocal bufhidden=hide
   setlocal buftype=nofile
-  setlocal filetype=zsh
+
+  " Set filetype
+  let command = fnamemodify(self.command, ':t:r')
+  let default_filetype = {
+        \ 'ash': 'sh',
+        \ 'bash': 'zsh',
+        \ 'fish': 'fish',
+        \ 'ksh': 'sh',
+        \ 'sh': 'sh',
+        \ 'zsh': 'zsh',
+        \ }
+  if has_key(default_filetype, command)
+    let &l:filetype = default_filetype[command]
+  endif
+
   let self.bufedit = bufnr('%')
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
