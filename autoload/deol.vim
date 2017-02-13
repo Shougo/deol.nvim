@@ -7,6 +7,14 @@
 let g:deol#_prev_deol = -1
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
 
+augroup deol
+  autocmd!
+augroup END
+
+if exists('##DirChanged')
+  autocmd deol DirChanged * call deol#cd(v:event.cwd)
+endif
+
 function! deol#start(options) abort
   if exists('t:deol')
     let id = win_findbuf(t:deol.bufnr)
