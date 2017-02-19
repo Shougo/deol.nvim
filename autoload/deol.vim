@@ -90,9 +90,9 @@ function! deol#edit() abort
   resize 5
 
   " Set the current command line
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val != ''")
   if !empty(buflines)
+    let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
     let cmdline = substitute(buflines[-1], pattern, '', '')
     if getline('$') == ''
       call setline('$', cmdline)
@@ -165,8 +165,20 @@ function! s:deol.init_deol_buffer() abort
         \ :<C-u>call <SID>paste_prompt()<CR>
   nnoremap <buffer><silent> <Plug>(deol_edit)
         \ :<C-u>call deol#edit()<CR>
+  nnoremap <buffer><expr> <Plug>(deol_start_insert)
+        \ <SID>start_insert('i')
+  nnoremap <buffer><expr> <Plug>(deol_start_insert_first)
+        \ 'i' . repeat("\<Left>", len(getline('.')))
+  nnoremap <buffer><expr> <Plug>(deol_start_append)
+        \ <SID>start_insert('A')
+  nnoremap <buffer><expr> <Plug>(deol_start_append_last)
+        \ 'i' . repeat("\<Right>", len(getline('.')))
 
   nmap <buffer> e     <Plug>(deol_edit)
+  nmap <buffer> i     <Plug>(deol_start_insert)
+  nmap <buffer> I     <Plug>(deol_start_insert_first)
+  nmap <buffer> a     <Plug>(deol_start_append)
+  nmap <buffer> A     <Plug>(deol_start_append_last)
   nmap <buffer> <CR>  <Plug>(deol_execute_line)
   nmap <buffer> <C-p> <Plug>(deol_previous_prompt)
   nmap <buffer> <C-n> <Plug>(deol_next_prompt)
@@ -213,8 +225,7 @@ function! s:execute_line() abort
     return
   endif
 
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
-  let cmdline = substitute(getline('.'), pattern, '', '')
+  let cmdline = s:get_cmdline()
   call jobsend(b:terminal_job_id, cmdline . "\<CR>")
   startinsert
 endfunction
@@ -240,8 +251,33 @@ function! s:paste_prompt() abort
     return
   endif
 
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
-  let cmdline = substitute(getline('.'), pattern, '', '')
+  let cmdline = s:get_cmdline()
   call jobsend(b:terminal_job_id, "\<C-u>" . cmdline)
   startinsert
+endfunction
+
+function! s:start_insert(mode) abort
+  let prompt = s:get_prompt()
+  if prompt == ''
+    return a:mode
+  endif
+
+  return 'i' . repeat("\<Right>", len(s:get_cmdline()))
+        \ . repeat("\<Left>", len(s:get_cmdline()) - len(s:get_input())
+        \ + (a:mode ==# 'i' ? 1 : 0))
+endfunction
+
+function! s:get_cmdline() abort
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  return substitute(getline('.'), pattern, '', '')
+endfunction
+
+function! s:get_prompt() abort
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  return matchstr(getline('.'), pattern)
+endfunction
+
+function! s:get_input() abort
+  let input = matchstr(getline('.'), '^.*\%' . (col('.') + 1) . 'c')
+  return input[len(s:get_prompt()):]
 endfunction
