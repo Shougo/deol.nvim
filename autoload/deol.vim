@@ -17,16 +17,17 @@ endif
 
 function! deol#start(options) abort
   if exists('t:deol')
-    let id = win_findbuf(t:deol.bufnr)
+    let deol = t:deol
+    let id = win_findbuf(deol.bufnr)
     if empty(id)
-      execute 'buffer' t:deol.bufnr
+      execute 'buffer' deol.bufnr
     else
       call win_gotoid(id[0])
     endif
     if has_key(a:options, 'cwd')
-      call t:deol.cd(a:options.cwd)
+      call deol.cd(a:options.cwd)
     else
-      call s:cd(t:deol.cwd)
+      call s:cd(deol.cwd)
     endif
     let g:deol#_prev_deol = win_getid()
     startinsert
