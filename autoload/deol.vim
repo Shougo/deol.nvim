@@ -140,7 +140,12 @@ endfunction
 let s:deol = {}
 
 function! s:deol.cd(directory) abort
-  let self.cwd = fnamemodify(a:directory, ':p')
+  let directory = fnamemodify(a:directory, ':p')
+  if has_key(self, 'cwd') && self.cwd ==# directory
+    return
+  endif
+
+  let self.cwd = directory
   call s:cd(self.cwd)
   if exists('b:terminal_job_id')
     call jobsend(b:terminal_job_id,
