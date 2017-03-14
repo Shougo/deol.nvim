@@ -4,6 +4,11 @@
 " License: MIT license
 "=============================================================================
 
+if !has('nvim')
+  echomsg 'deol.nvim requires Neovim.'
+  finish
+endif
+
 if exists('g:loaded_deol')
   finish
 endif
