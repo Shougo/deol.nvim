@@ -44,6 +44,7 @@ function! deol#start(options) abort
 
   let cwd = expand(options.cwd)
   if !isdirectory(cwd)
+    echomsg '[deol] ' . cwd . ' is not directory'
     return
   endif
 
