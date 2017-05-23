@@ -16,7 +16,7 @@ if exists('##DirChanged')
 endif
 
 function! deol#start(options) abort
-  if exists('t:deol')
+  if exists('t:deol') && bufexists(t:deol.bufnr)
     let deol = t:deol
     let id = win_findbuf(deol.bufnr)
     if empty(id)
