@@ -6,12 +6,13 @@
 
 let g:deol#_prev_deol = -1
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
+let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
 
 augroup deol
   autocmd!
 augroup END
 
-if exists('##DirChanged')
+if exists('##DirChanged') && g:deol#enable_dir_changed
   autocmd deol DirChanged * call deol#cd(v:event.cwd)
 endif
 
