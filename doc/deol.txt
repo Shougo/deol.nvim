@@ -60,6 +60,12 @@ g:deol#prompt_pattern				*g:deol#prompt_pattern*
 >
 		let g:deol#prompt_pattern = '% \|%$'
 
+g:deol#enable_dir_changed			*g:deol#enable_dir_changed*
+
+	This variable controls to automatically follow DirChanged event.
+
+	Default: 1
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deol-key-mappings*
 
