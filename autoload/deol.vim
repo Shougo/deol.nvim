@@ -72,7 +72,7 @@ function! deol#send(string) abort
     return
   endif
 
-  call jobsend(t:deol.jobid, "\<C-u>" . a:string . "\<CR>")
+  call t:deol.jobsend("\<C-u>" . a:string . "\<CR>")
 endfunction
 
 function! deol#cd(directory) abort
@@ -156,18 +156,19 @@ function! s:deol.cd(directory) abort
 
   let self.cwd = directory
   call s:cd(self.cwd)
-  if exists('b:terminal_job_id')
-    call jobsend(b:terminal_job_id,
-          \ "\<C-u>cd " . fnameescape(self.cwd) . "\<CR>")
-  endif
+  call self.jobsend("\<C-u>cd " . fnameescape(self.cwd) . "\<CR>")
 endfunction
 
 function! s:deol.init_deol_buffer() abort
-  execute 'terminal' self.command
+  if has('nvim')
+    execute 'terminal' self.command
+    let self.jobid = b:terminal_job_id
+  else
+    call term_start(self.command)
+  endif
   setlocal bufhidden=hide
   setlocal filetype=deol
   let self.bufnr = bufnr('%')
-  let self.jobid = b:terminal_job_id
   let g:deol#_prev_deol = win_getid()
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
@@ -232,8 +233,20 @@ function! s:deol.init_edit_buffer() abort
   imap <buffer> <CR> <Plug>(deol_execute_line)
 endfunction
 
+function! s:deol.jobsend(keys) abort
+  if !has_key(self, 'bufnr')
+    return
+  endif
+
+  if has('nvim')
+    call jobsend(self.jobid, a:keys)
+  else
+    call term_sendkeys(self.bufnr, a:keys)
+  endif
+endfunction
+
 function! s:send_editor() abort
-  call jobsend(t:deol.jobid, "\<C-u>" . getline('.') . "\<CR>")
+  call t:deol.jobsend("\<C-u>" . getline('.') . "\<CR>")
 endfunction
 
 function! s:execute_line() abort
@@ -242,7 +255,7 @@ function! s:execute_line() abort
   endif
 
   let cmdline = s:get_cmdline()
-  call jobsend(b:terminal_job_id, cmdline . "\<CR>")
+  call t:deol.jobsend(cmdline . "\<CR>")
   startinsert
 endfunction
 
@@ -268,7 +281,7 @@ function! s:paste_prompt() abort
   endif
 
   let cmdline = s:get_cmdline()
-  call jobsend(b:terminal_job_id, "\<C-u>" . cmdline)
+  call t:deol.jobsend("\<C-u>" . cmdline)
   startinsert
 endfunction
 
@@ -297,3 +310,4 @@ function! s:get_input() abort
   let input = matchstr(getline('.'), '^.*\%' . (col('.') + 1) . 'c')
   return input[len(s:get_prompt()):]
 endfunction
+

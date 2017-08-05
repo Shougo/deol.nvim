@@ -4,8 +4,8 @@
 " License: MIT license
 "=============================================================================
 
-if !has('nvim')
-  echomsg 'deol.nvim requires Neovim.'
+if !has('nvim') && !exists('*term_start')
+  echomsg 'deol.nvim requires Neovim or terminal feature enabled Vim.'
   finish
 endif
 
