@@ -76,7 +76,7 @@ function! deol#send(string) abort
 endfunction
 
 function! deol#cd(directory) abort
-  if exists('t:deol')
+  if exists('t:deol') && bufwinnr(t:deol.bufnr) > 0
     call t:deol.cd(a:directory)
   endif
 endfunction
