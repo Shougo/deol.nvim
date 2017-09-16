@@ -38,6 +38,14 @@ COMMANDS 						*deol-commands*
 	Create deol buffer using {command}.
 	If deol buffer exists in the current tab, will switch to the buffer.
 
+							*deol-options*
+
+							*deol-options-split*
+ -split
+		Split the buffer.
+
+		Default: "false"
+
 :DeolCd {directory}					*:DeolCd*
 	Change deol buffer directory to {directory}.
 

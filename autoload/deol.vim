@@ -16,30 +16,35 @@ if exists('##DirChanged') && g:deol#enable_dir_changed
   autocmd deol DirChanged * call deol#cd(v:event.cwd)
 endif
 
-function! deol#start(options) abort
+function! deol#start(cmdline) abort
+  return deol#_start(s:parse_options(a:cmdline))
+endfunction
+
+function! deol#_start(options) abort
+  let options = copy(a:options)
+
   if exists('t:deol') && bufexists(t:deol.bufnr)
     let deol = t:deol
+
     let id = win_findbuf(deol.bufnr)
     if empty(id)
-      execute 'buffer' deol.bufnr
+      execute (options.split ? 'sbuffer' : 'buffer') deol.bufnr
     else
       call win_gotoid(id[0])
     endif
-    if has_key(a:options, 'cwd')
-      call deol.cd(a:options.cwd)
+
+    if options.cwd != ''
+      call deol.cd(options.cwd)
     else
       call s:cd(deol.cwd)
     endif
+
     let g:deol#_prev_deol = win_getid()
     startinsert
     return
   endif
 
-  let options = copy(a:options)
-  if get(options, 'command', '') == ''
-    let options.command = &shell
-  endif
-  if get(options, 'cwd', '') == ''
+  if options.cwd == ''
     let options.cwd = input('Current directory: ', getcwd(), 'dir')
   endif
 
@@ -49,12 +54,16 @@ function! deol#start(options) abort
     return
   endif
 
+  if options.split
+    split
+  endif
+
   let t:deol = deol#_new(cwd, options.command)
   call t:deol.init_deol_buffer()
 endfunction
 
 function! deol#new(options) abort
-  let options = copy(a:options)
+  let options = extend(s:user_options(), copy(a:options))
   if get(options, 'cwd', '') == ''
     let options.cwd = input('Current directory: ', getcwd(), 'dir')
   endif
@@ -64,7 +73,7 @@ function! deol#new(options) abort
   endif
 
   tabnew
-  return deol#start(options)
+  return deol#_start(options)
 endfunction
 
 function! deol#send(string) abort
@@ -311,3 +320,31 @@ function! s:get_input() abort
   return input[len(s:get_prompt()):]
 endfunction
 
+function! s:user_options() abort
+  return {'split': v:false, 'command': &shell, 'cwd': ''}
+endfunction
+
+function! s:parse_options(cmdline) abort
+  let options = s:user_options()
+
+  for arg in split(a:cmdline, '\%(\\\@<!\s\)\+')
+    let arg = substitute(arg, '\\\( \)', '\1', 'g')
+    let arg_key = substitute(arg, '=\zs.*$', '', '')
+
+    let name = substitute(tr(arg_key, '-', '_'), '=$', '', '')[1:]
+    if name =~# '^no_'
+      let name = name[3:]
+      let value = 0
+    else
+      let value = (arg_key =~# '=$') ? arg[len(arg_key) :] : 1
+    endif
+
+    if index(keys(s:user_options()), name) >= 0
+      let options[name] = value
+    else
+      let options['command'] = arg
+    endif
+  endfor
+
+  return options
+endfunction
