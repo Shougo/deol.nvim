@@ -112,6 +112,13 @@ e			<Plug>(deol_edit)
 ==============================================================================
 FAQ							*deol-faq*
 
+Q: How to donate money to you?
+
+A: I don't get the donation, but if you want to donate, please support neovim
+project.  My plugins depends on neovim development.
+
+https://salt.bountysource.com/teams/neovim
+
 Q: What is the difference neoterm and deol.nvim?
 
 A: neoterm is specialized for interpreter execution in the buffer.
