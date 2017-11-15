@@ -361,3 +361,24 @@ function! s:parse_options(cmdline) abort
 
   return options
 endfunction
+
+function! deol#_complete(arglead, cmdline, cursorpos) abort
+  let _ = []
+
+  " Option names completion.
+  let bool_options = keys(filter(copy(s:user_options()),
+        \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'))
+  let _ += map(copy(bool_options), "'-' . tr(v:val, '_', '-')")
+  let string_options = keys(filter(copy(s:user_options()),
+        \ 'type(v:val) != type(v:true) && type(v:val) != type(v:false)'))
+  let _ += map(copy(string_options), "'-' . tr(v:val, '_', '-') . '='")
+
+  " Add "-no-" option names completion.
+  let _ += map(copy(bool_options), "'-no-' . tr(v:val, '_', '-')")
+
+  if exists('*getcompletion')
+    let _ += getcompletion(a:arglead, 'shellcmd')
+  endif
+
+  return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
+endfunction

@@ -14,7 +14,7 @@ if exists('g:loaded_deol')
 endif
 let g:loaded_deol = 1
 
-command! -nargs=* -range -complete=shellcmd
+command! -nargs=* -range -complete=customlist,deol#_complete
       \ Deol call deol#start(<q-args>)
 command! -nargs=1 -range -complete=dir
       \ DeolCd call deol#cd(<q-args>)
