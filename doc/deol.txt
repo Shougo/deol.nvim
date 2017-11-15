@@ -46,6 +46,12 @@ COMMANDS 						*deol-commands*
 
 		Default: "false"
 
+						*deol-options-start-insert*
+ -start-insert
+		Start the insert mode in deol buffer.
+
+		Default: "true"
+
 :DeolCd {directory}					*:DeolCd*
 	Change deol buffer directory to {directory}.
 

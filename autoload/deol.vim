@@ -40,7 +40,7 @@ function! deol#_start(options) abort
     endif
 
     let g:deol#_prev_deol = win_getid()
-    startinsert
+    call s:insert_mode(deol)
     return
   endif
 
@@ -58,8 +58,9 @@ function! deol#_start(options) abort
     split
   endif
 
-  let t:deol = deol#_new(cwd, options.command)
+  let t:deol = deol#_new(cwd, options)
   call t:deol.init_deol_buffer()
+  call s:insert_mode(t:deol)
 endfunction
 
 function! deol#new(options) abort
@@ -127,11 +128,12 @@ function! deol#kill_editor() abort
   call win_gotoid(g:deol#_prev_deol)
 endfunction
 
-function! deol#_new(cwd, command) abort
+function! deol#_new(cwd, options) abort
   let deol = copy(s:deol)
-  let deol.command = a:command
+  let deol.command = a:options.command
   let deol.edit_winid = -1
   let deol.edit_bufnr = -1
+  let deol.options = a:options
   call deol.cd(a:cwd)
 
   " Set $EDITOR.
@@ -265,7 +267,7 @@ function! s:execute_line() abort
 
   let cmdline = s:get_cmdline()
   call t:deol.jobsend(cmdline . "\<CR>")
-  startinsert
+  call s:insert_mode(t:deol)
 endfunction
 
 function! s:search_prompt(flag) abort
@@ -291,7 +293,13 @@ function! s:paste_prompt() abort
 
   let cmdline = s:get_cmdline()
   call t:deol.jobsend("\<C-u>" . cmdline)
-  startinsert
+  call s:insert_mode(t:deol)
+endfunction
+
+function! s:insert_mode(deol) abort
+  if a:deol.options.start_insert
+    startinsert
+  endif
 endfunction
 
 function! s:start_insert(mode) abort
@@ -321,7 +329,12 @@ function! s:get_input() abort
 endfunction
 
 function! s:user_options() abort
-  return {'split': v:false, 'command': &shell, 'cwd': ''}
+  return {
+        \ 'split': v:false,
+        \ 'command': &shell,
+        \ 'cwd': '',
+        \ 'start_insert': v:true
+        \ }
 endfunction
 
 function! s:parse_options(cmdline) abort
