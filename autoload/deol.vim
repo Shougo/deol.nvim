@@ -45,7 +45,7 @@ function! deol#_start(options) abort
   endif
 
   if options.cwd == ''
-    let options.cwd = input('Current directory: ', getcwd(), 'dir')
+    let options.cwd = getcwd()
   endif
 
   let cwd = expand(options.cwd)
