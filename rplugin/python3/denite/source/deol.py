@@ -36,8 +36,18 @@ class Kind(Command):
         super().__init__(vim)
 
         self.name = 'command/deol'
+        self.redraw_actions += ['delete']
+        self.persist_actions += ['delete']
 
     def action_new(self, context):
         target = context['targets'][0]
         self.vim.command(str(target['action__tabnr']) + 'tabnext')
         self.vim.call('deol#new', {})
+
+    def action_delete(self, context):
+        target = context['targets'][0]
+        tabnr = target['action__tabnr']
+        if tabnr == self.vim.current.tabpage.number:
+            return
+        self.vim.command(str(tabnr) + 'tabclose')
+
