@@ -13,7 +13,13 @@ augroup deol
 augroup END
 
 if exists('##DirChanged') && g:deol#enable_dir_changed
-  autocmd deol DirChanged * call deol#cd(v:event.cwd)
+  if has('nvim')
+    autocmd deol DirChanged *
+          \ call deol#cd(v:event.cwd)
+  else
+    autocmd deol DirChanged *
+          \ call deol#cd(fnamemodify(expand('<afile>'), ':p'))
+  endif
 endif
 
 function! deol#start(cmdline) abort
