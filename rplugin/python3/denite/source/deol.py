@@ -5,13 +5,13 @@
 # ============================================================================
 
 from .base import Base
-from ..kind.command import Kind as Command
+from ..kind.base import Base as BaseK
 
 
 class Source(Base):
 
     def __init__(self, vim):
-        Base.__init__(self, vim)
+        super().__init__(vim)
 
         self.name = 'deol'
         self.kind = Kind(vim)
@@ -26,18 +26,24 @@ class Source(Base):
                 if 'deol' in x.vars
                 else '{}: [new denite]'.format(x.number)),
             'action__tabnr': x.number,
-            'action__command': (
-                'tabnext ' + str(x.number) +
-                ('' if 'deol' in x.vars else '| Deol'))}
-                for x in self.vim.tabpages if x.valid]
+            'action__is_deol': ('deol' in x.vars),
+        } for x in self.vim.tabpages if x.valid]
 
-class Kind(Command):
+
+class Kind(BaseK):
     def __init__(self, vim):
         super().__init__(vim)
 
-        self.name = 'command/deol'
+        self.name = 'deol'
+        self.default_action = 'switch'
         self.redraw_actions += ['delete']
         self.persist_actions += ['delete']
+
+    def action_switch(self, context):
+        target = context['targets'][0]
+        self.vim.command(
+            'tabnext ' + str(target['action__tabnr']) +
+            ('' if target['action__is_deol'] else '| Deol'))
 
     def action_new(self, context):
         target = context['targets'][0]
@@ -50,4 +56,3 @@ class Kind(Command):
         if tabnr == self.vim.current.tabpage.number:
             return
         self.vim.command(str(tabnr) + 'tabclose')
-
