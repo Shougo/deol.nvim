@@ -77,6 +77,7 @@ g:deol#prompt_pattern				*g:deol#prompt_pattern*
 g:deol#enable_dir_changed			*g:deol#enable_dir_changed*
 
 	This variable controls to automatically follow DirChanged event.
+	Note: It is only available for deol buffer.
 
 	Default: 1
 

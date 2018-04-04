@@ -12,16 +12,6 @@ augroup deol
   autocmd!
 augroup END
 
-if exists('##DirChanged') && g:deol#enable_dir_changed
-  if has('nvim')
-    autocmd deol DirChanged *
-          \ call deol#cd(v:event.cwd)
-  else
-    autocmd deol DirChanged *
-          \ call deol#cd(fnamemodify(expand('<afile>'), ':p'))
-  endif
-endif
-
 function! deol#start(cmdline) abort
   return deol#_start(s:parse_options(a:cmdline))
 endfunction
@@ -216,6 +206,16 @@ function! s:deol.init_deol_buffer() abort
   nmap <buffer> <C-p> <Plug>(deol_previous_prompt)
   nmap <buffer> <C-n> <Plug>(deol_next_prompt)
   nmap <buffer> <C-y> <Plug>(deol_paste_prompt)
+
+  if exists('##DirChanged') && g:deol#enable_dir_changed
+    if has('nvim')
+      autocmd deol DirChanged <buffer>
+            \ call deol#cd(v:event.cwd)
+    else
+      autocmd deol DirChanged <buffer>
+            \ call deol#cd(fnamemodify(expand('<afile>'), ':p'))
+    endif
+  endif
 endfunction
 
 function! s:deol.init_edit_buffer() abort
