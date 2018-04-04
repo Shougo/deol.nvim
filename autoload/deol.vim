@@ -336,9 +336,9 @@ endfunction
 
 function! s:user_options() abort
   return {
-        \ 'split': v:false,
         \ 'command': &shell,
         \ 'cwd': '',
+        \ 'split': v:false,
         \ 'start_insert': v:true
         \ }
 endfunction

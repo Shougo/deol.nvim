@@ -40,6 +40,12 @@ COMMANDS 						*deol-commands*
 
 							*deol-options*
 
+							*deol-options-command*
+ -command
+		Execute the command.
+
+		Default: Use 'shell' value
+
 							*deol-options-split*
  -split
 		Split the buffer.
