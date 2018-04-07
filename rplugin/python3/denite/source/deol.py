@@ -17,6 +17,7 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def gather_candidates(self, context):
+        command = context['args'][0] if context['args'] else ''
         return [{
             'word': (
                 '{}: {} ({})'.format(
@@ -25,6 +26,7 @@ class Source(Base):
                     x.vars['deol']['cwd'])
                 if 'deol' in x.vars
                 else '{}: [new denite]'.format(x.number)),
+            'action__command': command,
             'action__tabnr': x.number,
             'action__is_deol': ('deol' in x.vars),
         } for x in self.vim.tabpages if x.valid]
@@ -43,12 +45,16 @@ class Kind(BaseK):
         target = context['targets'][0]
         self.vim.command(
             'tabnext ' + str(target['action__tabnr']) +
-            ('' if target['action__is_deol'] else '| Deol'))
+            ('' if target['action__is_deol']
+                else '| Deol ' + target['action__command']))
 
     def action_new(self, context):
         target = context['targets'][0]
         self.vim.command(str(target['action__tabnr']) + 'tabnext')
-        self.vim.call('deol#new', {})
+        options = {}
+        if target['action__command']:
+            options['command'] = target['action__command']
+        self.vim.call('deol#new', options)
 
     def action_delete(self, context):
         target = context['targets'][0]
