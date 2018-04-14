@@ -180,6 +180,8 @@ function! s:deol.init_deol_buffer() abort
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
         \ :<C-u>call <SID>execute_line()<CR>
+  nnoremap <buffer><silent> <Plug>(deol_bg)
+        \ :<C-u>call <SID>bg()<CR>
   nnoremap <buffer><silent> <Plug>(deol_previous_prompt)
         \ :<C-u>call <SID>search_prompt('bWn')<CR>
   nnoremap <buffer><silent> <Plug>(deol_next_prompt)
@@ -206,6 +208,7 @@ function! s:deol.init_deol_buffer() abort
   nmap <buffer> <C-p> <Plug>(deol_previous_prompt)
   nmap <buffer> <C-n> <Plug>(deol_next_prompt)
   nmap <buffer> <C-y> <Plug>(deol_paste_prompt)
+  nmap <buffer> <C-z> <Plug>(deol_bg)
 
   if exists('##DirChanged') && g:deol#enable_dir_changed
     if has('nvim')
@@ -263,11 +266,15 @@ function! s:deol.jobsend(keys) abort
 endfunction
 
 function! s:send_editor() abort
+  if !exists('t:deol')
+    return
+  endif
+
   call t:deol.jobsend("\<C-u>" . getline('.') . "\<CR>")
 endfunction
 
 function! s:execute_line() abort
-  if g:deol#prompt_pattern == ''
+  if g:deol#prompt_pattern == '' || !exists('t:deol')
     return
   endif
 
@@ -293,7 +300,7 @@ function! s:search_prompt(flag) abort
 endfunction
 
 function! s:paste_prompt() abort
-  if g:deol#prompt_pattern == ''
+  if g:deol#prompt_pattern == '' || !exists('t:deol')
     return
   endif
 
@@ -301,6 +308,17 @@ function! s:paste_prompt() abort
   call t:deol.jobsend("\<C-u>" . cmdline)
   call s:insert_mode(t:deol)
 endfunction
+
+function! s:bg() abort
+  if !exists('t:deol')
+    return
+  endif
+
+  let options = t:deol.options
+  unlet t:deol
+  call deol#_start(options)
+endfunction
+
 
 function! s:insert_mode(deol) abort
   if a:deol.options.start_insert

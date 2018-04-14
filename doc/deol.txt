@@ -113,6 +113,10 @@ KEY MAPPINGS 						*deol-key-mappings*
 		Paste the history to the command line.
 		Note: |g:deol#prompt_pattern| must be set.
 
+						*<Plug>(deol_bg)*
+<Plug>(deol_bg)
+		Create new deol buffer instead.
+
 						*deol-default_key_mappings*
 {lhs}			{rhs}
 --------		-----------------------------
@@ -120,6 +124,7 @@ KEY MAPPINGS 						*deol-key-mappings*
 <C-p>			<Plug>(deol_previous_prompt)
 <C-n>			<Plug>(deol_next_prompt)
 <C-y>			<Plug>(deol_paste_prompt)
+<C-z>			<Plug>(deol_bg)
 e			<Plug>(deol_edit)
 
 ==============================================================================
