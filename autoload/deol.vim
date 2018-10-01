@@ -107,6 +107,12 @@ function! deol#edit() abort
     Deol
   endif
 
+  let id = win_findbuf(t:deol.bufnr)
+  if !empty(id)
+    call win_gotoid(id[0])
+    call cursor(line('$'), 0)
+  endif
+
   if win_findbuf(t:deol.edit_bufnr) == [t:deol.edit_winid]
     call win_gotoid(t:deol.edit_winid)
   else
