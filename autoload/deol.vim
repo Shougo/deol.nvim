@@ -20,23 +20,7 @@ function! deol#_start(options) abort
   let options = copy(a:options)
 
   if exists('t:deol') && bufexists(t:deol.bufnr)
-    let deol = t:deol
-
-    let id = win_findbuf(deol.bufnr)
-    if empty(id)
-      execute (options.split ? 'sbuffer' : 'buffer') deol.bufnr
-    else
-      call win_gotoid(id[0])
-    endif
-
-    if options.cwd != ''
-      call deol.cd(options.cwd)
-    else
-      call s:cd(deol.cwd)
-    endif
-
-    let g:deol#_prev_deol = win_getid()
-    call s:insert_mode(deol)
+    call s:switch(options)
     return
   endif
 
@@ -56,7 +40,38 @@ function! deol#_start(options) abort
 
   let t:deol = deol#_new(cwd, options)
   call t:deol.init_deol_buffer()
+
   call s:insert_mode(t:deol)
+
+  if options.edit
+    call deol#edit()
+  endif
+endfunction
+
+function! s:switch(options) abort
+  let options = copy(a:options)
+  let deol = t:deol
+
+  let id = win_findbuf(deol.bufnr)
+  if empty(id)
+    execute (options.split ? 'sbuffer' : 'buffer') deol.bufnr
+  else
+    call win_gotoid(id[0])
+  endif
+
+  let g:deol#_prev_deol = win_getid()
+
+  if options.cwd != ''
+    call deol.cd(options.cwd)
+  else
+    call s:cd(deol.cwd)
+  endif
+
+  call s:insert_mode(deol)
+
+  if options.edit
+    call deol#edit()
+  endif
 endfunction
 
 function! deol#new(options) abort
@@ -355,6 +370,7 @@ endfunction
 function! s:user_options() abort
   return {
         \ 'command': &shell,
+        \ 'edit': v:false,
         \ 'cwd': '',
         \ 'split': v:false,
         \ 'start_insert': v:true

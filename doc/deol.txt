@@ -12,6 +12,7 @@ Install			|deol-install|
 Examples		|deol-examples|
 Interface		|deol-interface|
   Commands		  |deol-commands|
+  Options		  |deol-options|
   Variables		  |deol-variables|
   Key mappings		  |deol-key-mappings|
 FAQ			|deol-faq|
@@ -34,29 +35,9 @@ INTERFACE						*deol-interface*
 ------------------------------------------------------------------------------
 COMMANDS 						*deol-commands*
 
-:Deol [{command}]					*:Deol*
+:Deol [{command}] [{options}]				*:Deol*
 	Create deol buffer using {command}.
 	If deol buffer exists in the current tab, will switch to the buffer.
-
-							*deol-options*
-
-							*deol-options-command*
- -command
-		Execute the command.
-
-		Default: Use 'shell' value
-
-							*deol-options-split*
- -split
-		Split the buffer.
-
-		Default: "false"
-
-						*deol-options-start-insert*
- -start-insert
-		Start the insert mode in deol buffer.
-
-		Default: "true"
 
 :DeolCd {directory}					*:DeolCd*
 	Change deol buffer directory to {directory}.
@@ -69,6 +50,31 @@ COMMANDS 						*deol-commands*
 	Note: deoplete + deoplete-zsh is recommended.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh
+
+------------------------------------------------------------------------------
+OPTIONS							*deol-options*
+
+							*deol-options-command*
+ -command
+		Execute the command.
+
+		Default: Use 'shell' value
+
+							*deol-options-edit*
+ -edit
+ 		Open edit buffer.
+
+							*deol-options-split*
+ -split
+		Split the buffer.
+
+		Default: "false"
+
+						*deol-options-start-insert*
+ -start-insert
+		Start the insert mode in deol buffer.
+
+		Default: "true"
 
 ------------------------------------------------------------------------------
 VARIABLES 						*deol-variables*
