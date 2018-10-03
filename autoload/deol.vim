@@ -124,6 +124,8 @@ function! deol#edit() abort
     let t:deol.edit_bufnr = bufnr('%')
   endif
 
+  resize 5
+
   " Set the current command line
   let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val != ''")
   if !empty(buflines)
@@ -246,7 +248,6 @@ function! s:deol.init_edit_buffer() abort
   setlocal hidden
   setlocal bufhidden=hide
   setlocal buftype=nofile
-  resize 5
 
   " Set filetype
   let command = fnamemodify(self.command, ':t:r')
