@@ -117,14 +117,11 @@ function! deol#edit() abort
     call win_gotoid(t:deol.edit_winid)
   else
     split deol-edit
-    if !has_key(t:deol, 'bufedit')
-      call t:deol.init_edit_buffer()
-    endif
     let t:deol.edit_winid = win_getid()
     let t:deol.edit_bufnr = bufnr('%')
   endif
 
-  resize 5
+  call t:deol.init_edit_buffer()
 
   " Set the current command line
   let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val != ''")
@@ -248,6 +245,8 @@ function! s:deol.init_edit_buffer() abort
   setlocal hidden
   setlocal bufhidden=hide
   setlocal buftype=nofile
+
+  resize 5
 
   " Set filetype
   let command = fnamemodify(self.command, ':t:r')
