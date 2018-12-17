@@ -62,7 +62,11 @@ OPTIONS							*deol-options*
 
 							*deol-options-edit*
  -edit
- 		Open edit buffer.
+ 		Open edit buffer in default.
+
+						*deol-options-edit-filetype*
+ -edit-filetype
+ 		Specify 'filetype' in edit buffer.
 
 							*deol-options-split*
  -split

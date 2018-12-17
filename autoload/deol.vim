@@ -149,6 +149,7 @@ function! deol#_new(cwd, options) abort
   let deol.command = a:options.command
   let deol.edit_winid = -1
   let deol.edit_bufnr = -1
+  let deol.edit_filetype = a:options.edit_filetype
   let deol.options = a:options
   call deol.cd(a:cwd)
 
@@ -250,6 +251,7 @@ function! s:deol.init_edit_buffer() abort
 
   " Set filetype
   let command = fnamemodify(self.command, ':t:r')
+  let filetype = self.edit_filetype
   let default_filetype = {
         \ 'ash': 'sh',
         \ 'bash': 'zsh',
@@ -257,10 +259,13 @@ function! s:deol.init_edit_buffer() abort
         \ 'ksh': 'sh',
         \ 'sh': 'sh',
         \ 'zsh': 'zsh',
+        \ 'xonsh': 'python',
         \ }
-  if has_key(default_filetype, command)
-    let &l:filetype = default_filetype[command]
+  if filetype ==# '' && has_key(default_filetype, command)
+    let filetype = default_filetype[command]
   endif
+
+  let &l:filetype = filetype
 
   let self.bufedit = bufnr('%')
 
@@ -377,6 +382,7 @@ function! s:user_options() abort
   return {
         \ 'command': &shell,
         \ 'edit': v:false,
+        \ 'edit_filetype': '',
         \ 'cwd': '',
         \ 'split': v:false,
         \ 'start_insert': v:true
