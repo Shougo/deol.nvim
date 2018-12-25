@@ -192,10 +192,19 @@ function! s:deol.init_deol_buffer() abort
     execute 'terminal' self.command
     let self.jobid = b:terminal_job_id
   else
-    call term_start(self.command)
+    call term_start(self.command, {'curwin': v:true})
   endif
+
   setlocal bufhidden=hide
   setlocal filetype=deol
+  setlocal nolist
+  setlocal nowrap
+  setlocal nofoldenable
+  setlocal foldcolumn=0
+  setlocal colorcolumn=
+  setlocal nonumber
+  setlocal norelativenumber
+
   let self.bufnr = bufnr('%')
   let g:deol#_prev_deol = win_getid()
 
