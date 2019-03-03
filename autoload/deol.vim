@@ -34,8 +34,19 @@ function! deol#_start(options) abort
     return
   endif
 
-  if options.split
-    split
+  if options.split != ''
+    if options.split == 'floating' && exists('*nvim_open_win')
+      call nvim_open_win(bufnr('%'), v:true,
+            \ options.winwidth,
+            \ options.winheight,
+            \ {
+            \ 'relative': 'editor',
+            \ 'row': options.winrow,
+            \ 'col': options.wincol,
+            \ })
+    else
+      split
+    endif
   endif
 
   let t:deol = deol#_new(cwd, options)
@@ -398,8 +409,12 @@ function! s:user_options() abort
         \ 'edit': v:false,
         \ 'edit_filetype': '',
         \ 'cwd': '',
-        \ 'split': v:false,
-        \ 'start_insert': v:true
+        \ 'split': '',
+        \ 'start_insert': v:true,
+        \ 'wincol': &columns / 4,
+        \ 'winheight': 30,
+        \ 'winrow': &lines / 3,
+        \ 'winwidth': 90,
         \ }
 endfunction
 

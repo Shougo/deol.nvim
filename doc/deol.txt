@@ -69,10 +69,14 @@ OPTIONS							*deol-options*
  		Specify 'filetype' in edit buffer.
 
 							*deol-options-split*
- -split
-		Split the buffer.
+ -split={direction}
+		Specify the split direction.
 
-		Default: "false"
+		"": No split
+		"floating": Use neovim floating window feature
+		otherwise: Split buffer horizontally
+
+		Default: ""
 
 						*deol-options-start-insert*
  -start-insert
