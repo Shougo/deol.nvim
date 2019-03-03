@@ -228,6 +228,8 @@ function! s:deol.init_deol_buffer() abort
         \ <SID>start_insert('A')
   nnoremap <buffer><expr> <Plug>(deol_start_append_last)
         \ 'i' . repeat("\<Right>", len(getline('.')))
+  nnoremap <buffer><expr><silent> <Plug>(deol_quit)
+        \ winnr('$') == 1 ? ":\<C-u>buffer #\<CR>" : ":\<C-u>close!\<CR>"
 
   nmap <buffer> e     <Plug>(deol_edit)
   nmap <buffer> i     <Plug>(deol_start_insert)
@@ -239,6 +241,7 @@ function! s:deol.init_deol_buffer() abort
   nmap <buffer> <C-n> <Plug>(deol_next_prompt)
   nmap <buffer> <C-y> <Plug>(deol_paste_prompt)
   nmap <buffer> <C-z> <Plug>(deol_bg)
+  nmap <buffer> q     <Plug>(deol_quit)
 
   if exists('##DirChanged') && g:deol#enable_dir_changed
     if has('nvim')
@@ -282,9 +285,11 @@ function! s:deol.init_edit_buffer() abort
         \ :<C-u>call <SID>send_editor()<CR>
   inoremap <buffer><silent> <Plug>(deol_execute_line)
         \ <ESC>:call <SID>send_editor()<CR>o
+  nnoremap <buffer><expr><silent> <Plug>(deol_quit)
+        \ winnr('$') == 1 ? ":\<C-u>buffer #\<CR>" : ":\<C-u>close!\<CR>"
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
-  nmap <buffer> q :<C-u>close!<CR>
+  nmap <buffer> q    <Plug>(deol_quit)
   imap <buffer> <CR> <Plug>(deol_execute_line)
 endfunction
 
