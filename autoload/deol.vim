@@ -34,20 +34,7 @@ function! deol#_start(options) abort
     return
   endif
 
-  if options.split != ''
-    if options.split == 'floating' && exists('*nvim_open_win')
-      call nvim_open_win(bufnr('%'), v:true,
-            \ options.winwidth,
-            \ options.winheight,
-            \ {
-            \ 'relative': 'editor',
-            \ 'row': options.winrow,
-            \ 'col': options.wincol,
-            \ })
-    else
-      split
-    endif
-  endif
+  call s:split(options)
 
   let t:deol = deol#_new(cwd, options)
   call t:deol.init_deol_buffer()
@@ -65,7 +52,8 @@ function! s:switch(options) abort
 
   let id = win_findbuf(deol.bufnr)
   if empty(id)
-    execute (options.split ? 'sbuffer' : 'buffer') deol.bufnr
+    call s:split(options)
+    execute 'buffer' deol.bufnr
   else
     call win_gotoid(id[0])
   endif
@@ -368,6 +356,25 @@ function! s:bg() abort
   let options = t:deol.options
   unlet t:deol
   call deol#_start(options)
+endfunction
+
+function! s:split(options) abort
+  if a:options.split ==# ''
+    return
+  endif
+
+  if a:options.split == 'floating' && exists('*nvim_open_win')
+    call nvim_open_win(bufnr('%'), v:true,
+          \ a:options.winwidth,
+          \ a:options.winheight,
+          \ {
+          \ 'relative': 'editor',
+          \ 'row': a:options.winrow,
+          \ 'col': a:options.wincol,
+          \ })
+  else
+    split
+  endif
 endfunction
 
 
