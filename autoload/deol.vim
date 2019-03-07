@@ -365,12 +365,12 @@ function! s:split(options) abort
 
   if a:options.split == 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true,
-          \ a:options.winwidth,
-          \ a:options.winheight,
+          \ str2nr(a:options.winwidth),
+          \ str2nr(a:options.winheight),
           \ {
           \ 'relative': 'editor',
-          \ 'row': a:options.winrow,
-          \ 'col': a:options.wincol,
+          \ 'row': str2nr(a:options.winrow),
+          \ 'col': str2nr(a:options.wincol),
           \ })
   else
     split
