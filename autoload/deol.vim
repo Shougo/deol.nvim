@@ -258,7 +258,7 @@ function! s:deol.init_edit_buffer() abort
   setlocal bufhidden=hide
   setlocal buftype=nofile
 
-  resize 5
+  resize 1
 
   " Set filetype
   let command = fnamemodify(self.command, ':t:r')
