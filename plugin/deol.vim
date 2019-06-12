@@ -14,8 +14,8 @@ if exists('g:loaded_deol')
 endif
 let g:loaded_deol = 1
 
-command! -nargs=* -range -complete=customlist,deol#_complete
+command! -nargs=* -range -bar -complete=customlist,deol#_complete
       \ Deol call deol#start(<q-args>)
-command! -nargs=1 -range -complete=dir
+command! -nargs=1 -range -bar -complete=dir
       \ DeolCd call deol#cd(<q-args>)
-command! DeolEdit call deol#edit()
+command! DeolEdit -bar call deol#edit()
