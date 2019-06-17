@@ -396,7 +396,7 @@ function! s:start_insert(mode) abort
   endif
 
   return 'i' . repeat("\<Right>", len(deol#get_cmdline()))
-        \ . repeat("\<Left>", len(deol#get_cmdline()) - len(deol#get_input())
+        \ . repeat("\<Left>", len(deol#get_cmdline()) - len(s:get_input())
         \ + (a:mode ==# 'i' ? 1 : 0))
 endfunction
 
