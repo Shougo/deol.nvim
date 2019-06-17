@@ -143,6 +143,11 @@ function! deol#kill_editor() abort
   call win_gotoid(g:deol#_prev_deol)
 endfunction
 
+function! deol#get_cmdline() abort
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  return substitute(getline('.'), pattern, '', '')
+endfunction
+
 function! deol#_new(cwd, options) abort
   let deol = copy(s:deol)
   let deol.command = a:options.command
@@ -318,7 +323,7 @@ function! s:execute_line() abort
     return
   endif
 
-  let cmdline = s:get_cmdline()
+  let cmdline = deol#get_cmdline()
   call t:deol.jobsend(cmdline . "\<CR>")
   call s:insert_mode(t:deol)
 endfunction
@@ -344,7 +349,7 @@ function! s:paste_prompt() abort
     return
   endif
 
-  let cmdline = s:get_cmdline()
+  let cmdline = deol#get_cmdline()
   call t:deol.jobsend("\<C-u>" . cmdline)
   call s:insert_mode(t:deol)
 endfunction
@@ -390,14 +395,9 @@ function! s:start_insert(mode) abort
     return a:mode
   endif
 
-  return 'i' . repeat("\<Right>", len(s:get_cmdline()))
-        \ . repeat("\<Left>", len(s:get_cmdline()) - len(s:get_input())
+  return 'i' . repeat("\<Right>", len(deol#get_cmdline()))
+        \ . repeat("\<Left>", len(deol#get_cmdline()) - len(deol#get_input())
         \ + (a:mode ==# 'i' ? 1 : 0))
-endfunction
-
-function! s:get_cmdline() abort
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
-  return substitute(getline('.'), pattern, '', '')
 endfunction
 
 function! s:get_prompt() abort
