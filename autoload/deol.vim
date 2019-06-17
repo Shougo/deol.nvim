@@ -194,16 +194,6 @@ function! s:deol.init_deol_buffer() abort
     call term_start(self.command, {'curwin': v:true})
   endif
 
-  setlocal bufhidden=hide
-  setlocal filetype=deol
-  setlocal nolist
-  setlocal nowrap
-  setlocal nofoldenable
-  setlocal foldcolumn=0
-  setlocal colorcolumn=
-  setlocal nonumber
-  setlocal norelativenumber
-
   let self.bufnr = bufnr('%')
   let g:deol#_prev_deol = win_getid()
 
@@ -242,6 +232,17 @@ function! s:deol.init_deol_buffer() abort
   nmap <buffer> <C-z> <Plug>(deol_bg)
   nmap <buffer> q     <Plug>(deol_quit)
 
+  setlocal bufhidden=hide
+  setlocal nolist
+  setlocal nowrap
+  setlocal nofoldenable
+  setlocal foldcolumn=0
+  setlocal colorcolumn=
+  setlocal nonumber
+  setlocal norelativenumber
+
+  setlocal filetype=deol
+
   if exists('##DirChanged') && g:deol#enable_dir_changed
     if has('nvim')
       autocmd deol DirChanged <buffer>
@@ -276,8 +277,6 @@ function! s:deol.init_edit_buffer() abort
     let filetype = default_filetype[command]
   endif
 
-  let &l:filetype = filetype
-
   let self.bufedit = bufnr('%')
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
@@ -290,6 +289,8 @@ function! s:deol.init_edit_buffer() abort
   nmap <buffer> <CR> <Plug>(deol_execute_line)
   nmap <buffer> q    <Plug>(deol_quit)
   imap <buffer> <CR> <Plug>(deol_execute_line)
+
+  let &l:filetype = filetype
 endfunction
 
 function! s:deol.jobsend(keys) abort
