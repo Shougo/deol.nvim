@@ -5,8 +5,10 @@
 "=============================================================================
 
 let g:deol#_prev_deol = -1
-let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
 let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
+let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
+let g:deol#shell_history_path = get(g:, 'deol#shell_history_path', '')
+let g:deol#shell_history_max = get(g:, 'deol#shell_history_max', 500)
 
 augroup deol
   autocmd!
@@ -116,6 +118,7 @@ function! deol#edit() abort
     call win_gotoid(t:deol.edit_winid)
   else
     split deol-edit
+    call append(0, s:get_histories())
     let t:deol.edit_winid = win_getid()
     let t:deol.edit_bufnr = bufnr('%')
   endif
@@ -448,6 +451,17 @@ function! s:parse_options(cmdline) abort
   endfor
 
   return options
+endfunction
+
+function! s:get_histories() abort
+  let history_path = expand(g:deol#shell_history_path)
+  if !filereadable(history_path)
+    return []
+  endif
+
+  return map(readfile(history_path)[-g:deol#shell_history_max :],
+        \ 'substitute(v:val, "^\\%(\\d\\+/\\)\\+[:[:digit:]; ]\\+\\|' .
+        \ '^[:[:digit:]; ]\\+", "", "g")')
 endfunction
 
 function! deol#_complete(arglead, cmdline, cursorpos) abort

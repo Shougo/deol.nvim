@@ -87,6 +87,13 @@ OPTIONS							*deol-options*
 ------------------------------------------------------------------------------
 VARIABLES 						*deol-variables*
 
+g:deol#enable_dir_changed			*g:deol#enable_dir_changed*
+
+	This variable controls to automatically follow DirChanged event.
+	Note: It is only available for deol buffer.
+
+	Default: 1
+
 g:deol#prompt_pattern				*g:deol#prompt_pattern*
 
 	Sets the pattern which matches the shell prompt.
@@ -94,12 +101,19 @@ g:deol#prompt_pattern				*g:deol#prompt_pattern*
 >
 		let g:deol#prompt_pattern = '% \|%$'
 
-g:deol#enable_dir_changed			*g:deol#enable_dir_changed*
+g:deol#shell_history_max			*g:deol#shell_history_max*
 
-	This variable controls to automatically follow DirChanged event.
-	Note: It is only available for deol buffer.
+	Max history of external shell history.
+	It is only used when |g:deol#shell_history_path| is set.
 
-	Default: 1
+	Default: 500
+
+g:deol#shell_history_path			*g:deol#shell_history_path*
+
+	The external shell history path.
+	If it is set, the external histories are loaded in deol edit buffer.
+
+	Default: ""
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deol-key-mappings*
