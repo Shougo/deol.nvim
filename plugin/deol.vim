@@ -18,4 +18,4 @@ command! -nargs=* -range -bar -complete=customlist,deol#_complete
       \ Deol call deol#start(<q-args>)
 command! -nargs=1 -range -bar -complete=dir
       \ DeolCd call deol#cd(<q-args>)
-command! DeolEdit -bar call deol#edit()
+command! -bar DeolEdit call deol#edit()
