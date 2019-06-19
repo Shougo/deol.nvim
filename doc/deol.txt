@@ -74,6 +74,7 @@ OPTIONS							*deol-options*
 
 		"": No split
 		"floating": Use neovim floating window feature
+		"vertical": Split buffer vertically
 		otherwise: Split buffer horizontally
 
 		Default: ""

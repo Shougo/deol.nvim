@@ -114,16 +114,7 @@ function! deol#edit() abort
     call cursor(line('$'), 0)
   endif
 
-  if win_findbuf(t:deol.edit_bufnr) == [t:deol.edit_winid]
-    call win_gotoid(t:deol.edit_winid)
-  else
-    split deol-edit
-    if line('$') == 1
-      call append(0, s:get_histories())
-    endif
-    let t:deol.edit_winid = win_getid()
-    let t:deol.edit_bufnr = bufnr('%')
-  endif
+  call t:deol.switch_edit_buffer()
 
   call t:deol.init_edit_buffer()
 
@@ -264,6 +255,20 @@ function! s:deol.init_deol_buffer() abort
   endif
 endfunction
 
+function! s:deol.switch_edit_buffer() abort
+  if win_findbuf(self.edit_bufnr) == [self.edit_winid]
+    call win_gotoid(self.edit_winid)
+    return
+  endif
+
+  split deol-edit
+  if line('$') == 1
+    call append(0, s:get_histories())
+  endif
+  let self.edit_winid = win_getid()
+  let self.edit_bufnr = bufnr('%')
+endfunction
+
 function! s:deol.init_edit_buffer() abort
   setlocal hidden
   setlocal bufhidden=hide
@@ -382,6 +387,8 @@ function! s:split(options) abort
           \ 'width': str2nr(a:options.winwidth),
           \ 'height': str2nr(a:options.winheight),
           \ })
+  elseif a:options.split == 'vertical'
+    vsplit
   else
     split
   endif
