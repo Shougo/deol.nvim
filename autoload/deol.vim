@@ -261,10 +261,23 @@ function! s:deol.switch_edit_buffer() abort
     return
   endif
 
-  split deol-edit
+  if self.options.split == 'floating' && exists('*nvim_open_win')
+    call nvim_open_win(bufnr('%'), v:true, {
+          \ 'relative': 'editor',
+          \ 'row': str2nr(self.options.winrow + winheight(0)),
+          \ 'col': str2nr(self.options.wincol),
+          \ 'width': winwidth(0),
+          \ 'height': 1,
+          \ })
+    edit deol-edit
+  else
+    split deol-edit
+  endif
+
   if line('$') == 1
     call append(0, s:get_histories())
   endif
+
   let self.edit_winid = win_getid()
   let self.edit_bufnr = bufnr('%')
 endfunction
@@ -273,6 +286,12 @@ function! s:deol.init_edit_buffer() abort
   setlocal hidden
   setlocal bufhidden=hide
   setlocal buftype=nofile
+  setlocal nolist
+  setlocal nofoldenable
+  setlocal foldcolumn=0
+  setlocal colorcolumn=
+  setlocal nonumber
+  setlocal norelativenumber
 
   resize 1
 
