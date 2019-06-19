@@ -109,7 +109,7 @@ function! deol#edit() abort
   endif
 
   let id = win_findbuf(t:deol.bufnr)
-  if !empty(id)
+  if !empty(id) && win_getid() != id[0]
     call win_gotoid(id[0])
     call cursor(line('$'), 0)
   endif
@@ -118,7 +118,9 @@ function! deol#edit() abort
     call win_gotoid(t:deol.edit_winid)
   else
     split deol-edit
-    call append(0, s:get_histories())
+    if line('$') == 1
+      call append(0, s:get_histories())
+    endif
     let t:deol.edit_winid = win_getid()
     let t:deol.edit_bufnr = bufnr('%')
   endif
