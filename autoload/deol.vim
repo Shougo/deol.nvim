@@ -319,6 +319,8 @@ function! s:deol.init_edit_buffer() abort
         \ <ESC>:call <SID>send_editor()<CR>o
   nnoremap <buffer><expr><silent> <Plug>(deol_quit)
         \ winnr('$') == 1 ? ":\<C-u>buffer #\<CR>" : ":\<C-u>close!\<CR>"
+  inoremap <buffer><expr><silent> <Plug>(deol_quit)
+        \ winnr('$') == 1 ? "\<ESC>:buffer #\<CR>" : "\<ESC>:close!\<CR>"
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
   nmap <buffer> q    <Plug>(deol_quit)
