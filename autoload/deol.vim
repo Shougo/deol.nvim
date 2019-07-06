@@ -269,7 +269,12 @@ function! s:deol.switch_edit_buffer() abort
           \ 'width': winwidth(0),
           \ 'height': 1,
           \ })
-    edit deol-edit
+    if exists('bufadd')
+      let bufnr = bufadd('deol-edit')
+      execute bufnr 'buffer'
+    else
+      edit deol-edit
+    endif
   else
     split deol-edit
   endif
