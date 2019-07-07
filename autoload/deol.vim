@@ -288,7 +288,6 @@ function! s:deol.switch_edit_buffer() abort
 endfunction
 
 function! s:deol.init_edit_buffer() abort
-  setlocal hidden
   setlocal bufhidden=hide
   setlocal buftype=nofile
   setlocal nolist
