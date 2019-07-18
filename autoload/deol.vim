@@ -120,8 +120,8 @@ function! deol#edit() abort
 
   " Set the current command line
   let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val != ''")
-  if !empty(buflines)
-    let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  if !empty(buflines) && buflines[-1] =~# pattern
     let cmdline = substitute(buflines[-1], pattern, '', '')
     if getline('$') == ''
       call setline('$', cmdline)
