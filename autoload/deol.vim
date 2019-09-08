@@ -325,10 +325,14 @@ function! s:deol.init_edit_buffer() abort
         \ winnr('$') == 1 ? ":\<C-u>buffer #\<CR>" : ":\<C-u>close!\<CR>"
   inoremap <buffer><expr><silent> <Plug>(deol_quit)
         \ winnr('$') == 1 ? "\<ESC>:buffer #\<CR>" : "\<ESC>:close!\<CR>"
+  inoremap <buffer><expr><silent> <Plug>(deol_backspace)
+        \ col('.') == 1 ? "" : "<BS>"
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
   nmap <buffer> q    <Plug>(deol_quit)
   imap <buffer> <CR> <Plug>(deol_execute_line)
+  imap <buffer> <BS> <Plug>(deol_backspace)
+  imap <buffer> <C-h> <Plug>(deol_backspace)
 
   let &l:filetype = filetype
 endfunction
