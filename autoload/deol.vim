@@ -94,7 +94,7 @@ function! deol#send(string) abort
     return
   endif
 
-  call t:deol.jobsend("\<C-u>" . a:string . "\<CR>")
+  call t:deol.jobsend(repeat("\<BS>", len(deol#get_cmdline())) . a:string . "\<CR>")
 endfunction
 
 function! deol#cd(directory) abort
@@ -184,7 +184,8 @@ function! s:deol.cd(directory) abort
 
   let self.cwd = directory
   call s:cd(self.cwd)
-  call self.jobsend("\<C-u>cd " . fnameescape(self.cwd) . "\<CR>")
+  call self.jobsend(repeat("\<BS>", len(deol#get_cmdline())) .
+        \   'cd ' . fnameescape(self.cwd) . "\<CR>")
 endfunction
 
 function! s:deol.init_deol_buffer() abort
@@ -354,7 +355,8 @@ function! s:send_editor() abort
     return
   endif
 
-  call t:deol.jobsend("\<C-u>" . getline('.') . "\<CR>")
+  call t:deol.jobsend(repeat("\<BS>", len(deol#get_cmdline()))
+  \     . getline('.') . "\<CR>")
 endfunction
 
 function! s:execute_line() abort
@@ -389,7 +391,7 @@ function! s:paste_prompt() abort
   endif
 
   let cmdline = deol#get_cmdline()
-  call t:deol.jobsend("\<C-u>" . cmdline)
+  call t:deol.jobsend(repeat("\<BS>", len(deol#get_cmdline())) . cmdline)
   call s:insert_mode(t:deol)
 endfunction
 
