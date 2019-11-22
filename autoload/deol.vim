@@ -497,12 +497,12 @@ function! s:get_histories() abort
     return []
   endif
 
-  let l:histories = readfile(history_path)
+  let histories = readfile(history_path)
   if g:deol#shell_history_max > 0 &&
-      \ len(l:histories) > g:deol#shell_history_max
-      let l:histories = l:histories[-g:deol#shell_history_max :]
+      \ len(histories) > g:deol#shell_history_max
+      let histories = histories[-g:deol#shell_history_max :]
   endif
-  return map(l:histories,
+  return map(histories,
         \ 'substitute(v:val, "^\\%(\\d\\+/\\)\\+[:[:digit:]; ]\\+\\|' .
         \ '^[:[:digit:]; ]\\+", "", "g")')
 endfunction
