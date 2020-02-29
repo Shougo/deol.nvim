@@ -9,6 +9,24 @@ let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
 let g:deol#shell_history_path = get(g:, 'deol#shell_history_path', '')
 let g:deol#shell_history_max = get(g:, 'deol#shell_history_max', 500)
+let s:options = {
+      \ 'curwin': v:true,
+      \ }
+let g:deol#options = extend(s:options, get(g:, 'deol#extra_options', {}))
+let s:map = {
+      \ 'edit': 'e',
+      \ 'start_insert': 'i',
+      \ 'start_insert_first': 'I',
+      \ 'start_append': 'a',
+      \ 'start_append_last': 'A',
+      \ 'execute_line': '<CR>',
+      \ 'previous_prompt': '<C-p>',
+      \ 'next_prompt': '<C-n>',
+      \ 'paste_prompt': '<C-y>',
+      \ 'bg': '<C-z>',
+      \ 'quit': 'q',
+      \ }
+let g:deol#map = extend(s:map, get(g:, 'deol#custom_map', {}) )
 
 augroup deol
   autocmd!
@@ -192,7 +210,7 @@ function! s:deol.init_deol_buffer() abort
     execute 'terminal' self.command
     let self.jobid = b:terminal_job_id
   else
-    call term_start(self.command, {'curwin': v:true})
+    call term_start(self.command, g:deol#options)
   endif
 
   let self.bufnr = bufnr('%')
@@ -221,18 +239,6 @@ function! s:deol.init_deol_buffer() abort
   nnoremap <buffer><expr><silent> <Plug>(deol_quit)
         \ winnr('$') == 1 ? ":\<C-u>buffer #\<CR>" : ":\<C-u>close!\<CR>"
 
-  nmap <buffer> e     <Plug>(deol_edit)
-  nmap <buffer> i     <Plug>(deol_start_insert)
-  nmap <buffer> I     <Plug>(deol_start_insert_first)
-  nmap <buffer> a     <Plug>(deol_start_append)
-  nmap <buffer> A     <Plug>(deol_start_append_last)
-  nmap <buffer> <CR>  <Plug>(deol_execute_line)
-  nmap <buffer> <C-p> <Plug>(deol_previous_prompt)
-  nmap <buffer> <C-n> <Plug>(deol_next_prompt)
-  nmap <buffer> <C-y> <Plug>(deol_paste_prompt)
-  nmap <buffer> <C-z> <Plug>(deol_bg)
-  nmap <buffer> q     <Plug>(deol_quit)
-
   setlocal bufhidden=hide
   setlocal nolist
   setlocal nowrap
@@ -243,6 +249,10 @@ function! s:deol.init_deol_buffer() abort
   setlocal norelativenumber
 
   setlocal filetype=deol
+
+  for [l:rhs, l:lhs] in items(g:deol#map)
+    execute 'nmap <buffer> '.l:lhs.' <Plug>(deol_'.l:rhs.')'
+  endfor
 
   if exists('##DirChanged') && g:deol#enable_dir_changed
     if has('nvim')
@@ -531,3 +541,6 @@ endfunction
 function! s:cleanup() abort
   return has('win32') ? repeat("\<BS>", len(deol#get_cmdline())) : "\<C-u>"
 endfunction
+
+" vim: set expandtab softtabstop=2 shiftwidth=2:
+
