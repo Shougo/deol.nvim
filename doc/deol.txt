@@ -122,6 +122,31 @@ g:deol#shell_history_path			*g:deol#shell_history_path*
 
 	Default: ""
 
+g:deol#extra_options				*g:deol#extra_options*
+
+	Set the extra options for gvim terminal. See |term_start()|.
+>
+		let g:deol#extra_options = {'term_finish': 'close'}
+
+g:deol#custom_map				*g:deol#custom_map*
+
+	Customize the mappings for deol.  See |deol-key-mappings| for default
+	mappings.
+>
+		let g:deol#custom_map = {
+			\ 'edit': 'e',
+			\ 'start_insert': 'i',
+			\ 'start_insert_first': 'I',
+			\ 'start_append': 'a',
+			\ 'start_append_last': 'A',
+			\ 'execute_line': '<CR>',
+			\ 'previous_prompt': '<C-p>',
+			\ 'next_prompt': '<C-n>',
+			\ 'paste_prompt': '<C-y>',
+			\ 'bg': '<C-z>',
+			\ 'quit': 'q',
+			\ }
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deol-key-mappings*
 
