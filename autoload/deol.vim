@@ -9,24 +9,26 @@ let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
 let g:deol#shell_history_path = get(g:, 'deol#shell_history_path', '')
 let g:deol#shell_history_max = get(g:, 'deol#shell_history_max', 500)
-let s:options = {
+
+let s:default_term_options = {
       \ 'curwin': v:true,
       \ }
-let g:deol#options = extend(s:options, get(g:, 'deol#extra_options', {}))
-let s:map = {
+let g:deol#_term_options = extend(s:default_term_options,
+      \ get(g:, 'deol#extra_options', {}))
+let s:default_maps = {
+      \ 'bg': '<C-z>',
       \ 'edit': 'e',
-      \ 'start_insert': 'i',
-      \ 'start_insert_first': 'I',
-      \ 'start_append': 'a',
-      \ 'start_append_last': 'A',
       \ 'execute_line': '<CR>',
-      \ 'previous_prompt': '<C-p>',
       \ 'next_prompt': '<C-n>',
       \ 'paste_prompt': '<C-y>',
-      \ 'bg': '<C-z>',
+      \ 'previous_prompt': '<C-p>',
       \ 'quit': 'q',
+      \ 'start_append': 'a',
+      \ 'start_append_last': 'A',
+      \ 'start_insert': 'i',
+      \ 'start_insert_first': 'I',
       \ }
-let g:deol#map = extend(s:map, get(g:, 'deol#custom_map', {}) )
+let g:deol#_maps = extend(s:default_maps, get(g:, 'deol#custom_map', {}))
 
 augroup deol
   autocmd!
@@ -210,7 +212,7 @@ function! s:deol.init_deol_buffer() abort
     execute 'terminal' self.command
     let self.jobid = b:terminal_job_id
   else
-    call term_start(self.command, g:deol#options)
+    call term_start(self.command, g:deol#_term_options)
   endif
 
   let self.bufnr = bufnr('%')
@@ -250,8 +252,8 @@ function! s:deol.init_deol_buffer() abort
 
   setlocal filetype=deol
 
-  for [l:rhs, l:lhs] in items(g:deol#map)
-    execute 'nmap <buffer> '.l:lhs.' <Plug>(deol_'.l:rhs.')'
+  for [rhs, lhs] in items(g:deol#_maps)
+    execute 'nmap <buffer> ' . lhs . ' <Plug>(deol_' . rhs . ')'
   endfor
 
   if exists('##DirChanged') && g:deol#enable_dir_changed
@@ -541,6 +543,3 @@ endfunction
 function! s:cleanup() abort
   return has('win32') ? repeat("\<BS>", len(deol#get_cmdline())) : "\<C-u>"
 endfunction
-
-" vim: set expandtab softtabstop=2 shiftwidth=2:
-

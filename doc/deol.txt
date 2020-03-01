@@ -94,12 +94,38 @@ OPTIONS							*deol-options*
 ------------------------------------------------------------------------------
 VARIABLES 						*deol-variables*
 
+g:deol#custom_map					*g:deol#custom_map*
+
+	Customize the mappings for deol.  See |deol-key-mappings| for default
+	mappings.
+>
+		let g:deol#custom_map = {
+			\ 'edit': 'e',
+			\ 'start_insert': 'i',
+			\ 'start_insert_first': 'I',
+			\ 'start_append': 'a',
+			\ 'start_append_last': 'A',
+			\ 'execute_line': '<CR>',
+			\ 'previous_prompt': '<C-p>',
+			\ 'next_prompt': '<C-n>',
+			\ 'paste_prompt': '<C-y>',
+			\ 'bg': '<C-z>',
+			\ 'quit': 'q',
+			\ }
+
 g:deol#enable_dir_changed			*g:deol#enable_dir_changed*
 
 	This variable controls to automatically follow DirChanged event.
 	Note: It is only available for deol buffer.
 
 	Default: 1
+
+g:deol#extra_options					*g:deol#extra_options*
+
+	Set the extra options for gvim terminal. See |term_start()|.
+	Note: It is available in Vim8 only.
+>
+		let g:deol#extra_options = {'term_finish': 'close'}
 
 g:deol#prompt_pattern				*g:deol#prompt_pattern*
 
@@ -121,31 +147,6 @@ g:deol#shell_history_path			*g:deol#shell_history_path*
 	If it is set, the external histories are loaded in deol edit buffer.
 
 	Default: ""
-
-g:deol#extra_options				*g:deol#extra_options*
-
-	Set the extra options for gvim terminal. See |term_start()|.
->
-		let g:deol#extra_options = {'term_finish': 'close'}
-
-g:deol#custom_map				*g:deol#custom_map*
-
-	Customize the mappings for deol.  See |deol-key-mappings| for default
-	mappings.
->
-		let g:deol#custom_map = {
-			\ 'edit': 'e',
-			\ 'start_insert': 'i',
-			\ 'start_insert_first': 'I',
-			\ 'start_append': 'a',
-			\ 'start_append_last': 'A',
-			\ 'execute_line': '<CR>',
-			\ 'previous_prompt': '<C-p>',
-			\ 'next_prompt': '<C-n>',
-			\ 'paste_prompt': '<C-y>',
-			\ 'bg': '<C-z>',
-			\ 'quit': 'q',
-			\ }
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deol-key-mappings*
