@@ -52,7 +52,8 @@ function! deol#_start(options) abort
 
   let cwd = expand(options.cwd)
   if !isdirectory(cwd)
-    echomsg '[deol] ' . cwd . ' is not directory'
+    redraw
+    echomsg printf('[deol] %s is not directory', cwd)
     return
   endif
 
@@ -102,6 +103,11 @@ function! deol#new(options) abort
   endif
 
   if options.cwd == ''
+    return
+  endif
+  if !isdirectory(options.cwd)
+    redraw
+    echomsg printf('[deol] %s is not directory', cwd)
     return
   endif
 
@@ -198,7 +204,8 @@ let s:deol = {}
 
 function! s:deol.cd(directory) abort
   let directory = fnamemodify(a:directory, ':p')
-  if has_key(self, 'cwd') && self.cwd ==# directory
+  if (has_key(self, 'cwd') && self.cwd ==# directory)
+        \ || !isdirectory(directory)
     return
   endif
 
