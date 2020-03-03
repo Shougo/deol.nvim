@@ -107,7 +107,7 @@ function! deol#new(options) abort
   endif
   if !isdirectory(options.cwd)
     redraw
-    echomsg printf('[deol] %s is not directory', cwd)
+    echomsg printf('[deol] %s is not directory', options.cwd)
     return
   endif
 
@@ -257,11 +257,11 @@ function! s:deol.init_deol_buffer() abort
   setlocal nonumber
   setlocal norelativenumber
 
-  setlocal filetype=deol
-
   for [rhs, lhs] in items(g:deol#_maps)
     execute 'nmap <buffer> ' . lhs . ' <Plug>(deol_' . rhs . ')'
   endfor
+
+  setlocal filetype=deol
 
   if exists('##DirChanged') && g:deol#enable_dir_changed
     if has('nvim')
