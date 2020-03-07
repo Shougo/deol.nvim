@@ -7,6 +7,8 @@
 from .base import Base
 from ..kind.base import Base as BaseK
 
+import denite.util
+
 
 class Source(Base):
 
@@ -62,3 +64,19 @@ class Kind(BaseK):
         if tabnr == self.vim.current.tabpage.number:
             return
         self.vim.command(str(tabnr) + 'tabclose')
+
+    def action_edit(self, context):
+        target = context['targets'][0]
+        deol = self.vim.call('gettabvar',
+                                target['action__tabnr'], 'deol')
+        cwd = str(self.vim.call(
+            'denite#util#input',
+            f"New deol cwd: ", deol['cwd'], 'dir'
+        ))
+
+        if self.vim.call('isdirectory', cwd):
+            self.vim.command(f"tabnext {target['action__tabnr']}")
+            self.vim.call('deol#cd', cwd)
+        else:
+            self.vim.command('redraw')
+            denite.util.error(self.vim, f'{cwd} is not directory.')
