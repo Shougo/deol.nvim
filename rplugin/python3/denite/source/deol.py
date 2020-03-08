@@ -45,15 +45,19 @@ class Kind(BaseK):
 
     def action_switch(self, context):
         target = context['targets'][0]
-        self.vim.command(
-            'tabnext ' + str(target['action__tabnr']) +
-            ('' if target['action__is_deol']
-                else '| Deol ' + target['action__command']))
+        self.vim.command(f"tabnext {target['action__tabnr']}")
+        if not target['action__is_deol']:
+            self.vim.command(f"Deol {target['action__command']}")
 
     def action_new(self, context):
         target = context['targets'][0]
-        self.vim.command(str(target['action__tabnr']) + 'tabnext')
-        options = {}
+        if not target['action__is_deol']:
+            return
+
+        self.vim.command(f"tabnext {target['action__tabnr']}")
+        deol = self.vim.call('gettabvar',
+                             target['action__tabnr'], 'deol')
+        options = {'start_insert': deol['options']['start_insert']}
         if target['action__command']:
             options['command'] = target['action__command']
         self.vim.call('deol#new', options)
@@ -63,12 +67,15 @@ class Kind(BaseK):
         tabnr = target['action__tabnr']
         if tabnr == self.vim.current.tabpage.number:
             return
-        self.vim.command(str(tabnr) + 'tabclose')
+        self.vim.command(f'{tabnr} tabclose')
 
     def action_edit(self, context):
         target = context['targets'][0]
+        if not target['action__is_deol']:
+            return
+
         deol = self.vim.call('gettabvar',
-                                target['action__tabnr'], 'deol')
+                             target['action__tabnr'], 'deol')
         cwd = str(self.vim.call(
             'denite#util#input',
             f"New deol cwd: ", deol['cwd'], 'dir'
