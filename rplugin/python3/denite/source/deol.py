@@ -74,6 +74,9 @@ class Kind(BaseK):
             f"New deol cwd: ", deol['cwd'], 'dir'
         ))
 
+        if cwd == '':
+            return
+
         if self.vim.call('isdirectory', cwd):
             self.vim.command(f"tabnext {target['action__tabnr']}")
             self.vim.call('deol#cd', cwd)
