@@ -246,7 +246,9 @@ function! s:deol.init_deol_buffer() abort
   nnoremap <buffer><expr> <Plug>(deol_start_append_last)
         \ 'i' . repeat("\<Right>", len(getline('.')))
   nnoremap <buffer><expr><silent> <Plug>(deol_quit)
-        \ winnr('$') == 1 ? ":\<C-u>buffer #\<CR>" : ":\<C-u>close!\<CR>"
+        \ winnr('$') != 1 ? ":\<C-u>close!\<CR>" :
+        \ bufname(bufnr('#')) ==# 'deol-edit' ? '' :
+        \ ":\<C-u>buffer #\<CR>"
 
   setlocal bufhidden=hide
   setlocal nolist
@@ -341,9 +343,11 @@ function! s:deol.init_edit_buffer() abort
   inoremap <buffer><silent> <Plug>(deol_execute_line)
         \ <ESC>:call <SID>send_editor()<CR>o
   nnoremap <buffer><expr><silent> <Plug>(deol_quit)
-        \ winnr('$') == 1 ? ":\<C-u>buffer #\<CR>" : ":\<C-u>close!\<CR>"
+        \ winnr('$') != 1 ? ":\<C-u>close!\<CR>" :
+        \ ":\<C-u>buffer #\<CR>"
   inoremap <buffer><expr><silent> <Plug>(deol_quit)
-        \ winnr('$') == 1 ? "\<ESC>:buffer #\<CR>" : "\<ESC>:close!\<CR>"
+        \ winnr('$') != 1 ? "\<ESC>:close!\<CR>" :
+        \ "\<ESC>:buffer #\<CR>"
   inoremap <buffer><expr><silent> <Plug>(deol_backspace)
         \ col('.') == 1 ? "" : "<BS>"
 
