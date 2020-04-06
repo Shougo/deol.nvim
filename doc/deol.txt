@@ -123,6 +123,8 @@ g:deol#enable_dir_changed			*g:deol#enable_dir_changed*
 g:deol#extra_options					*g:deol#extra_options*
 
 	Set the extra options for gvim terminal. See |term_start()|.
+	By default, it is `{'curwin': v:true}` .
+	`b:deol_extra_options` can overide it in a buffer.
 	Note: It is available in Vim8 only.
 >
 		let g:deol#extra_options = {'term_finish': 'close'}
