@@ -219,7 +219,8 @@ function! s:deol.init_deol_buffer() abort
     execute 'terminal' self.command
     let self.jobid = b:terminal_job_id
   else
-    call term_start(self.command, extend(g:deol#_term_options, get(b:, 'deol_extra_options', {})))
+    call term_start(self.command, extend(g:deol#_term_options,
+          \ get(b:, 'deol_extra_options', {})))
   endif
 
   let self.bufnr = bufnr('%')
