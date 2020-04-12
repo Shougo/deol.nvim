@@ -20,18 +20,19 @@ class Source(Base):
 
     def gather_candidates(self, context):
         command = context['args'][0] if context['args'] else ''
-        return [{
+        candidates = []
+        for tabnr in range(1, self.vim.call('tabpagenr', '$') + 1):
+            deol = self.vim.call('gettabvar', tabnr, 'deol', {})
+            candidates.append({
             'word': (
-                '{}: {} ({})'.format(
-                    x.number,
-                    x.vars['deol']['command'],
-                    x.vars['deol']['cwd'])
-                if 'deol' in x.vars
-                else '{}: [new denite]'.format(x.number)),
+                '{}: {} ({})'.format(tabnr, deol['command'], deol['cwd'])
+                if deol
+                else '{}: [new denite]'.format(tabnr)),
             'action__command': command,
-            'action__tabnr': x.number,
-            'action__is_deol': ('deol' in x.vars),
-        } for x in self.vim.tabpages if x.valid]
+            'action__tabnr': tabnr,
+            'action__is_deol': bool(deol),
+        })
+        return candidates
 
 
 class Kind(BaseK):
