@@ -264,6 +264,8 @@ function! s:deol.init_deol_buffer() abort
     execute 'nmap <buffer> ' . lhs . ' <Plug>(deol_' . rhs . ')'
   endfor
 
+  " set filetype twice to load after/ftplugin in Vim8
+  setlocal filetype=deol
   setlocal filetype=deol
 
   if exists('##DirChanged') && g:deol#enable_dir_changed
@@ -451,6 +453,11 @@ endfunction
 function! s:insert_mode(deol) abort
   if a:deol.options.start_insert
     startinsert
+  elseif has('nvim')
+    stopinsert
+  else
+    sleep 100m
+    call feedkeys("\<C-\>\<C-n>", 'n')
   endif
 endfunction
 
