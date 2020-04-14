@@ -562,3 +562,7 @@ endfunction
 function! s:cleanup() abort
   return has('win32') ? repeat("\<BS>", len(deol#get_cmdline())) : "\<C-u>"
 endfunction
+
+function! deol#abbrev(check, lhs, rhs) abort
+  return getline('.') ==# a:check && v:char == ' ' ? a:rhs : a:lhs
+endfunction
