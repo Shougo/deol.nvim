@@ -45,8 +45,8 @@ COMMANDS 						*deol-commands*
 :DeolEdit						*:DeolEdit*
 	Open deol edit buffer.
 	You can edit and execute the deol command line in the buffer.
-	The buffer filetype is "zsh" and you can use Vim auto completion
-	feature.
+	The buffer filetype is "zsh" if you use bash or zsh, and you can use
+	Vim auto completion feature.
 	Note: deoplete + deoplete-zsh is recommended.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh
