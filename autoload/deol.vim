@@ -356,6 +356,8 @@ function! s:deol.init_edit_buffer() abort
         \ col('.') == 1 ? "" : "<BS>"
   inoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>") . "\<ESC>a"
+  inoremap <buffer><expr><silent> <Plug>(deol_ctrl_d)
+        \ deol#send("\<C-d>") . "\<ESC>a"
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
   nmap <buffer> q    <Plug>(deol_quit)
@@ -363,6 +365,7 @@ function! s:deol.init_edit_buffer() abort
   imap <buffer> <BS> <Plug>(deol_backspace)
   imap <buffer> <C-h> <Plug>(deol_backspace)
   imap <buffer> <C-c> <Plug>(deol_ctrl_c)
+  imap <buffer> <C-d> <Plug>(deol_ctrl_d)
 
   let &l:filetype = filetype
 
