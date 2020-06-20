@@ -361,6 +361,16 @@ function! s:deol.init_edit_buffer() abort
   imap <buffer> <C-h> <Plug>(deol_backspace)
 
   let &l:filetype = filetype
+
+  if exists('##DirChanged') && g:deol#enable_dir_changed
+    if has('nvim')
+      autocmd deol DirChanged <buffer>
+            \ call deol#cd(v:event.cwd)
+    else
+      autocmd deol DirChanged <buffer>
+            \ call deol#cd(fnamemodify(expand('<afile>'), ':p'))
+    endif
+  endif
 endfunction
 
 function! s:deol.jobsend(keys) abort
