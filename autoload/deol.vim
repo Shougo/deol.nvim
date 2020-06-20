@@ -117,10 +117,11 @@ endfunction
 
 function! deol#send(string) abort
   if !exists('t:deol')
-    return
+    return ''
   endif
 
   call t:deol.jobsend(s:cleanup() . a:string . "\<CR>")
+  return ''
 endfunction
 
 function! deol#cd(directory) abort
@@ -353,12 +354,15 @@ function! s:deol.init_edit_buffer() abort
         \ "\<ESC>:buffer #\<CR>"
   inoremap <buffer><expr><silent> <Plug>(deol_backspace)
         \ col('.') == 1 ? "" : "<BS>"
+  inoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
+        \ deol#send("\<C-c>") . "\<ESC>a"
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
   nmap <buffer> q    <Plug>(deol_quit)
   imap <buffer> <CR> <Plug>(deol_execute_line)
   imap <buffer> <BS> <Plug>(deol_backspace)
   imap <buffer> <C-h> <Plug>(deol_backspace)
+  imap <buffer> <C-c> <Plug>(deol_ctrl_c)
 
   let &l:filetype = filetype
 
