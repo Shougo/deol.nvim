@@ -180,6 +180,13 @@ KEY MAPPINGS 						*deol-key-mappings*
 <Plug>(deol_bg)
 		Create new deol buffer instead.
 
+						*<Plug>(deol_ctrl_c)*
+<Plug>(deol_ctrl_c)
+		Same as shell's CTRL-c; send an INT signal
+						*<Plug>(deol_ctrl_d)*
+<Plug>(deol_ctrl_d)
+		Same as shell's CTRL-d; send an EOF
+
 						*deol-default_key_mappings*
 {lhs}			{rhs}
 --------		-----------------------------
@@ -189,6 +196,8 @@ KEY MAPPINGS 						*deol-key-mappings*
 <C-y>			<Plug>(deol_paste_prompt)
 <C-z>			<Plug>(deol_bg)
 e			<Plug>(deol_edit)
+<C-c>			<Plug>(deol_ctrl_c)
+<C-d>			<Plug>(deol_ctrl_d)
 
 ==============================================================================
 FAQ							*deol-faq*
