@@ -213,10 +213,13 @@ function! deol#quit() abort
     return
   endif
 
+  let is_edit_buffer = bufname('%') ==# 'deol-edit'
+
   close!
 
-  if &l:filetype ==# 'deol'
+  if is_edit_buffer && bufwinnr(t:deol.bufnr) > 0
     " Close deol buffer
+    execute bufwinnr(t:deol.bufnr) 'wincmd w'
     return deol#quit()
   endif
 endfunction
