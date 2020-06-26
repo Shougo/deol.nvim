@@ -60,6 +60,7 @@ function! deol#_start(options) abort
   call s:split(options)
 
   let t:deol = deol#_new(cwd, options)
+  let t:deol.prev_bufnr = bufnr('%')
   call t:deol.init_deol_buffer()
 
   call s:insert_mode(t:deol)
@@ -72,6 +73,7 @@ endfunction
 function! s:switch(options) abort
   let options = copy(a:options)
   let deol = t:deol
+  let deol.prev_bufnr = bufnr('%')
 
   let id = win_findbuf(deol.bufnr)
   if empty(id)
@@ -197,6 +199,28 @@ function! deol#_new(cwd, options) abort
   return deol
 endfunction
 
+function! deol#quit() abort
+  if !exists('t:deol')
+    return
+  endif
+
+  if winnr('$') == 1
+    if bufexists(t:deol.prev_bufnr)
+      execute 'buffer' t:deol.prev_bufnr
+    elseif bufname('#') !=# 'deol-edit'
+      buffer #
+    endif
+    return
+  endif
+
+  close!
+
+  if &l:filetype ==# 'deol'
+    " Close deol buffer
+    return deol#quit()
+  endif
+endfunction
+
 function! s:cd(directory) abort
   execute (exists(':tchdir') ? 'tchdir' : 'lcd') fnameescape(a:directory)
 endfunction
@@ -247,10 +271,8 @@ function! s:deol.init_deol_buffer() abort
         \ <SID>start_insert('A')
   nnoremap <buffer><expr> <Plug>(deol_start_append_last)
         \ 'i' . repeat("\<Right>", len(getline('.')))
-  nnoremap <buffer><expr><silent> <Plug>(deol_quit)
-        \ winnr('$') != 1 ? ":\<C-u>close!\<CR>" :
-        \ bufname(bufnr('#')) ==# 'deol-edit' ? '' :
-        \ ":\<C-u>buffer #\<CR>"
+  nnoremap <buffer><silent> <Plug>(deol_quit)
+        \ :<C-u>call deol#quit()<CR>
 
   setlocal bufhidden=hide
   setlocal nolist
@@ -346,12 +368,10 @@ function! s:deol.init_edit_buffer() abort
         \ :<C-u>call <SID>send_editor()<CR>
   inoremap <buffer><silent> <Plug>(deol_execute_line)
         \ <ESC>:call <SID>send_editor()<CR>o
-  nnoremap <buffer><expr><silent> <Plug>(deol_quit)
-        \ winnr('$') != 1 ? ":\<C-u>close!\<CR>" :
-        \ ":\<C-u>buffer #\<CR>"
-  inoremap <buffer><expr><silent> <Plug>(deol_quit)
-        \ winnr('$') != 1 ? "\<ESC>:close!\<CR>" :
-        \ "\<ESC>:buffer #\<CR>"
+  nnoremap <buffer><silent> <Plug>(deol_quit)
+        \ :<C-u>call deol#quit()<CR>
+  inoremap <buffer><silent> <Plug>(deol_quit)
+        \ <ESC>:call deol#quit()<CR>
   inoremap <buffer><expr><silent> <Plug>(deol_backspace)
         \ col('.') == 1 ? "" : "<BS>"
   inoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
