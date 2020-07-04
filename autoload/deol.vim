@@ -53,8 +53,13 @@ function! deol#_start(options) abort
   let cwd = expand(options.cwd)
   if !isdirectory(cwd)
     redraw
-    echomsg printf('[deol] %s is not directory', cwd)
-    return
+    let result = confirm(printf('[deol] %s is not directory.  Create?', cwd),
+          \ "&Yes\n&No\n&Cancel")
+    if result != 1
+      return
+    endif
+
+    call mkdir(cwd, 'p')
   endif
 
   call s:split(options)
@@ -107,10 +112,16 @@ function! deol#new(options) abort
   if options.cwd == ''
     return
   endif
-  if !isdirectory(options.cwd)
+  let cwd = expand(options.cwd)
+  if !isdirectory(cwd)
     redraw
-    echomsg printf('[deol] %s is not directory', options.cwd)
-    return
+    let result = confirm(printf('[deol] %s is not directory.  Create?', cwd),
+          \ "&Yes\n&No\n&Cancel")
+    if result != 1
+      return
+    endif
+
+    call mkdir(cwd, 'p')
   endif
 
   tabnew
