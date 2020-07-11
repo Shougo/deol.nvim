@@ -46,7 +46,7 @@ function! deol#_start(options) abort
     return
   endif
 
-  if options.cwd == ''
+  if options.cwd ==# ''
     let options.cwd = getcwd()
   endif
 
@@ -90,7 +90,7 @@ function! s:switch(options) abort
 
   let g:deol#_prev_deol = win_getid()
 
-  if options.cwd != ''
+  if options.cwd !=# ''
     call deol.cd(options.cwd)
   else
     call s:cd(deol.cwd)
@@ -105,11 +105,11 @@ endfunction
 
 function! deol#new(options) abort
   let options = extend(s:user_options(), copy(a:options))
-  if get(options, 'cwd', '') == ''
+  if get(options, 'cwd', '') ==# ''
     let options.cwd = input('Current directory: ', getcwd(), 'dir')
   endif
 
-  if options.cwd == ''
+  if options.cwd ==# ''
     return
   endif
   let cwd = expand(options.cwd)
@@ -159,11 +159,11 @@ function! deol#edit() abort
   call t:deol.init_edit_buffer()
 
   " Set the current command line
-  let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val != ''")
+  let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val !=# ''")
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   if !empty(buflines) && buflines[-1] =~# pattern
     let cmdline = substitute(buflines[-1], pattern, '', '')
-    if getline('$') == ''
+    if getline('$') ==# ''
       call setline('$', cmdline)
     else
       call append('$', cmdline)
@@ -200,9 +200,9 @@ function! deol#_new(cwd, options) abort
   elseif executable('gvim')
     let editor_command =
           \ printf('gvim %s --remote-tab-wait-silent',
-          \   (v:servername == '' ? '' : ' --servername='.v:servername))
+          \   (v:servername ==# '' ? '' : ' --servername='.v:servername))
   endif
-  if editor_command != ''
+  if editor_command !=# ''
     let $EDITOR = editor_command
     let $GIT_EDITOR = editor_command
   endif
@@ -322,7 +322,7 @@ function! s:deol.switch_edit_buffer() abort
     return
   endif
 
-  if self.options.split == 'floating' && exists('*nvim_open_win')
+  if self.options.split ==# 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
           \ 'row': str2nr(self.options.winrow + winheight(0)),
@@ -435,7 +435,7 @@ function! s:send_editor() abort
 endfunction
 
 function! s:execute_line() abort
-  if g:deol#prompt_pattern == '' || !exists('t:deol')
+  if g:deol#prompt_pattern ==# '' || !exists('t:deol')
     return
   endif
 
@@ -445,7 +445,7 @@ function! s:execute_line() abort
 endfunction
 
 function! s:search_prompt(flag) abort
-  if g:deol#prompt_pattern == ''
+  if g:deol#prompt_pattern ==# ''
     return
   endif
 
@@ -461,7 +461,7 @@ function! s:search_prompt(flag) abort
 endfunction
 
 function! s:paste_prompt() abort
-  if g:deol#prompt_pattern == '' || !exists('t:deol')
+  if g:deol#prompt_pattern ==# '' || !exists('t:deol')
     return
   endif
 
@@ -485,7 +485,7 @@ function! s:split(options) abort
     return
   endif
 
-  if a:options.split == 'floating' && exists('*nvim_open_win')
+  if a:options.split ==# 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
           \ 'row': str2nr(a:options.winrow),
@@ -493,7 +493,7 @@ function! s:split(options) abort
           \ 'width': str2nr(a:options.winwidth),
           \ 'height': str2nr(a:options.winheight),
           \ })
-  elseif a:options.split == 'vertical'
+  elseif a:options.split ==# 'vertical'
     vsplit
   else
     split
@@ -514,7 +514,7 @@ endfunction
 
 function! s:start_insert(mode) abort
   let prompt = s:get_prompt()
-  if prompt == ''
+  if prompt ==# ''
     return a:mode
   endif
 
@@ -615,5 +615,5 @@ function! s:cleanup() abort
 endfunction
 
 function! deol#abbrev(check, lhs, rhs) abort
-  return getline('.') ==# a:check && v:char == ' ' ? a:rhs : a:lhs
+  return getline('.') ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
 endfunction
