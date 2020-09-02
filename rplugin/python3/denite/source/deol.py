@@ -64,8 +64,10 @@ class Kind(BaseK):
         self.vim.call('deol#new', options)
 
     def action_delete(self, context):
+        tabnr = self.vim.call('tabpagenr')
         for tabnr in reversed(sorted(
-            [x['action__tabnr'] for x in context['targets']])):
+            [x['action__tabnr'] for x in context['targets']
+             if x['action__tabnr'] != tabnr])):
             self.vim.command(f'silent! {tabnr} tabclose')
 
     def action_edit(self, context):
