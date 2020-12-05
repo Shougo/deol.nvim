@@ -36,17 +36,19 @@ INTERFACE						*deol-interface*
 COMMANDS 						*deol-commands*
 
 :Deol [{command}] [{options}]				*:Deol*
-	Create deol buffer using {command}.
-	If deol buffer exists in the current tab, will switch to the buffer.
+	Create a deol buffer using {command}.
+	If another deol buffer exists in the current tab, it will switch to
+	the buffer.
 
 :DeolCd {directory}					*:DeolCd*
-	Change deol buffer directory to {directory}.
+	Change the deol buffer directory to {directory}.
 
 :DeolEdit						*:DeolEdit*
-	Open deol edit buffer.
+	Open a deol edit buffer.
 	You can edit and execute the deol command line in the buffer.
 	The buffer filetype is "zsh" if you use bash or zsh, and you can use
 	Vim auto completion feature.
+
 	Note: deoplete + deoplete-zsh is recommended.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh
@@ -216,11 +218,11 @@ deol.nvim is specialized for shell environment in each tab.
 
 Q: How to exit terminal mode in deol buffer?
 
-A: Press |CTRL-\_CTRL-N| key or map <ESC> key.
+A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
 >
 	tnoremap <ESC>   <C-\><C-n>
 <
-Q: I want to use current buffer directory.
+Q: I want to start Deol in the directory where the current buffer belongs to.
 
 A: >
 	execute 'Deol' '-cwd='.fnamemodify(expand('%'), ':h')
