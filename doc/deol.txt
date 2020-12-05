@@ -220,7 +220,7 @@ A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
 >
 	tnoremap <ESC>   <C-\><C-n>
 <
-Q: I want to use current buffer directory.
+Q: I want to start Deol in the directory where the current buffer belongs to.
 
 A: >
 	execute 'Deol' '-cwd='.fnamemodify(expand('%'), ':h')
