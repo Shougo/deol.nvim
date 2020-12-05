@@ -216,7 +216,7 @@ deol.nvim is specialized for shell environment in each tab.
 
 Q: How to exit terminal mode in deol buffer?
 
-A: Press |CTRL-\_CTRL-N| key or map <ESC> key.
+A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
 >
 	tnoremap <ESC>   <C-\><C-n>
 <
