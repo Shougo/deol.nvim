@@ -56,28 +56,40 @@ COMMANDS 						*deol-commands*
 ------------------------------------------------------------------------------
 OPTIONS							*deol-options*
 
+-auto-cd						*deol-options-auto-cd*
+		Follow cd command in shell
+		Note: It is only available for deol edit buffer.
+
+		Default: v:true
+
 							*deol-options-command*
- -command
+-command
 		Execute the command.
 
 		Default: Use 'shell' value
 
+						*deol-options-dir-changed*
+-dir-changed
+		Follow |DirChanged| event.
+
+		Default: v:true
+
 							*deol-options-cwd*
- -cwd={directory}
+-cwd={directory}
 		Current directory.
 
 		Default: Use |getcwd()| value
 
 							*deol-options-edit*
- -edit
+-edit
  		Open edit buffer in default.
 
 						*deol-options-edit-filetype*
- -edit-filetype
+-edit-filetype
  		Specify 'filetype' in edit buffer.
 
 							*deol-options-split*
- -split={direction}
+-split={direction}
 		Specify the split direction.
 
 		"": No split
@@ -88,7 +100,7 @@ OPTIONS							*deol-options*
 		Default: ""
 
 						*deol-options-start-insert*
- -start-insert
+-start-insert
 		Start the insert mode in deol buffer.
 
 		Default: "true"
@@ -114,13 +126,6 @@ g:deol#custom_map					*g:deol#custom_map*
 			\ 'bg': '<C-z>',
 			\ 'quit': 'q',
 			\ }
-
-g:deol#enable_dir_changed			*g:deol#enable_dir_changed*
-
-	This variable controls to automatically follow DirChanged event.
-	Note: It is only available for deol buffer.
-
-	Default: 1
 
 g:deol#extra_options					*g:deol#extra_options*
 

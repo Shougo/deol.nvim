@@ -305,7 +305,7 @@ function! s:deol.init_deol_buffer() abort
   setlocal filetype=deol
   setlocal filetype=deol
 
-  if exists('##DirChanged') && g:deol#enable_dir_changed
+  if exists('##DirChanged') && self.options.dir_changed
     if has('nvim')
       autocmd deol DirChanged <buffer>
             \ call deol#cd(v:event.cwd)
@@ -433,6 +433,13 @@ function! s:send_editor() abort
   endif
 
   call t:deol.jobsend(s:cleanup() . getline('.') . "\<CR>")
+
+  if t:deol.options.auto_cd
+    let directory = matchstr(getline('.'), '^\%(cd\s\+\)\?\%(\S\|\\\s\)\+')
+    if isdirectory(directory)
+      noautocmd call s:cd(directory)
+    endif
+  endif
 endfunction
 
 function! s:execute_line() abort
@@ -536,7 +543,9 @@ endfunction
 
 function! s:user_options() abort
   return {
+        \ 'auto_cd': v:true,
         \ 'command': &shell,
+        \ 'dir_changed': v:true,
         \ 'edit': v:false,
         \ 'edit_filetype': '',
         \ 'cwd': '',
