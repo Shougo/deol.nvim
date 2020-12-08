@@ -357,6 +357,7 @@ function! s:deol.init_edit_buffer() abort
   setlocal colorcolumn=
   setlocal nonumber
   setlocal norelativenumber
+  setlocal noswapfile
 
   resize 1
 
