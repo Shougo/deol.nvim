@@ -435,7 +435,7 @@ function! s:send_editor() abort
   call t:deol.jobsend(s:cleanup() . getline('.') . "\<CR>")
 
   if t:deol.options.auto_cd
-    let directory = matchstr(getline('.'), '^\%(cd\s\+\)\?\%(\S\|\\\s\)\+')
+    let directory = matchstr(getline('.'), '^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+')
     if isdirectory(directory)
       noautocmd call s:cd(directory)
     endif
