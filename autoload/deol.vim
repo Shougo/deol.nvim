@@ -503,8 +503,10 @@ function! s:split(options) abort
           \ })
   elseif a:options.split ==# 'vertical'
     vsplit
+    execute 'vertical resize' str2nr(a:options.winwidth)
   else
     split
+    execute 'resize' str2nr(a:options.winheight)
   endif
 endfunction
 
@@ -552,9 +554,9 @@ function! s:user_options() abort
         \ 'split': '',
         \ 'start_insert': v:true,
         \ 'wincol': &columns / 4,
-        \ 'winheight': 30,
+        \ 'winheight': 15,
         \ 'winrow': &lines / 3,
-        \ 'winwidth': 90,
+        \ 'winwidth': 80,
         \ }
 endfunction
 
