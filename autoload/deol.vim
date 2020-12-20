@@ -389,6 +389,8 @@ function! s:deol.init_edit_buffer() abort
         \ <ESC>:call deol#quit()<CR>
   inoremap <buffer><expr><silent> <Plug>(deol_backspace)
         \ col('.') == 1 ? "" : "<BS>"
+  nnoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
+        \ deol#send("\<C-c>")
   inoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>") . "\<ESC>a"
   inoremap <buffer><expr><silent> <Plug>(deol_ctrl_d)
@@ -396,6 +398,8 @@ function! s:deol.init_edit_buffer() abort
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
   nmap <buffer> q    <Plug>(deol_quit)
+  nmap <buffer> <C-c> <Plug>(deol_ctrl_c)
+
   imap <buffer> <CR> <Plug>(deol_execute_line)
   imap <buffer> <BS> <Plug>(deol_backspace)
   imap <buffer> <C-h> <Plug>(deol_backspace)
