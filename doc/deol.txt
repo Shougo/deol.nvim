@@ -112,7 +112,7 @@ OPTIONS							*deol-options*
 
 						*deol-options-toggle*
 -toggle
-		Start the insert mode in deol buffer.
+		Close deol buffer window if this deol window exists.
 
 		Default: v:false
 

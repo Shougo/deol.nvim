@@ -221,23 +221,30 @@ function! deol#quit() abort
     return
   endif
 
-  if winnr('$') == 1
-    if bufexists(t:deol.prev_bufnr)
-      execute 'buffer' t:deol.prev_bufnr
-    elseif bufnr('#') !=# t:deol.edit_bufnr
-      buffer #
-    endif
+  if bufwinnr(t:deol.edit_bufnr) > 0
+    " Close edit buffer in the first
+    execute bufwinnr(t:deol.edit_bufnr) 'wincmd w'
+    close!
+  endif
+
+  let deolwin = bufwinnr(t:deol.bufnr)
+  if deolwin < 0
     return
   endif
 
-  let is_edit_buffer = bufname('%') ==# bufname(t:deol.edit_bufnr)
+  execute deolwin 'wincmd w'
 
-  close!
-
-  if is_edit_buffer && bufwinnr(t:deol.bufnr) > 0
-    " Close deol buffer
-    execute bufwinnr(t:deol.bufnr) 'wincmd w'
-    return deol#quit()
+  if winnr('$') == 1
+    " Move to alternate buffer
+    if s:check_buffer(t:deol.prev_bufnr)
+      execute 'buffer' t:deol.prev_bufnr
+    elseif s:check_buffer(bufnr('#'))
+      buffer #
+    else
+      enew
+    endif
+  else
+    close!
   endif
 endfunction
 
@@ -647,4 +654,10 @@ endfunction
 
 function! deol#abbrev(check, lhs, rhs) abort
   return getline('.') ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
+endfunction
+
+function s:check_buffer(bufnr)
+  return buflisted(a:bufnr)
+        \ && a:bufnr !=# t:deol.edit_bufnr
+        \ && a:bufnr !=# t:deol.bufnr
 endfunction
