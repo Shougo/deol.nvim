@@ -71,21 +71,23 @@ OPTIONS							*deol-options*
 
 		Default: Use 'shell' value
 
-						*deol-options-dir-changed*
--dir-changed
-		Follow |DirChanged| event.
-
-		Default: v:true
-
 							*deol-options-cwd*
 -cwd={directory}
 		Current directory.
 
 		Default: Use |getcwd()| value
 
+						*deol-options-dir-changed*
+-dir-changed
+		Follow |DirChanged| event.
+
+		Default: v:true
+
 							*deol-options-edit*
 -edit
  		Open edit buffer in default.
+
+		Default: v:false
 
 						*deol-options-edit-filetype*
 -edit-filetype
@@ -106,7 +108,13 @@ OPTIONS							*deol-options*
 -start-insert
 		Start the insert mode in deol buffer.
 
-		Default: "true"
+		Default: v:true
+
+						*deol-options-toggle*
+-toggle
+		Start the insert mode in deol buffer.
+
+		Default: v:false
 
 						*deol-option-wineight*
 -winheight={window-height}

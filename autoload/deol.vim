@@ -42,7 +42,13 @@ function! deol#_start(options) abort
   let options = copy(a:options)
 
   if exists('t:deol') && bufexists(t:deol.bufnr)
-    call s:switch(options)
+    let id = win_findbuf(t:deol.bufnr)
+    if !empty(id) && options.toggle
+      call deol#quit()
+    else
+      call s:switch(options)
+    endif
+
     return
   endif
 
@@ -218,13 +224,13 @@ function! deol#quit() abort
   if winnr('$') == 1
     if bufexists(t:deol.prev_bufnr)
       execute 'buffer' t:deol.prev_bufnr
-    elseif bufname('#') !=# 'deol-edit'
+    elseif bufnr('#') !=# t:deol.edit_bufnr
       buffer #
     endif
     return
   endif
 
-  let is_edit_buffer = bufname('%') ==# 'deol-edit'
+  let is_edit_buffer = bufname('%') ==# bufname(t:deol.edit_bufnr)
 
   close!
 
@@ -322,6 +328,7 @@ function! s:deol.switch_edit_buffer() abort
     return
   endif
 
+  let edit_bufname = 'deol-edit@' . bufname(t:deol.bufnr)
   if self.options.split ==# 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true, {
           \ 'relative': 'editor',
@@ -330,14 +337,14 @@ function! s:deol.switch_edit_buffer() abort
           \ 'width': winwidth(0),
           \ 'height': 1,
           \ })
-    if exists('bufadd')
-      let bufnr = bufadd('deol-edit')
+    if exists('*bufadd')
+      let bufnr = bufadd(edit_bufname)
       execute bufnr 'buffer'
     else
-      edit deol-edit
+      execute 'edit' fnameescape(edit_bufname)
     endif
   else
-    split deol-edit
+    execute 'split' fnameescape(edit_bufname)
   endif
 
   if line('$') == 1
@@ -564,6 +571,7 @@ function! s:user_options() abort
         \ 'cwd': '',
         \ 'split': '',
         \ 'start_insert': v:true,
+        \ 'toggle': v:false,
         \ 'wincol': &columns / 4,
         \ 'winheight': 15,
         \ 'winrow': &lines / 3,
