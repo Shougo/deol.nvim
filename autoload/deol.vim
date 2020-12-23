@@ -436,6 +436,13 @@ function! s:send_editor() abort
     return
   endif
 
+  let ex_command = matchstr(getline('.'), '^:\zs.*')
+  if ex_command !=# ''
+    " Execute as Ex command
+    execute ex_command
+    return
+  endif
+
   call t:deol.jobsend(s:cleanup() . getline('.') . "\<CR>")
 
   if t:deol.options.auto_cd

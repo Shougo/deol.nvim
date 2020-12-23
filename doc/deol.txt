@@ -49,6 +49,9 @@ COMMANDS 						*deol-commands*
 	The buffer filetype is "zsh" if you use bash or zsh, and you can use
 	Vim auto completion feature.
 
+	Note: If your input command is started by ":", the command is executed
+	as Vim Ex-command.
+
 	Note: deoplete + deoplete-zsh is recommended.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh
