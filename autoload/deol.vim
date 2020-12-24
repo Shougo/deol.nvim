@@ -665,7 +665,7 @@ function! deol#abbrev(check, lhs, rhs) abort
   return getline('.') ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
 endfunction
 
-function s:check_buffer(bufnr)
+function s:check_buffer(bufnr) abort
   return buflisted(a:bufnr)
         \ && a:bufnr !=# t:deol.edit_bufnr
         \ && a:bufnr !=# t:deol.bufnr
