@@ -401,8 +401,8 @@ function! s:deol.init_edit_buffer() abort
         \ :<C-u>call deol#quit()<CR>
   inoremap <buffer><silent> <Plug>(deol_quit)
         \ <ESC>:call deol#quit()<CR>
-  inoremap <buffer><expr><silent> <Plug>(deol_backspace)
-        \ col('.') == 1 ? "" : "<BS>"
+  inoremap <buffer><silent> <Plug>(deol_backspace)
+        \ <C-o>:call <SID>deol_backspace()<CR>
   nnoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>")
   inoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
@@ -464,6 +464,15 @@ function! s:send_editor() abort
     if isdirectory(directory)
       noautocmd call s:cd(directory)
     endif
+  endif
+endfunction
+
+function! s:deol_backspace() abort
+  if getline('.') ==# '' && t:deol.options.toggle
+    call deol#quit()
+  elseif col('.') == 1
+  else
+    normal! x
   endif
 endfunction
 
