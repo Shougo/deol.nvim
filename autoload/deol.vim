@@ -468,8 +468,9 @@ function! s:send_editor() abort
 endfunction
 
 function! s:deol_backspace() abort
-  if col('.') == 1 && t:deol.options.toggle
+  if getline('.') ==# '' && t:deol.options.toggle
     call deol#quit()
+  elseif col('.') == 1
   else
     normal! x
   endif
