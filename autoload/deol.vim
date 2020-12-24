@@ -102,10 +102,10 @@ function! s:switch(options) abort
     call s:cd(deol.cwd)
   endif
 
-  call s:insert_mode(deol)
-
   if options.edit
     call deol#edit()
+  else
+    call s:insert_mode(deol)
   endif
 endfunction
 
@@ -469,8 +469,9 @@ endfunction
 
 function! s:deol_backspace() abort
   if getline('.') ==# '' && t:deol.options.toggle
+    stopinsert
     call deol#quit()
-  elseif col('.') == 1
+  elseif s:get_input() == ''
   else
     normal! x
   endif
@@ -568,6 +569,10 @@ function! s:start_insert(mode) abort
 endfunction
 
 function! s:get_prompt() abort
+  if &filetype !=# 'deol'
+    return ''
+  endif
+
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   return matchstr(getline('.'), pattern)
 endfunction
