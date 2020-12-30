@@ -471,7 +471,7 @@ function! s:deol_backspace() abort
   if getline('.') ==# '' && t:deol.options.toggle
     stopinsert
     call deol#quit()
-  elseif s:get_input() == ''
+  elseif s:get_input() ==# ''
   else
     normal! x
   endif
@@ -670,7 +670,7 @@ function! deol#abbrev(check, lhs, rhs) abort
   return getline('.') ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
 endfunction
 
-function s:check_buffer(bufnr) abort
+function! s:check_buffer(bufnr) abort
   return buflisted(a:bufnr)
         \ && a:bufnr !=# t:deol.edit_bufnr
         \ && a:bufnr !=# t:deol.bufnr
