@@ -663,7 +663,7 @@ function! deol#_complete(arglead, cmdline, cursorpos) abort
 endfunction
 
 function! s:cleanup() abort
-  return has('win32') ? repeat("\<BS>", len(deol#get_cmdline())) : "\<C-u>"
+  return has('win32') ? '' : "\<C-u>"
 endfunction
 
 function! deol#abbrev(check, lhs, rhs) abort
