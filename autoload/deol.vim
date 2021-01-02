@@ -539,6 +539,14 @@ function! s:split(options) abort
   elseif a:options.split ==# 'vertical'
     vsplit
     execute 'vertical resize' str2nr(a:options.winwidth)
+  elseif a:options.split ==# 'farleft'
+    vsplit
+    wincmd H
+    execute 'vertical resize' str2nr(a:options.winwidth)
+  elseif a:options.split ==# 'farright'
+    vsplit
+    wincmd L
+    execute 'vertical resize' str2nr(a:options.winwidth)
   else
     split
     execute 'resize' str2nr(a:options.winheight)
