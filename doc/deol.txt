@@ -100,6 +100,8 @@ OPTIONS							*deol-options*
 		"": No split
 		"floating": Use neovim floating window feature
 		"vertical": Split buffer vertically
+		"farleft": Split buffer far left, like |CTRL-W_H|
+		"farright": Split buffer far right, like |CTRL-W_H|
 		otherwise: Split buffer horizontally
 
 		Default: ""
