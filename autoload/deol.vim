@@ -42,8 +42,8 @@ function! deol#_start(options) abort
   let options = copy(a:options)
 
   if exists('t:deol') && bufexists(t:deol.bufnr)
-    let id = win_findbuf(t:deol.bufnr)
-    if !empty(id) && options.toggle
+    let ids = win_findbuf(t:deol.bufnr)
+    if !empty(ids) && options.toggle
       call deol#quit()
     else
       call s:switch(options)
@@ -74,6 +74,10 @@ function! deol#_start(options) abort
   let t:deol.prev_bufnr = bufnr('%')
   call t:deol.init_deol_buffer()
 
+  if !has('nvim')
+    " Vim8 takes initialization...
+    sleep 100m
+  endif
   call s:insert_mode(t:deol)
 
   if options.edit
@@ -86,12 +90,12 @@ function! s:switch(options) abort
   let deol = t:deol
   let deol.prev_bufnr = bufnr('%')
 
-  let id = win_findbuf(deol.bufnr)
-  if empty(id)
+  let ids = win_findbuf(deol.bufnr)
+  if empty(ids)
     call s:split(options)
     execute 'buffer' deol.bufnr
   else
-    call win_gotoid(id[0])
+    call win_gotoid(ids[0])
   endif
 
   let g:deol#_prev_deol = win_getid()
@@ -154,9 +158,9 @@ function! deol#edit() abort
     Deol
   endif
 
-  let id = win_findbuf(t:deol.bufnr)
-  if !empty(id) && win_getid() != id[0]
-    call win_gotoid(id[0])
+  let ids = win_findbuf(t:deol.bufnr)
+  if !empty(ids) && win_getid() != ids[0]
+    call win_gotoid(ids[0])
     call cursor(line('$'), 0)
   endif
 
@@ -395,9 +399,9 @@ function! s:deol.init_edit_buffer() abort
   let self.bufedit = bufnr('%')
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ :<C-u>call <SID>send_editor()<CR>
+        \ :<C-u>call <SID>send_editor(v:false)<CR>
   inoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ <ESC>:call <SID>send_editor()<CR>o
+        \ <ESC>:call <SID>send_editor(v:true)<CR>
   nnoremap <buffer><silent> <Plug>(deol_quit)
         \ :<C-u>call deol#quit()<CR>
   inoremap <buffer><silent> <Plug>(deol_quit)
@@ -444,10 +448,52 @@ function! s:deol.jobsend(keys) abort
     call jobsend(self.jobid, a:keys)
   else
     call term_sendkeys(self.bufnr, a:keys)
+
+    call s:vim8_redraw(self.bufnr)
+
+    call term_wait(self.bufnr)
   endif
 endfunction
 
-function! s:send_editor() abort
+function! s:vim8_redraw(bufnr) abort
+  " Note: In Vim8, auto redraw does not work!
+
+  let ids = win_findbuf(a:bufnr)
+  if empty(ids)
+    return
+  endif
+
+  let prev_mode = mode()
+  let prev_winid = win_getid()
+  call win_gotoid(ids[0])
+
+  " Goto insert mode
+  silent! execute 'normal!' s:start_insert('A')
+
+  " Go back to normal mode
+  call s:stop_insert_term()
+
+  call win_gotoid(prev_winid)
+endfunction
+
+function! s:start_insert_term() abort
+  if has('nvim')
+    startinsert
+  else
+    sleep 100m
+    call feedkeys('i', 'n')
+  endif
+endfunction
+function! s:stop_insert_term() abort
+  if has('nvim')
+    stopinsert
+  else
+    sleep 100m
+    call feedkeys("\<C-\>\<C-n>", 'n')
+  endif
+endfunction
+
+function! s:send_editor(is_insert) abort
   if !exists('t:deol')
     return
   endif
@@ -456,6 +502,10 @@ function! s:send_editor() abort
   if ex_command !=# ''
     " Execute as Ex command
     execute ex_command
+    if a:is_insert
+      normal! o
+      call s:start_insert_term()
+    endif
     return
   endif
 
@@ -466,6 +516,11 @@ function! s:send_editor() abort
     if isdirectory(directory)
       noautocmd call s:cd(directory)
     endif
+  endif
+
+  if a:is_insert
+    normal! o
+    call s:start_insert_term()
   endif
 endfunction
 
@@ -559,11 +614,8 @@ endfunction
 function! s:insert_mode(deol) abort
   if a:deol.options.start_insert
     startinsert
-  elseif has('nvim')
-    stopinsert
   else
-    sleep 200m
-    call feedkeys("\<C-\>\<C-n>", 'n')
+    call s:stop_insert_term()
   endif
 endfunction
 
