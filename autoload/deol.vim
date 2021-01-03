@@ -323,8 +323,9 @@ function! s:deol.init_deol_buffer() abort
       autocmd deol DirChanged <buffer>
             \ call deol#cd(v:event.cwd)
     else
+      " Note: Use <afile> does not work...
       autocmd deol DirChanged <buffer>
-            \ call deol#cd(fnamemodify(expand('<afile>'), ':p'))
+            \ call deol#cd(getcwd())
     endif
   endif
 endfunction
@@ -427,8 +428,9 @@ function! s:deol.init_edit_buffer() abort
       autocmd deol DirChanged <buffer>
             \ call deol#cd(v:event.cwd)
     else
+      " Note: Use <afile> does not work...
       autocmd deol DirChanged <buffer>
-            \ call deol#cd(fnamemodify(expand('<afile>'), ':p'))
+            \ call deol#cd(getcwd())
     endif
   endif
 endfunction
@@ -560,7 +562,7 @@ function! s:insert_mode(deol) abort
   elseif has('nvim')
     stopinsert
   else
-    sleep 100m
+    sleep 200m
     call feedkeys("\<C-\>\<C-n>", 'n')
   endif
 endfunction
