@@ -190,6 +190,10 @@ function! deol#kill_editor() abort
 endfunction
 
 function! deol#get_cmdline() abort
+  if &l:filetype !=# 'deol'
+    return getline('.')
+  endif
+
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   return substitute(getline('.'), pattern, '', '')
 endfunction
@@ -283,7 +287,9 @@ function! s:deol.init_deol_buffer() abort
   let g:deol#_prev_deol = win_getid()
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ :<C-u>call <SID>execute_line()<CR>
+        \ :<C-u>call <SID>eval_deol(v:false)<CR>
+  tnoremap <buffer><silent> <Plug>(deol_execute_line)
+        \ <C-\><C-n>:call <SID>eval_deol(v:true)<CR>
   nnoremap <buffer><silent> <Plug>(deol_bg)
         \ :<C-u>call <SID>bg()<CR>
   nnoremap <buffer><silent> <Plug>(deol_previous_prompt)
@@ -399,9 +405,9 @@ function! s:deol.init_edit_buffer() abort
   let self.bufedit = bufnr('%')
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ :<C-u>call <SID>send_editor(v:false)<CR>
+        \ :<C-u>call <SID>eval_edit(v:false)<CR>
   inoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ <ESC>:call <SID>send_editor(v:true)<CR>
+        \ <ESC>:call <SID>eval_edit(v:true)<CR>
   nnoremap <buffer><silent> <Plug>(deol_quit)
         \ :<C-u>call deol#quit()<CR>
   inoremap <buffer><silent> <Plug>(deol_quit)
@@ -480,7 +486,7 @@ function! s:start_insert_term() abort
   if has('nvim')
     startinsert
   else
-    sleep 100m
+    sleep 50m
     call feedkeys('i', 'n')
   endif
 endfunction
@@ -493,35 +499,63 @@ function! s:stop_insert_term() abort
   endif
 endfunction
 
-function! s:send_editor(is_insert) abort
+function! s:eval_edit(is_insert) abort
   if !exists('t:deol')
     return
   endif
 
-  let ex_command = matchstr(getline('.'), '^:\zs.*')
-  if ex_command !=# ''
-    " Execute as Ex command
-    execute ex_command
-    if a:is_insert
-      normal! o
-      call s:start_insert_term()
-    endif
+  let cmdline = deol#get_cmdline()
+
+  if s:eval_commands(cmdline, a:is_insert)
     return
-  endif
-
-  call t:deol.jobsend(s:cleanup() . getline('.') . "\<CR>")
-
-  if t:deol.options.auto_cd
-    let directory = matchstr(getline('.'), '^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+')
-    if isdirectory(directory)
-      noautocmd call s:cd(directory)
-    endif
   endif
 
   if a:is_insert
     normal! o
     call s:start_insert_term()
   endif
+endfunction
+
+function! s:eval_commands(cmdline, is_insert) abort
+  let ex_command = matchstr(a:cmdline, '^:\zs.*')
+  if ex_command !=# ''
+    " Execute as Ex command
+
+    if &l:filetype ==# 'deol'
+      call t:deol.jobsend(s:cleanup())
+    endif
+
+    execute ex_command
+    if a:is_insert && s:is_deol_edit_buffer()
+      normal! o
+      call s:start_insert_term()
+    endif
+    return v:true
+  endif
+
+  let path = matchstr(a:cmdline, '^vim\s\+\zs\%(\S\|\\\s\)\+')
+  if path !=# ''
+    " file edit by Vim
+
+    if &l:filetype ==# 'deol'
+      call t:deol.jobsend(s:cleanup())
+    endif
+
+    call deol#quit()
+    execute 'edit' fnameescape(path)
+    return v:true
+  endif
+
+  call t:deol.jobsend(s:cleanup() . a:cmdline . "\<CR>")
+
+  if t:deol.options.auto_cd
+    let directory = matchstr(a:cmdline, '^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+')
+    if isdirectory(directory)
+      noautocmd call s:cd(directory)
+    endif
+  endif
+
+  return v:false
 endfunction
 
 function! s:deol_backspace() abort
@@ -534,14 +568,24 @@ function! s:deol_backspace() abort
   endif
 endfunction
 
-function! s:execute_line() abort
+function! s:eval_deol(is_insert) abort
   if g:deol#prompt_pattern ==# '' || !exists('t:deol')
     return
   endif
 
-  let cmdline = deol#get_cmdline()
-  call t:deol.jobsend(cmdline . "\<CR>")
-  call s:insert_mode(t:deol)
+  if getline('.') =~# g:deol#prompt_pattern
+    if s:eval_commands(deol#get_cmdline(), a:is_insert)
+      return
+    endif
+  else
+    call t:deol.jobsend("\<CR>")
+  endif
+
+  if a:is_insert
+    call s:start_insert_term()
+  else
+    call s:insert_mode(t:deol)
+  endif
 endfunction
 
 function! s:search_prompt(flag) abort
@@ -736,4 +780,8 @@ function! s:check_buffer(bufnr) abort
   return buflisted(a:bufnr)
         \ && a:bufnr !=# t:deol.edit_bufnr
         \ && a:bufnr !=# t:deol.bufnr
+endfunction
+
+function! s:is_deol_edit_buffer() abort
+  return bufname('%') =~# '^deol-edit@'
 endfunction

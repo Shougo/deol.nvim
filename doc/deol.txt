@@ -46,13 +46,17 @@ COMMANDS 						*deol-commands*
 :DeolEdit						*:DeolEdit*
 	Open a deol edit buffer.
 	You can edit and execute the deol command line in the buffer.
+
+	Special commands in edit buffer:
+
+	":{command}"	Execute as Vim Ex-command
+	"cd {path}"	|:lcd| to {path} if |deol-options-auto-cd| is enabled
+	"vim {path}"	Quit deol buffer and |:edit| {path}
+
 	The buffer filetype is "zsh" if you use bash or zsh, and you can use
 	Vim auto completion feature.
 
-	Note: If your input command is started by ":", the command is executed
-	as Vim Ex-command.
-
-	Note: deoplete + deoplete-zsh is recommended.
+	Note: deoplete + deoplete-zsh is recommended for auto completion.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh
 
