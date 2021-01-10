@@ -4,6 +4,8 @@
 " License: MIT license
 "=============================================================================
 
+let s:is_windows = has('win32') || has('win64')
+
 let g:deol#_prev_deol = -1
 let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
@@ -56,7 +58,7 @@ function! deol#_start(options) abort
     let options.cwd = getcwd()
   endif
 
-  let cwd = expand(options.cwd)
+  let cwd = s:expand(options.cwd)
   if !isdirectory(cwd)
     redraw
     let result = confirm(printf('[deol] %s is not directory.  Create?', cwd),
@@ -122,7 +124,7 @@ function! deol#new(options) abort
   if options.cwd ==# ''
     return
   endif
-  let cwd = expand(options.cwd)
+  let cwd = s:expand(options.cwd)
   if !isdirectory(cwd)
     redraw
     let result = confirm(printf('[deol] %s is not directory.  Create?', cwd),
@@ -549,7 +551,8 @@ function! s:eval_commands(cmdline, is_insert) abort
   call t:deol.jobsend(s:cleanup() . a:cmdline . "\<CR>")
 
   if t:deol.options.auto_cd
-    let directory = matchstr(a:cmdline, '^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+')
+    let directory = s:expand(matchstr(
+          \ a:cmdline, '^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
     if isdirectory(directory)
       noautocmd call s:cd(directory)
     endif
@@ -732,7 +735,7 @@ function! s:parse_options(cmdline) abort
 endfunction
 
 function! s:get_histories() abort
-  let history_path = expand(g:deol#shell_history_path)
+  let history_path = s:expand(g:deol#shell_history_path)
   if !filereadable(history_path)
     return []
   endif
@@ -784,4 +787,13 @@ endfunction
 
 function! s:is_deol_edit_buffer() abort
   return bufname('%') =~# '^deol-edit@'
+endfunction
+
+function! s:expand(path) abort
+  return s:substitute_path_separator(
+        \ (a:path =~# '^\~') ? fnamemodify(a:path, ':p') :
+        \ a:path)
+endfunction
+function! s:substitute_path_separator(path) abort
+  return s:is_windows ? substitute(a:path, '\\', '/', 'g') : a:path
 endfunction
