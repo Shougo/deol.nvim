@@ -792,6 +792,7 @@ endfunction
 function! s:expand(path) abort
   return s:substitute_path_separator(
         \ (a:path =~# '^\~') ? fnamemodify(a:path, ':p') :
+        \ (a:path =~# '^\$') ? expand(a:path) :
         \ a:path)
 endfunction
 function! s:substitute_path_separator(path) abort
