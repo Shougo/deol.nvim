@@ -280,9 +280,11 @@ function! s:deol.init_deol_buffer() abort
   if has('nvim')
     execute 'terminal' self.command
     let self.jobid = b:terminal_job_id
+    let self.pid = b:terminal_job_pid
   else
     call term_start(self.command, extend(g:deol#_term_options,
           \ get(b:, 'deol_extra_options', {})))
+    let self.pid = job_info(term_getjob(bufnr('%'))).process
   endif
 
   let self.bufnr = bufnr('%')
@@ -348,6 +350,8 @@ function! s:deol.switch_edit_buffer() abort
     return
   endif
 
+  let cwd = getcwd()
+
   let edit_bufname = 'deol-edit@' . bufname(t:deol.bufnr)
   if self.options.split ==# 'floating' && exists('*nvim_open_win')
     call nvim_open_win(bufnr('%'), v:true, {
@@ -370,6 +374,8 @@ function! s:deol.switch_edit_buffer() abort
   if line('$') == 1
     call append(0, s:get_histories())
   endif
+
+  call s:cd(cwd)
 
   let self.edit_winid = win_getid()
   let self.edit_bufnr = bufnr('%')
@@ -453,7 +459,7 @@ function! s:deol.jobsend(keys) abort
   endif
 
   if has('nvim')
-    call jobsend(self.jobid, a:keys)
+    call chansend(self.jobid, a:keys)
   else
     call term_sendkeys(self.bufnr, a:keys)
 
@@ -551,9 +557,19 @@ function! s:eval_commands(cmdline, is_insert) abort
   call t:deol.jobsend(s:cleanup() . a:cmdline . "\<CR>")
 
   if t:deol.options.auto_cd
-    let directory = s:expand(matchstr(
-          \ a:cmdline, '^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
-    if isdirectory(directory)
+    let cwd = printf('/proc/%d/cwd', t:deol.pid)
+    if isdirectory(cwd)
+      " Use directory tracking
+
+      " Note: Needs wait to proceed messages
+      sleep 50m
+      let directory = resolve(cwd)
+    else
+      let directory = s:expand(matchstr(
+            \ a:cmdline, '^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
+    endif
+
+    if isdirectory(directory) && getcwd() !=# directory
       noautocmd call s:cd(directory)
     endif
   endif
