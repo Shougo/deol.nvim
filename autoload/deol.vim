@@ -420,6 +420,8 @@ function! s:deol.init_edit_buffer() abort
         \ :<C-u>call deol#quit()<CR>
   inoremap <buffer><silent> <Plug>(deol_quit)
         \ <ESC>:call deol#quit()<CR>
+  nnoremap <buffer><silent> <Plug>(deol_backspace)
+        \ :<C-u>call <SID>deol_backspace()<CR>
   inoremap <buffer><silent> <Plug>(deol_backspace)
         \ <C-o>:call <SID>deol_backspace()<CR>
   nnoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
@@ -430,6 +432,7 @@ function! s:deol.init_edit_buffer() abort
         \ deol#send("\<C-d>") . "\<ESC>a"
 
   nmap <buffer> <CR> <Plug>(deol_execute_line)
+  nmap <buffer> <BS> <Plug>(deol_backspace)
   nmap <buffer> q    <Plug>(deol_quit)
   nmap <buffer> <C-c> <Plug>(deol_ctrl_c)
 
@@ -582,7 +585,7 @@ function! s:deol_backspace() abort
     stopinsert
     call deol#quit()
   elseif s:get_input() ==# ''
-  else
+  elseif mode() == 'i'
     normal! x
   endif
 endfunction
