@@ -81,13 +81,24 @@ class Kind(BaseK):
             'denite#util#input',
             f"New deol cwd: ", deol['cwd'], 'dir'
         ))
+        self.vim.command('redraw')
 
         if cwd == '':
             return
 
-        if self.vim.call('isdirectory', cwd):
-            self.vim.command(f"tabnext {target['action__tabnr']}")
-            self.vim.call('deol#cd', cwd)
-        else:
-            self.vim.command('redraw')
+        if self.vim.call('filereadable', cwd):
             denite.util.error(self.vim, f'{cwd} is not directory.')
+            return
+
+        if not self.vim.call('isdirectory', cwd):
+            result = self.vim.call(
+                'confirm',
+                f"[deol] {cwd} is not directory.  Create?",
+                "&Yes\n&No\n&Cancel")
+            if result != 1:
+                return
+
+            self.vim.call('mkdir', cwd, 'p')
+
+        self.vim.command(f"tabnext {target['action__tabnr']}")
+        self.vim.call('deol#cd', cwd)
