@@ -431,13 +431,14 @@ function! s:deol.init_edit_buffer() abort
   inoremap <buffer><expr><silent> <Plug>(deol_ctrl_d)
         \ deol#send("\<C-d>") . "\<ESC>a"
 
-  nmap <buffer> <CR> <Plug>(deol_execute_line)
-  nmap <buffer> <BS> <Plug>(deol_backspace)
-  nmap <buffer> q    <Plug>(deol_quit)
+  nmap <buffer> <CR>  <Plug>(deol_execute_line)
+  nmap <buffer> <BS>  <Plug>(deol_backspace)
+  nmap <buffer> <C-h> <Plug>(deol_backspace)
+  nmap <buffer> q     <Plug>(deol_quit)
   nmap <buffer> <C-c> <Plug>(deol_ctrl_c)
 
-  imap <buffer> <CR> <Plug>(deol_execute_line)
-  imap <buffer> <BS> <Plug>(deol_backspace)
+  imap <buffer> <CR>  <Plug>(deol_execute_line)
+  imap <buffer> <BS>  <Plug>(deol_backspace)
   imap <buffer> <C-h> <Plug>(deol_backspace)
   imap <buffer> <C-c> <Plug>(deol_ctrl_c)
   imap <buffer> <C-d> <Plug>(deol_ctrl_d)
