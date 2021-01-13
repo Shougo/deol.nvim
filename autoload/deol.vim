@@ -586,7 +586,7 @@ function! s:deol_backspace() abort
     stopinsert
     call deol#quit()
   elseif s:get_input() ==# ''
-  elseif mode(1) ==# 'niI'
+  elseif mode() ==# 'n'
     normal! x
   endif
 endfunction
