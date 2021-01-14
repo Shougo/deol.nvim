@@ -171,6 +171,10 @@ g:deol#extra_options					*g:deol#extra_options*
 >
 		let g:deol#extra_options = {'term_finish': 'close'}
 
+g:deol#password_pattern				*g:deol#password_pattern*
+
+	Sets the pattern which matches password input.
+
 g:deol#prompt_pattern				*g:deol#prompt_pattern*
 
 	Sets the pattern which matches the shell prompt.

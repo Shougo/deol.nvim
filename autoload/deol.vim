@@ -5,10 +5,16 @@
 "=============================================================================
 
 let s:is_windows = has('win32') || has('win64')
+let s:default_password_pattern =
+        \   '\%(Enter \|Repeat \|[Oo]ld \|[Nn]ew \|login ' .
+        \   '\|Kerberos \|EncFS \|CVS \|UNIX \| SMB \|LDAP \|\[sudo] ' .
+        \   '\|^\|\n\|''s \)\%([Pp]assword\|[Pp]assphrase\)\>'
 
 let g:deol#_prev_deol = -1
 let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
+let g:deol#password_pattern = get(g:, 'deol#password_pattern',
+      \ s:default_password_pattern)
 let g:deol#shell_history_path = get(g:, 'deol#shell_history_path', '')
 let g:deol#shell_history_max = get(g:, 'deol#shell_history_max', 500)
 
@@ -467,13 +473,18 @@ function! s:deol.jobsend(keys) abort
   else
     call term_sendkeys(self.bufnr, a:keys)
 
-    call s:vim8_redraw(self.bufnr)
+    call s:term_redraw(self.bufnr)
 
     call term_wait(self.bufnr)
   endif
 endfunction
 
-function! s:vim8_redraw(bufnr) abort
+function! s:term_redraw(bufnr) abort
+  if has('nvim')
+    redraw
+    return
+  endif
+
   " Note: In Vim8, auto redraw does not work!
 
   let ids = win_findbuf(a:bufnr)
@@ -560,13 +571,17 @@ function! s:eval_commands(cmdline, is_insert) abort
 
   call t:deol.jobsend(s:cleanup() . a:cmdline . "\<CR>")
 
+  " Note: Needs wait to proceed messages
+  sleep 100m
+  call s:term_redraw(t:deol.bufnr)
+
+  " Password check
+  call s:check_password()
+
   if t:deol.options.auto_cd
     let cwd = printf('/proc/%d/cwd', t:deol.pid)
     if isdirectory(cwd)
       " Use directory tracking
-
-      " Note: Needs wait to proceed messages
-      sleep 50m
       let directory = resolve(cwd)
     else
       let directory = s:expand(matchstr(
@@ -579,6 +594,35 @@ function! s:eval_commands(cmdline, is_insert) abort
   endif
 
   return v:false
+endfunction
+
+function! s:check_password() abort
+
+  while 1
+    " Get the last non empty line
+    let lines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val !=# ''")
+    if empty(lines) || lines[-1] !~? g:deol#password_pattern
+      break
+    endif
+
+    " Password input.
+    set imsearch=0
+    " Note: call inputsave() to clear input queue.
+    call inputsave()
+    redraw | echo ''
+    let secret = inputsecret('Input Secret : ')
+    redraw | echo ''
+    if secret ==# ''
+      break
+    endif
+
+    call t:deol.jobsend(secret . "\<CR>")
+
+    " Note: Needs wait to proceed messages
+    sleep 3000m
+
+    call s:term_redraw(t:deol.bufnr)
+  endwhile
 endfunction
 
 function! s:deol_backspace() abort
@@ -715,10 +759,10 @@ function! s:user_options() abort
   return {
         \ 'auto_cd': v:true,
         \ 'command': &shell,
+        \ 'cwd': '',
         \ 'dir_changed': v:true,
         \ 'edit': v:false,
         \ 'edit_filetype': '',
-        \ 'cwd': '',
         \ 'split': '',
         \ 'start_insert': v:true,
         \ 'toggle': v:false,
