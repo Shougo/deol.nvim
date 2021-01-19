@@ -217,7 +217,7 @@ function! deol#_new(cwd, options) abort
 
   " Set $EDITOR.
   let editor_command = ''
-  if v:progname ==# 'nvr' && executable('nvr')
+  if v:progname ==# 'nvim' && executable('nvr')
     let editor_command = 'nvr --remote-tab-wait-silent'
   elseif v:progname ==# 'gvim' && executable('gvim')
     let editor_command =
