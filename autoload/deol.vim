@@ -218,14 +218,18 @@ function! deol#_new(cwd, options) abort
   " Set $EDITOR.
   let editor_command = ''
   if v:progname ==# 'nvim' && executable('nvr')
+    " Use neovim-remote for neovim
     let editor_command = 'nvr --remote-tab-wait-silent'
-  elseif v:progname ==# 'gvim' && executable('gvim')
+  elseif executable(v:progpath) && has('clientserver')
+    " Use clientserver for Vim8
     let editor_command =
-          \ printf('gvim %s --remote-tab-wait-silent',
+          \ printf('%s %s --remote-tab-wait-silent',
+          \   v:progpath,
           \   (v:servername ==# '' ? '' : ' --servername='.v:servername))
-  else
+  elseif executable(v:progpath)
     let editor_command = v:progpath
   endif
+
   if editor_command !=# ''
     let $EDITOR = editor_command
     let $GIT_EDITOR = editor_command
