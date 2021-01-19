@@ -219,10 +219,10 @@ function! deol#_new(cwd, options) abort
   let editor_command = ''
   if executable('nvr')
     let editor_command = 'nvr --remote-tab-wait-silent'
-  elseif executable('gvim')
-    let editor_command =
-          \ printf('gvim %s --remote-tab-wait-silent',
-          \   (v:servername ==# '' ? '' : ' --servername='.v:servername))
+  elseif v:progname ==# 'gvim' && executable('gvim')
+    let editor_command = 'gvim --nofork'
+  else
+    let editor_command = v:progpath
   endif
   if editor_command !=# ''
     let $EDITOR = editor_command
