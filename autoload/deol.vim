@@ -220,7 +220,9 @@ function! deol#_new(cwd, options) abort
   if executable('nvr')
     let editor_command = 'nvr --remote-tab-wait-silent'
   elseif v:progname ==# 'gvim' && executable('gvim')
-    let editor_command = 'gvim --nofork'
+    let editor_command =
+          \ printf('gvim %s --remote-tab-wait-silent',
+          \   (v:servername ==# '' ? '' : ' --servername='.v:servername))
   else
     let editor_command = v:progpath
   endif
