@@ -217,7 +217,10 @@ function! deol#_new(cwd, options) abort
 
   " Set $EDITOR.
   let editor_command = ''
-  if v:progname ==# 'nvim' && executable('nvr')
+  if exists('g:edita_loaded')
+    " Use edita instead
+    let editor_command = edita#EDITOR()
+  elseif v:progname ==# 'nvim' && executable('nvr')
     " Use neovim-remote for neovim
     let editor_command = 'nvr --remote-tab-wait-silent'
   elseif executable(v:progpath) && has('clientserver')
