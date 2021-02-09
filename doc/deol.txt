@@ -53,9 +53,6 @@ COMMANDS 						*deol-commands*
 	"cd {path}"	|:lcd| to {path} if |deol-options-auto-cd| is enabled
 	"vim {path}"	Quit deol buffer and |:edit| {path}
 
-	The buffer filetype is "zsh" if you use bash or zsh, and you can use
-	Vim auto completion feature.
-
 	Note: deoplete + deoplete-zsh is recommended for auto completion.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh

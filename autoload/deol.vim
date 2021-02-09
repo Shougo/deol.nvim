@@ -414,12 +414,12 @@ function! s:deol.init_edit_buffer() abort
   let filetype = self.edit_filetype
   let default_filetype = {
         \ 'ash': 'sh',
-        \ 'bash': 'zsh',
+        \ 'bash': 'bash',
         \ 'fish': 'fish',
         \ 'ksh': 'sh',
         \ 'sh': 'sh',
-        \ 'zsh': 'zsh',
         \ 'xonsh': 'python',
+        \ 'zsh': 'zsh',
         \ }
   if filetype ==# '' && has_key(default_filetype, command)
     let filetype = default_filetype[command]
