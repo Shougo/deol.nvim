@@ -357,6 +357,8 @@ function! s:deol.init_deol_buffer() abort
             \ call deol#cd(getcwd())
     endif
   endif
+
+  autocmd deol InsertEnter <buffer> call <SID>set_prev_deol(t:deol)
 endfunction
 
 function! s:deol.switch_edit_buffer() abort
@@ -485,6 +487,16 @@ function! s:deol.jobsend(keys) abort
     call s:term_redraw(self.bufnr)
 
     call term_wait(self.bufnr)
+  endif
+
+  " Set prev deol
+  call s:set_prev_deol(self)
+endfunction
+
+function! s:set_prev_deol(deol) abort
+  let ids = win_findbuf(a:deol.bufnr)
+  if !empty(ids)
+    let g:deol#_prev_deol = ids[0]
   endif
 endfunction
 
