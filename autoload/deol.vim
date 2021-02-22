@@ -561,12 +561,14 @@ function! s:eval_edit(is_insert) abort
 endfunction
 
 function! s:eval_commands(cmdline, is_insert) abort
+  let deol = t:deol
+
   let ex_command = matchstr(a:cmdline, '^:\zs.*')
   if ex_command !=# ''
     " Execute as Ex command
 
     if &l:filetype ==# 'deol'
-      call t:deol.jobsend(s:cleanup())
+      call deol.jobsend(s:cleanup())
     endif
 
     execute ex_command
@@ -582,7 +584,7 @@ function! s:eval_commands(cmdline, is_insert) abort
     " file edit by Vim
 
     if &l:filetype ==# 'deol'
-      call t:deol.jobsend(s:cleanup())
+      call deol.jobsend(s:cleanup())
     endif
 
     call deol#quit()
@@ -590,17 +592,17 @@ function! s:eval_commands(cmdline, is_insert) abort
     return v:true
   endif
 
-  call t:deol.jobsend(s:cleanup() . a:cmdline . "\<CR>")
+  call deol.jobsend(s:cleanup() . a:cmdline . "\<CR>")
 
   " Note: Needs wait to proceed messages
   sleep 100m
-  call s:term_redraw(t:deol.bufnr)
+  call s:term_redraw(deol.bufnr)
 
   " Password check
   call s:check_password()
 
-  if t:deol.options.auto_cd
-    let cwd = printf('/proc/%d/cwd', t:deol.pid)
+  if deol.options.auto_cd
+    let cwd = printf('/proc/%d/cwd', deol.pid)
     if isdirectory(cwd)
       " Use directory tracking
       let directory = resolve(cwd)
