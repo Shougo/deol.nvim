@@ -332,6 +332,7 @@ function! s:deol.init_deol_buffer() abort
 
   setlocal bufhidden=hide
   setlocal nolist
+  setlocal nobuflisted
   setlocal nowrap
   setlocal nofoldenable
   setlocal foldcolumn=0
@@ -402,6 +403,7 @@ function! s:deol.init_edit_buffer() abort
   setlocal bufhidden=hide
   setlocal buftype=nofile
   setlocal nolist
+  setlocal nobuflisted
   setlocal nofoldenable
   setlocal foldcolumn=0
   setlocal colorcolumn=
