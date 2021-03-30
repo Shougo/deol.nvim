@@ -53,7 +53,8 @@ COMMANDS 						*deol-commands*
 	"cd {path}"	|:lcd| to {path} if |deol-options-auto-cd| is enabled
 	"vim {path}"	Quit deol buffer and |:edit| {path}
 
-	Note: deoplete + deoplete-zsh is recommended for auto completion.
+	Note: deoplete + deoplete-zsh is recommended for auto completion,
+	if you use Deol with -command zsh or if you set 'shell' to zsh.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh
 
