@@ -243,28 +243,26 @@ function! deol#_new(cwd, options) abort
 endfunction
 
 function! deol#quit() abort
-  if !exists('t:deol')
-    return
-  endif
+  if exists('t:deol')
+    if bufwinnr(t:deol.edit_bufnr) > 0
+      " Close edit buffer in the first
+      execute bufwinnr(t:deol.edit_bufnr) 'wincmd w'
+      close!
+    endif
 
-  if bufwinnr(t:deol.edit_bufnr) > 0
-    " Close edit buffer in the first
-    execute bufwinnr(t:deol.edit_bufnr) 'wincmd w'
-    close!
-  endif
+    let deolwin = bufwinnr(t:deol.bufnr)
+    if deolwin < 0
+      return
+    endif
 
-  let deolwin = bufwinnr(t:deol.bufnr)
-  if deolwin < 0
-    return
+    execute deolwin 'wincmd w'
   endif
-
-  execute deolwin 'wincmd w'
 
   if winnr('$') == 1
     " Move to alternate buffer
-    if s:check_buffer(t:deol.prev_bufnr)
+    if exists('t:deol') && s:check_buffer(t:deol.prev_bufnr)
       execute 'buffer' t:deol.prev_bufnr
-    elseif s:check_buffer(bufnr('#'))
+    elseif exists('t:deol') && s:check_buffer(bufnr('#'))
       buffer #
     else
       enew
