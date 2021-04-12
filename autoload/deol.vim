@@ -20,6 +20,7 @@ let g:deol#shell_history_max = get(g:, 'deol#shell_history_max', 500)
 
 let s:default_term_options = {
       \ 'curwin': v:true,
+      \ 'exit_cb': { job, status -> execute('unlet! t:deol') },
       \ }
 let g:deol#_term_options = extend(s:default_term_options,
       \ get(g:, 'deol#extra_options', {}))
@@ -359,6 +360,9 @@ function! s:deol.init_deol_buffer() abort
     endif
   endif
 
+  if exists('##TermClose')
+    autocmd deol TermClose <buffer> unlet! t:deol
+  endif
   autocmd deol InsertEnter <buffer> call <SID>set_prev_deol(t:deol)
 endfunction
 
@@ -519,11 +523,13 @@ function! s:term_redraw(bufnr) abort
   let prev_winid = win_getid()
   call win_gotoid(ids[0])
 
-  " Goto insert mode
-  silent! execute 'normal!' s:start_insert('A')
+  if &l:modifiable
+    " Goto insert mode
+    silent! execute 'normal!' s:start_insert('A')
 
-  " Go back to normal mode
-  call s:stop_insert_term()
+    " Go back to normal mode
+    call s:stop_insert_term()
+  endif
 
   call win_gotoid(prev_winid)
 endfunction
@@ -622,6 +628,9 @@ function! s:eval_commands(cmdline, is_insert) abort
 endfunction
 
 function! s:check_password() abort
+  if !exists('t:deol')
+    return
+  endif
 
   while 1
     " Get the last non empty line
