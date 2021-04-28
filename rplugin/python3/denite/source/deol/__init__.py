@@ -4,8 +4,8 @@
 # License: MIT license
 # ============================================================================
 
-from .base import Base
-from ..kind.base import Base as BaseK
+from denite.source.base import Base
+from denite.kind.base import Base as BaseK
 
 import denite.util
 

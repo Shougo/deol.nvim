@@ -392,7 +392,7 @@ function! s:deol.switch_edit_buffer() abort
   endif
 
   if line('$') == 1
-    call append(0, s:get_histories())
+    call append(0, deol#_get_histories())
   endif
 
   call s:cd(cwd)
@@ -830,7 +830,7 @@ function! s:parse_options(cmdline) abort
   return options
 endfunction
 
-function! s:get_histories() abort
+function! deol#_get_histories() abort
   let history_path = s:expand(g:deol#shell_history_path)
   if !filereadable(history_path)
     return []

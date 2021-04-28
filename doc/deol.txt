@@ -15,6 +15,7 @@ Interface		|deol-interface|
   Options		  |deol-options|
   Variables		  |deol-variables|
   Key mappings		  |deol-key-mappings|
+Denite Sources		|deol-denite-sources|
 FAQ			|deol-faq|
 
 ==============================================================================
@@ -244,14 +245,21 @@ e			<Plug>(deol_edit)
 <C-d>			<Plug>(deol_ctrl_d)
 
 ==============================================================================
+DENITE SOURCES						*deol-denite-sources*
+
+						*deol-source-deol*
+deol		Gather deol tabs.
+
+						*deol-source-deol/history*
+deol/history	Gather deol histories from |g:deol#shell_history_path|.
+
+==============================================================================
 FAQ							*deol-faq*
 
 Q: How to donate money to you?
 
 A: I don't get the donation, but if you want to donate, please support neovim
 project.  My plugins depends on neovim development.
-
-https://salt.bountysource.com/teams/neovim
 
 Q: What is the difference neoterm and deol.nvim?
 
