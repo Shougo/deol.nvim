@@ -21,7 +21,7 @@ class Source(Base):
 
     def gather_candidates(self, context):
         candidates = []
-        for line in self.vim.call('deol#_get_histories'):
+        for line in reversed(self.vim.call('deol#_get_histories')):
             candidates.append({
                 'word': line,
                 'action__history': line,
