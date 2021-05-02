@@ -178,7 +178,8 @@ function! deol#edit() abort
   call t:deol.init_edit_buffer()
 
   " Set the current command line
-  let buflines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val !=# ''")
+  let buflines = filter(getbufline(t:deol.bufnr, 1, '$'),
+        \ { _, val -> val !=# '' })
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   if !empty(buflines) && buflines[-1] =~# pattern
     let cmdline = substitute(buflines[-1], pattern, '', '')
@@ -632,7 +633,8 @@ function! s:check_password() abort
 
   while 1
     " Get the last non empty line
-    let lines = filter(getbufline(t:deol.bufnr, 1, '$'), "v:val !=# ''")
+    let lines = filter(getbufline(t:deol.bufnr, 1, '$'),
+          \ { _, val -> val !=# '' })
     if empty(lines) || lines[-1] !~? g:deol#password_pattern
       break
     endif
@@ -842,8 +844,9 @@ function! deol#_get_histories() abort
       let histories = histories[-g:deol#shell_history_max :]
   endif
   return map(histories,
-        \ 'substitute(v:val, "^\\%(\\d\\+/\\)\\+[:[:digit:]; ]\\+\\|' .
-        \ '^[:[:digit:]; ]\\+", "", "g")')
+        \ { _, val -> substitute(
+        \  val, '^\%(\d\+/\)\+[:[:digit:]; ]\+\|^[:[:digit:]; ]\+', '', '')
+        \ })
 endfunction
 
 function! deol#_complete(arglead, cmdline, cursorpos) abort
@@ -851,20 +854,21 @@ function! deol#_complete(arglead, cmdline, cursorpos) abort
 
   " Option names completion.
   let bool_options = keys(filter(copy(s:user_options()),
-        \ 'type(v:val) == type(v:true) || type(v:val) == type(v:false)'))
-  let _ += map(copy(bool_options), "'-' . tr(v:val, '_', '-')")
+        \ { _, val -> type(val) == v:t_bool }))
+  let _ += map(copy(bool_options), { _, val -> '-' . tr(val, '_', '-') })
   let string_options = keys(filter(copy(s:user_options()),
-        \ 'type(v:val) != type(v:true) && type(v:val) != type(v:false)'))
-  let _ += map(copy(string_options), "'-' . tr(v:val, '_', '-') . '='")
+        \ { _, val -> type(val) == v:t_string }))
+  let _ += map(copy(string_options),
+        \ { _, val -> '-' . tr(val, '_', '-') . '=' })
 
   " Add "-no-" option names completion.
-  let _ += map(copy(bool_options), "'-no-' . tr(v:val, '_', '-')")
+  let _ += map(copy(bool_options), { _, val -> '-no-' . tr(val, '_', '-') })
 
   if exists('*getcompletion')
     let _ += getcompletion(a:arglead, 'shellcmd')
   endif
 
-  return uniq(sort(filter(_, 'stridx(v:val, a:arglead) == 0')))
+  return uniq(sort(filter(_, { key, val -> stridx(val, a:arglead) == 0 })))
 endfunction
 
 function! s:cleanup() abort
