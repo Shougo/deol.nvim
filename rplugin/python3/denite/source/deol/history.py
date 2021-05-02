@@ -30,9 +30,10 @@ class Source(Base):
             return []
 
         candidates = []
-        histories = history_path.read_text(
-                encoding='utf-8', errors='replace').split('\n')
-        for line in histories[: self.vim.vars['deol#shell_history_max']]:
+        histories = [x for x in history_path.read_text(
+            encoding='utf-8', errors='replace').split('\n') if x != '']
+        history_max = self.vim.vars['deol#shell_history_max']
+        for line in reversed(histories[-history_max:]):
             line = re.sub(r'^(\d+/)+[:0-9; ]+|^[:0-9; ]+', '', line)
             candidates.append({
                 'word': line,
