@@ -857,7 +857,7 @@ function! deol#_complete(arglead, cmdline, cursorpos) abort
         \ { _, val -> type(val) == v:t_bool }))
   let _ += map(copy(bool_options), { _, val -> '-' . tr(val, '_', '-') })
   let string_options = keys(filter(copy(s:user_options()),
-        \ { _, val -> type(val) == v:t_string }))
+        \ { _, val -> type(val) != v:t_bool }))
   let _ += map(copy(string_options),
         \ { _, val -> '-' . tr(val, '_', '-') . '=' })
 
