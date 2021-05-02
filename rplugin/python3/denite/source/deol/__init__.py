@@ -24,14 +24,14 @@ class Source(Base):
         for tabnr in range(1, self.vim.call('tabpagenr', '$') + 1):
             deol = self.vim.call('gettabvar', tabnr, 'deol', {})
             candidates.append({
-            'word': (
-                '{}: {} ({})'.format(tabnr, deol['command'], deol['cwd'])
-                if deol
-                else '{}: [new denite]'.format(tabnr)),
-            'action__command': command,
-            'action__tabnr': tabnr,
-            'action__is_deol': bool(deol),
-        })
+                'word': (
+                    '{}: {} ({})'.format(tabnr, deol['command'], deol['cwd'])
+                    if deol
+                    else '{}: [new denite]'.format(tabnr)),
+                'action__command': command,
+                'action__tabnr': tabnr,
+                'action__is_deol': bool(deol),
+            })
         return candidates
 
 
@@ -79,7 +79,7 @@ class Kind(BaseK):
                              target['action__tabnr'], 'deol')
         cwd = str(self.vim.call(
             'denite#util#input',
-            f"New deol cwd: ", deol['cwd'], 'dir'
+            'New deol cwd: ', deol['cwd'], 'dir'
         ))
         self.vim.command('redraw')
 

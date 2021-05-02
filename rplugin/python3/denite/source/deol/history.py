@@ -8,6 +8,7 @@ from denite.kind.base import Base as BaseK
 from denite.source.base import Base
 
 import denite.util
+import re
 from pathlib import Path
 
 
@@ -20,8 +21,19 @@ class Source(Base):
         self.kind = Kind(vim)
 
     def gather_candidates(self, context):
+        if 'deol#shell_history_path' not in self.vim.vars:
+            return []
+
+        history_path = Path(denite.util.expand(
+            self.vim.vars['deol#shell_history_path']))
+        if not history_path.exists():
+            return []
+
         candidates = []
-        for line in reversed(self.vim.call('deol#_get_histories')):
+        histories = history_path.read_text(
+                encoding='utf-8', errors='replace').split('\n')
+        for line in histories[: self.vim.vars['deol#shell_history_max']]:
+            line = re.sub(r'^(\d+/)+[:0-9; ]+|^[:0-9; ]+', '', line)
             candidates.append({
                 'word': line,
                 'action__history': line,
