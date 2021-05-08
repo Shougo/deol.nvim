@@ -414,7 +414,7 @@ function! s:deol.init_edit_buffer() abort
   setlocal norelativenumber
   setlocal noswapfile
 
-  execute 'resize' get(self.options, 'editwinheight', 1)
+  execute 'resize' self.options.editwinheight
 
   " Set filetype
   let command = fnamemodify(self.command, ':t:r')
