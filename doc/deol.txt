@@ -139,6 +139,13 @@ OPTIONS							*deol-options*
 
 		Default: 80
 
+						*deol-option-editwineight*
+-editwinheight={window-height}
+		Set the height of the deol edit window.
+
+		Default: 1
+
+
 ------------------------------------------------------------------------------
 VARIABLES 						*deol-variables*
 

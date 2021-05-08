@@ -414,7 +414,7 @@ function! s:deol.init_edit_buffer() abort
   setlocal norelativenumber
   setlocal noswapfile
 
-  resize 1
+  execute 'resize' get(self.options, 'editwinheight', 1)
 
   " Set filetype
   let command = fnamemodify(self.command, ':t:r')
@@ -804,6 +804,7 @@ function! s:user_options() abort
         \ 'winheight': 15,
         \ 'winrow': &lines / 3,
         \ 'winwidth': 80,
+        \ 'editwinheight': 1,
         \ }
 endfunction
 
