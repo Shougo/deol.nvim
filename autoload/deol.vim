@@ -414,7 +414,7 @@ function! s:deol.init_edit_buffer() abort
   setlocal norelativenumber
   setlocal noswapfile
 
-  execute 'resize' self.options.editwinheight
+  execute 'resize' self.options.edit_winheight
 
   " Set filetype
   let command = fnamemodify(self.command, ':t:r')
@@ -797,6 +797,7 @@ function! s:user_options() abort
         \ 'dir_changed': v:true,
         \ 'edit': v:false,
         \ 'edit_filetype': '',
+        \ 'edit_winheight': 1,
         \ 'split': '',
         \ 'start_insert': v:true,
         \ 'toggle': v:false,
@@ -804,7 +805,6 @@ function! s:user_options() abort
         \ 'winheight': 15,
         \ 'winrow': &lines / 3,
         \ 'winwidth': 80,
-        \ 'editwinheight': 1,
         \ }
 endfunction
 

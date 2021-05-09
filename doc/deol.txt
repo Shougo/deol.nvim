@@ -96,6 +96,12 @@ OPTIONS							*deol-options*
 -edit-filetype
  		Specify 'filetype' in edit buffer.
 
+						*deol-option-edit-wineight*
+-edit-winheight={window-height}
+		Set the height of the deol edit window.
+
+		Default: 1
+
 							*deol-options-split*
 -split={direction}
 		Specify the split direction.
@@ -138,12 +144,6 @@ OPTIONS							*deol-options*
 		floating window.
 
 		Default: 80
-
-						*deol-option-editwineight*
--editwinheight={window-height}
-		Set the height of the deol edit window.
-
-		Default: 1
 
 
 ------------------------------------------------------------------------------
