@@ -555,9 +555,7 @@ function! s:eval_edit(is_insert) abort
     return
   endif
 
-  let cmdline = deol#get_cmdline()
-
-  if s:eval_commands(cmdline, a:is_insert)
+  if s:eval_commands(deol#get_cmdline(), a:is_insert)
     return
   endif
 
@@ -599,7 +597,10 @@ function! s:eval_commands(cmdline, is_insert) abort
     return v:true
   endif
 
-  call deol.jobsend(s:cleanup() . a:cmdline . "\<CR>")
+  " If the current line is the last line, deol must send <CR> only
+  let cmdline = (&l:filetype ==# 'deol' && line('.') == line('$')) ?
+        \ '' : s:cleanup() . a:cmdline
+  call deol.jobsend(cmdline . "\<CR>")
 
   " Note: Needs wait to proceed messages
   sleep 100m
