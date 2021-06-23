@@ -306,19 +306,19 @@ function! s:deol.init_deol_buffer() abort
   let g:deol#_prev_deol = win_getid()
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ :<C-u>call <SID>eval_deol(v:false)<CR>
+        \ <Cmd>call <SID>eval_deol(v:false)<CR>
   tnoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ <C-\><C-n>:call <SID>eval_deol(v:true)<CR>
+        \ <Cmd>call <SID>eval_deol(v:true)<CR>
   nnoremap <buffer><silent> <Plug>(deol_bg)
-        \ :<C-u>call <SID>bg()<CR>
+        \ <Cmd>call <SID>bg()<CR>
   nnoremap <buffer><silent> <Plug>(deol_previous_prompt)
-        \ :<C-u>call <SID>search_prompt('bWn')<CR>
+        \ <Cmd>call <SID>search_prompt('bWn')<CR>
   nnoremap <buffer><silent> <Plug>(deol_next_prompt)
-        \ :<C-u>call <SID>search_prompt('Wn')<CR>
+        \ <Cmd>call <SID>search_prompt('Wn')<CR>
   nnoremap <buffer><silent> <Plug>(deol_paste_prompt)
-        \ :<C-u>call <SID>paste_prompt()<CR>
+        \ <Cmd>call <SID>paste_prompt()<CR>
   nnoremap <buffer><silent> <Plug>(deol_edit)
-        \ :<C-u>call deol#edit()<CR>
+        \ <Cmd>call deol#edit()<CR>
   nnoremap <buffer><expr> <Plug>(deol_start_insert)
         \ <SID>start_insert('i')
   nnoremap <buffer><expr> <Plug>(deol_start_insert_first)
@@ -328,7 +328,7 @@ function! s:deol.init_deol_buffer() abort
   nnoremap <buffer><expr> <Plug>(deol_start_append_last)
         \ 'i' . repeat("\<Right>", len(getline('.')))
   nnoremap <buffer><silent> <Plug>(deol_quit)
-        \ :<C-u>call deol#quit()<CR>
+        \ <Cmd>call deol#quit()<CR>
 
   setlocal bufhidden=hide
   setlocal nolist
@@ -598,7 +598,8 @@ function! s:eval_commands(cmdline, is_insert) abort
   endif
 
   " If the current line is the last line, deol must send <CR> only
-  let cmdline = (&l:filetype ==# 'deol' && line('.') == line('$')) ?
+  let cmdline = (&l:filetype ==# 'deol' &&
+        \ (line('.') == line('$') || mode() ==# 't')) ?
         \ '' : s:cleanup() . a:cmdline
   call deol.jobsend(cmdline . "\<CR>")
 

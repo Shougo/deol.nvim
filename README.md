@@ -8,4 +8,4 @@ Please read [help](doc/deol.txt) for details.
 
 ## Requirements
 
-deol requires Neovim or terminal feature enabled Vim.
+deol requires Neovim 0.3.0 or Vim 8.2.1978+.

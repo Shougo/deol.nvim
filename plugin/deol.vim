@@ -4,8 +4,8 @@
 " License: MIT license
 "=============================================================================
 
-if !has('nvim') && !exists('*term_start')
-  echomsg 'deol.nvim requires Neovim or terminal feature enabled Vim.'
+if !has('nvim-0.3') && !has('patch-8.2.1978')
+  echomsg 'deol.nvim requires Neovim 0.3+ or Vim 8.2.1978+.'
   finish
 endif
 
