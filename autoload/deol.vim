@@ -435,17 +435,17 @@ function! s:deol.init_edit_buffer() abort
   let self.bufedit = bufnr('%')
 
   nnoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ :<C-u>call <SID>eval_edit(v:false)<CR>
+        \ <Cmd>call <SID>eval_edit(v:false)<CR>
   inoremap <buffer><silent> <Plug>(deol_execute_line)
-        \ <ESC>:call <SID>eval_edit(v:true)<CR>
+        \ <Cmd>call <SID>eval_edit(v:true)<CR>
   nnoremap <buffer><silent> <Plug>(deol_quit)
-        \ :<C-u>call deol#quit()<CR>
+        \ <Cmd>call deol#quit()<CR>
   inoremap <buffer><silent> <Plug>(deol_quit)
-        \ <ESC>:call deol#quit()<CR>
+        \ <Cmd>call deol#quit()<CR>
   nnoremap <buffer><silent> <Plug>(deol_backspace)
-        \ :<C-u>call <SID>deol_backspace()<CR>
+        \ <Cmd>call <SID>deol_backspace()<CR>
   inoremap <buffer><silent> <Plug>(deol_backspace)
-        \ <C-o>:call <SID>deol_backspace()<CR>
+        \ <Cmd>call <SID>deol_backspace()<CR>
   nnoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>")
   inoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
@@ -560,7 +560,8 @@ function! s:eval_edit(is_insert) abort
   endif
 
   if a:is_insert
-    normal! o
+    call append(line('$'), '')
+    call cursor([line('$'), 0])
     call s:start_insert_term()
   endif
 endfunction
@@ -578,7 +579,8 @@ function! s:eval_commands(cmdline, is_insert) abort
 
     execute ex_command
     if a:is_insert && s:is_deol_edit_buffer()
-      normal! o
+      call append(line('$'), '')
+      call cursor([line('$'), 0])
       call s:start_insert_term()
     endif
     return v:true
@@ -668,6 +670,9 @@ function! s:deol_backspace() abort
   elseif s:get_input() ==# ''
   elseif mode() ==# 'n'
     normal! x
+  elseif mode() ==# 'i'
+    normal! x
+    call cursor([0, col('.') + 1])
   endif
 endfunction
 
@@ -787,7 +792,8 @@ function! s:get_prompt() abort
 endfunction
 
 function! s:get_input() abort
-  let input = matchstr(getline('.'), '^.*\%' . (col('.') + 1) . 'c')
+  let input = matchstr(getline('.'), '^.*\%' .
+        \ (mode() ==# 'i' ? col('.') : col('.') + 1) . 'c')
   return input[len(s:get_prompt()):]
 endfunction
 
