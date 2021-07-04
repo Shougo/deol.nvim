@@ -305,19 +305,19 @@ function! s:deol.init_deol_buffer() abort
   let self.bufnr = bufnr('%')
   let g:deol#_prev_deol = win_getid()
 
-  nnoremap <buffer><silent> <Plug>(deol_execute_line)
+  nnoremap <buffer> <Plug>(deol_execute_line)
         \ <Cmd>call <SID>eval_deol(v:false)<CR>
-  tnoremap <buffer><silent> <Plug>(deol_execute_line)
+  tnoremap <buffer> <Plug>(deol_execute_line)
         \ <Cmd>call <SID>eval_deol(v:true)<CR>
-  nnoremap <buffer><silent> <Plug>(deol_bg)
+  nnoremap <buffer> <Plug>(deol_bg)
         \ <Cmd>call <SID>bg()<CR>
-  nnoremap <buffer><silent> <Plug>(deol_previous_prompt)
+  nnoremap <buffer> <Plug>(deol_previous_prompt)
         \ <Cmd>call <SID>search_prompt('bWn')<CR>
-  nnoremap <buffer><silent> <Plug>(deol_next_prompt)
+  nnoremap <buffer> <Plug>(deol_next_prompt)
         \ <Cmd>call <SID>search_prompt('Wn')<CR>
-  nnoremap <buffer><silent> <Plug>(deol_paste_prompt)
+  nnoremap <buffer> <Plug>(deol_paste_prompt)
         \ <Cmd>call <SID>paste_prompt()<CR>
-  nnoremap <buffer><silent> <Plug>(deol_edit)
+  nnoremap <buffer> <Plug>(deol_edit)
         \ <Cmd>call deol#edit()<CR>
   nnoremap <buffer><expr> <Plug>(deol_start_insert)
         \ <SID>start_insert('i')
@@ -327,7 +327,7 @@ function! s:deol.init_deol_buffer() abort
         \ <SID>start_insert('A')
   nnoremap <buffer><expr> <Plug>(deol_start_append_last)
         \ 'i' . repeat("\<Right>", len(getline('.')))
-  nnoremap <buffer><silent> <Plug>(deol_quit)
+  nnoremap <buffer> <Plug>(deol_quit)
         \ <Cmd>call deol#quit()<CR>
 
   setlocal bufhidden=hide
@@ -434,23 +434,23 @@ function! s:deol.init_edit_buffer() abort
 
   let self.bufedit = bufnr('%')
 
-  nnoremap <buffer><silent> <Plug>(deol_execute_line)
+  nnoremap <buffer> <Plug>(deol_execute_line)
         \ <Cmd>call <SID>eval_edit(v:false)<CR>
-  inoremap <buffer><silent> <Plug>(deol_execute_line)
+  inoremap <buffer> <Plug>(deol_execute_line)
         \ <Cmd>call <SID>eval_edit(v:true)<CR>
-  nnoremap <buffer><silent> <Plug>(deol_quit)
+  nnoremap <buffer> <Plug>(deol_quit)
         \ <Cmd>call deol#quit()<CR>
-  inoremap <buffer><silent> <Plug>(deol_quit)
+  inoremap <buffer> <Plug>(deol_quit)
         \ <Cmd>call deol#quit()<CR>
-  nnoremap <buffer><silent> <Plug>(deol_backspace)
+  nnoremap <buffer> <Plug>(deol_backspace)
         \ <Cmd>call <SID>deol_backspace()<CR>
-  inoremap <buffer><silent> <Plug>(deol_backspace)
+  inoremap <buffer> <Plug>(deol_backspace)
         \ <Cmd>call <SID>deol_backspace()<CR>
-  nnoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
+  nnoremap <buffer><expr> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>")
-  inoremap <buffer><expr><silent> <Plug>(deol_ctrl_c)
+  inoremap <buffer><expr> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>") . "\<ESC>a"
-  inoremap <buffer><expr><silent> <Plug>(deol_ctrl_d)
+  inoremap <buffer><expr> <Plug>(deol_ctrl_d)
         \ deol#send("\<C-d>") . "\<ESC>a"
 
   nmap <buffer> <CR>  <Plug>(deol_execute_line)
