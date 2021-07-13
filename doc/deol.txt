@@ -102,7 +102,7 @@ OPTIONS							*deol-options*
 
 		Default: 1
 
-							*deol-options-split*
+							*deol-option-split*
 -split={direction}
 		Specify the split direction.
 
@@ -171,11 +171,12 @@ g:deol#custom_map					*g:deol#custom_map*
 g:deol#extra_options					*g:deol#extra_options*
 
 	Set the extra options for gvim terminal. See |term_start()|.
-	By default, it is `{'curwin': v:true}` .
 	`b:deol_extra_options` can overide it in a buffer.
 	Note: It is available in Vim8 only.
 >
 		let g:deol#extra_options = {'term_finish': 'close'}
+<
+	Default: {"curwin": v:true}
 
 g:deol#password_pattern				*g:deol#password_pattern*
 
