@@ -85,7 +85,7 @@ function! deol#_start(options) abort
 
   if !has('nvim')
     " Vim8 takes initialization...
-    sleep 100m
+    sleep 150m
   endif
   call s:insert_mode(t:deol)
 
@@ -157,8 +157,15 @@ function! deol#send(string) abort
 endfunction
 
 function! deol#cd(directory) abort
-  if exists('t:deol') && bufwinnr(t:deol.bufnr) > 0
-    call t:deol.cd(a:directory)
+  if !exists('t:deol') || bufwinnr(t:deol.bufnr) < 0
+    return
+  endif
+
+  call t:deol.cd(a:directory)
+
+  " Needs redraw for Vim8
+  if !has('nvim')
+    call s:term_redraw(t:deol.bufnr)
   endif
 endfunction
 
@@ -522,13 +529,11 @@ function! s:term_redraw(bufnr) abort
   let prev_winid = win_getid()
   call win_gotoid(ids[0])
 
-  if &l:modifiable
-    " Goto insert mode
-    silent! execute 'normal!' s:start_insert('A')
+  " Goto insert mode
+  silent! execute 'normal!' s:start_insert('A')
 
-    " Go back to normal mode
-    call s:stop_insert_term()
-  endif
+  " Go back to normal mode
+  silent! call s:stop_insert_term()
 
   call win_gotoid(prev_winid)
 endfunction
