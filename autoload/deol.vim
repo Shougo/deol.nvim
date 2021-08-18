@@ -296,7 +296,10 @@ function! s:deol.cd(directory) abort
 
   let self.cwd = directory
   call s:cd(self.cwd)
-  call self.jobsend(s:cleanup() . 'cd ' . fnameescape(self.cwd) . "\<CR>")
+
+  let quote = s:is_windows ? '"' : "'"
+  call self.jobsend(printf('%scd %s%s%s%s',
+        \ s:cleanup(), quote, self.cwd, quote, "\<CR>"))
 endfunction
 
 function! s:deol.init_deol_buffer() abort
