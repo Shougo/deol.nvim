@@ -12,7 +12,8 @@ let s:default_password_pattern =
 
 let g:deol#_prev_deol = -1
 let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
-let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern', '')
+let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern',
+      \ s:is_windows ? '\f\+>' : '')
 let g:deol#password_pattern = get(g:, 'deol#password_pattern',
       \ s:default_password_pattern)
 let g:deol#shell_history_path = get(g:, 'deol#shell_history_path', '')
