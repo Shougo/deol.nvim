@@ -289,9 +289,9 @@ A: >
 
 Q: I want to use current vim when "git commit".
 
-A: You should install "edita" plugin for it.
+A: You should install "guise" plugin for it.
 
-https://github.com/lambdalisue/edita.vim
+https://github.com/lambdalisue/guise.vim
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:

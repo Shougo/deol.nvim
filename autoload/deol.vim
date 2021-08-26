@@ -227,7 +227,9 @@ function! deol#_new(cwd, options) abort
 
   " Set $EDITOR.
   let editor_command = ''
-  if exists('g:edita_loaded')
+  if exists('g:guise_loaded')
+    " Use guise instead
+  elseif exists('g:edita_loaded')
     " Use edita instead
     let editor_command = edita#EDITOR()
   elseif v:progname ==# 'nvim' && executable('nvr')
