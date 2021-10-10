@@ -799,7 +799,7 @@ function! s:insert_mode(deol) abort
 endfunction
 
 function! s:start_insert(mode) abort
-  let prompt = s:get_prompt()
+  let prompt = deol#get_prompt()
   if prompt ==# ''
     return a:mode
   endif
@@ -809,13 +809,13 @@ function! s:start_insert(mode) abort
         \ + (a:mode ==# 'i' ? 1 : 0))
 endfunction
 
-function! s:get_prompt() abort
+function! deol#get_prompt() abort
   if &filetype !=# 'deol'
     return ''
   endif
 
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
-  return matchstr(getline('.'), pattern)
+  return matchstr(s:get_text(mode()), pattern)
 endfunction
 
 function! s:get_text(mode) abort
@@ -829,7 +829,7 @@ function! deol#get_input() abort
         \ term_getcursor(bufnr('%'))[1] : col('.')
   let input = matchstr(s:get_text(mode), '^.*\%' .
         \ ((mode ==# 'i' || mode ==# 't') ? col : col + 1) . 'c')
-  return input[len(s:get_prompt()):]
+  return input[len(deol#get_prompt()):]
 endfunction
 
 function! s:user_options() abort
