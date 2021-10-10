@@ -824,8 +824,11 @@ function! s:get_text(mode) abort
         \ : getline('.')
 endfunction
 function! deol#get_input() abort
-  let input = matchstr(s:get_text(mode()), '^.*\%' .
-        \ (mode() ==# 'i' ? col('.') : col('.') + 1) . 'c')
+  let mode = mode()
+  let col = mode ==# 't' && !has('nvim') ?
+        \ term_getcursor(bufnr('%'))[1] : col('.')
+  let input = matchstr(s:get_text(mode), '^.*\%' .
+        \ ((mode ==# 'i' || mode ==# 't') ? col : col + 1) . 'c')
   return input[len(s:get_prompt()):]
 endfunction
 
@@ -941,5 +944,11 @@ function! s:substitute_path_separator(path) abort
 endfunction
 
 function! s:ddc_changed() abort
+  " It must be prompt
+  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  if s:get_text(mode()) !~# pattern || deol#get_input() ==# ''
+    return
+  endif
+
   call ddc#_on_event('TextChangedI')
 endfunction
