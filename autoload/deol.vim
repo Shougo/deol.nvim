@@ -308,9 +308,7 @@ endfunction
 function! s:deol.init_deol_buffer() abort
   if has('nvim')
     let options = {}
-    if g:deol#enable_ddc_completion
-      let options.on_stdout = { j, d, e -> s:ddc_changed() }
-    endif
+    let options.on_stdout = { j, d, e -> s:ddc_changed() }
 
     call termopen(self.command, options)
 
@@ -319,9 +317,7 @@ function! s:deol.init_deol_buffer() abort
   else
     let options = extend(g:deol#_term_options,
           \ get(b:, 'deol_extra_options', {}))
-    if g:deol#enable_ddc_completion
-      let options.out_cb = { c, m -> ddc#_on_event('TextChangedI')}
-    endif
+    let options.out_cb = { c, m -> s:ddc_changed() }
     call term_start(self.command, options)
     let self.pid = job_info(term_getjob(bufnr('%'))).process
   endif
@@ -932,6 +928,11 @@ function! s:is_deol_edit_buffer() abort
   return bufname('%') =~# '^deol-edit@'
 endfunction
 
+function! s:row() abort
+  return (!has('nvim') && mode() ==# 't') ?
+        \ term_getcursor(bufnr('%'))[0] : line('.')
+endfunction
+
 function! s:expand(path) abort
   return s:substitute_path_separator(
         \ (a:path =~# '^\~') ? fnamemodify(a:path, ':p') :
@@ -943,6 +944,20 @@ function! s:substitute_path_separator(path) abort
 endfunction
 
 function! s:ddc_changed() abort
+  if exists('*pum#_get') && mode() ==# 't'
+    silent doautocmd <nomodeline> User PumTextChanged
+
+    if pum#map#_skip_count() <= 0 &&
+          \ (s:row() != pum#_get().startrow || deol#get_input() =~# '\s$')
+      call pum#close()
+      return
+    endif
+  endif
+
+  if !g:deol#enable_ddc_completion
+    return
+  endif
+
   " It must be prompt
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   if s:get_text(mode()) !~# pattern || deol#get_input() ==# ''
