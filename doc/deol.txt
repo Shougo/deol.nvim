@@ -172,6 +172,8 @@ g:deol#custom_map					*g:deol#custom_map*
 g:deol#enable_ddc_completion
 	Enable ddc.vim completion feature.
 	Note: It is experimental feature.
+	Note: pum.vim is needed.
+	https://github.com/Shougo/pum.vim
 
 	Default: v:false
 
