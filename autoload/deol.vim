@@ -317,8 +317,12 @@ function! s:deol.init_deol_buffer() abort
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
   else
-    call term_start(self.command, extend(g:deol#_term_options,
-          \ get(b:, 'deol_extra_options', {})))
+    let options = extend(g:deol#_term_options,
+          \ get(b:, 'deol_extra_options', {}))
+    if g:deol#enable_ddc_completion
+      let options.out_cb = { c, m -> ddc#_on_event('TextChangedI')}
+    endif
+    call term_start(self.command, options)
     let self.pid = job_info(term_getjob(bufnr('%'))).process
   endif
 
@@ -813,8 +817,13 @@ function! s:get_prompt() abort
   return matchstr(getline('.'), pattern)
 endfunction
 
+function! s:get_text(mode) abort
+  return a:mode ==# 'c' ? getcmdline() :
+        \ a:mode ==# 't' && !has('nvim') ? term_getline('', '.')
+        \ : getline('.')
+endfunction
 function! deol#get_input() abort
-  let input = matchstr(getline('.'), '^.*\%' .
+  let input = matchstr(s:get_text(mode()), '^.*\%' .
         \ (mode() ==# 'i' ? col('.') : col('.') + 1) . 'c')
   return input[len(s:get_prompt()):]
 endfunction
