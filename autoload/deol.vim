@@ -309,7 +309,7 @@ function! s:deol.init_deol_buffer() abort
   if has('nvim')
     let options = {}
     if g:deol#enable_ddc_completion
-      let options.on_stdout = { j, d, e -> ddc#_on_event('TextChangedI')}
+      let options.on_stdout = { j, d, e -> s:ddc_changed() }
     endif
 
     call termopen(self.command, options)
@@ -938,4 +938,8 @@ function! s:expand(path) abort
 endfunction
 function! s:substitute_path_separator(path) abort
   return s:is_windows ? substitute(a:path, '\\', '/', 'g') : a:path
+endfunction
+
+function! s:ddc_changed() abort
+  call ddc#_on_event('TextChangedI')
 endfunction
