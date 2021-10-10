@@ -11,7 +11,8 @@ let s:default_password_pattern =
         \   '\|^\|\n\|''s \)\%([Pp]assword\|[Pp]assphrase\)\>'
 
 let g:deol#_prev_deol = -1
-let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', 1)
+let g:deol#enable_dir_changed = get(g:, 'deol#enable_dir_changed', v:true)
+let g:deol#enable_ddc_completion = get(g:, 'deol#enable_ddc_completion', v:false)
 let g:deol#prompt_pattern = get(g:, 'deol#prompt_pattern',
       \ s:is_windows ? '\f\+>' : '')
 let g:deol#password_pattern = get(g:, 'deol#password_pattern',
@@ -306,13 +307,23 @@ endfunction
 
 function! s:deol.init_deol_buffer() abort
   if has('nvim')
-    call termopen(self.command)
+    let options = {}
+    if g:deol#enable_ddc_completion
+      let options.on_stdout = { j, d, e -> ddc#_on_event('TextChangedI')}
+    endif
+
+    call termopen(self.command, options)
+
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
   else
     call term_start(self.command, extend(g:deol#_term_options,
           \ get(b:, 'deol_extra_options', {})))
     let self.pid = job_info(term_getjob(bufnr('%'))).process
+  endif
+
+  if g:deol#enable_ddc_completion
+    call ddc#custom#patch_buffer('specialBufferCompletion', v:true)
   endif
 
   let self.bufnr = bufnr('%')
@@ -678,7 +689,7 @@ function! s:deol_backspace() abort
   if getline('.') ==# '' && t:deol.options.toggle
     stopinsert
     call deol#quit()
-  elseif s:get_input() ==# ''
+  elseif deol#get_input() ==# ''
   elseif mode() ==# 'n'
     normal! x
   elseif mode() ==# 'i'

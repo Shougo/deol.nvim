@@ -167,6 +167,15 @@ g:deol#custom_map					*g:deol#custom_map*
 			\ 'bg': '<C-z>',
 			\ 'quit': 'q',
 			\ }
+<
+					    	*g:deol#enable_ddc_completion*
+g:deol#enable_ddc_completion
+	Enable ddc.vim completion feature.
+	Note: It is experimental feature.
+
+					    	*g:deol#enable_dir_changed*
+g:deol#enable_dir_changed
+	Enable |DirChanged| autocmd detection.
 
 g:deol#extra_options					*g:deol#extra_options*
 
