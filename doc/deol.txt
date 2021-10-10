@@ -173,9 +173,13 @@ g:deol#enable_ddc_completion
 	Enable ddc.vim completion feature.
 	Note: It is experimental feature.
 
+	Default: v:false
+
 					    	*g:deol#enable_dir_changed*
 g:deol#enable_dir_changed
 	Enable |DirChanged| autocmd detection.
+
+	Default: v:true
 
 g:deol#extra_options					*g:deol#extra_options*
 
@@ -185,7 +189,7 @@ g:deol#extra_options					*g:deol#extra_options*
 >
 		let g:deol#extra_options = {'term_finish': 'close'}
 <
-	Default: {"curwin": v:true}
+	Default: { "curwin": v:true }
 
 g:deol#password_pattern				*g:deol#password_pattern*
 
