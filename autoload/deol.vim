@@ -306,7 +306,7 @@ endfunction
 
 function! s:deol.init_deol_buffer() abort
   if has('nvim')
-    execute 'terminal' self.command
+    call termopen(self.command)
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
   else
@@ -789,7 +789,7 @@ function! s:start_insert(mode) abort
   endif
 
   return 'i' . repeat("\<Right>", len(deol#get_cmdline()))
-        \ . repeat("\<Left>", len(deol#get_cmdline()) - len(s:get_input())
+        \ . repeat("\<Left>", len(deol#get_cmdline()) - len(deol#get_input())
         \ + (a:mode ==# 'i' ? 1 : 0))
 endfunction
 
@@ -802,7 +802,7 @@ function! s:get_prompt() abort
   return matchstr(getline('.'), pattern)
 endfunction
 
-function! s:get_input() abort
+function! deol#get_input() abort
   let input = matchstr(getline('.'), '^.*\%' .
         \ (mode() ==# 'i' ? col('.') : col('.') + 1) . 'c')
   return input[len(s:get_prompt()):]
