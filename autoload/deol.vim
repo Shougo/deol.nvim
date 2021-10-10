@@ -319,9 +319,10 @@ function! s:deol.init_deol_buffer() abort
   else
     let options = extend(g:deol#_term_options,
           \ get(b:, 'deol_extra_options', {}))
-    if g:deol#enable_ddc_completion
-      let options.out_cb = { c, m -> ddc#_on_event('TextChangedI')}
-    endif
+    " Todo: Vim8 completion support
+    "if g:deol#enable_ddc_completion
+    "  let options.out_cb = { c, m -> ddc#_on_event('TextChangedI')}
+    "endif
     call term_start(self.command, options)
     let self.pid = job_info(term_getjob(bufnr('%'))).process
   endif
