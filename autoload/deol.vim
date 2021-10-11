@@ -950,7 +950,6 @@ function! s:ddc_changed() abort
     if pum#map#_skip_count() <= 0 &&
           \ (s:row() != pum#_get().startrow || deol#get_input() =~# '\s$')
       call pum#close()
-      return
     endif
   endif
 
