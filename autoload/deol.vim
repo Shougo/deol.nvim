@@ -782,6 +782,9 @@ function! s:split(options) abort
     split
     execute 'resize' str2nr(a:options.winheight)
   endif
+
+  " Open dummy buffer
+  enew
 endfunction
 
 
