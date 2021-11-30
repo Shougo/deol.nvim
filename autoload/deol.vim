@@ -679,7 +679,7 @@ function! s:check_password() abort
     call t:deol.jobsend(secret . "\<CR>")
 
     " Note: Needs wait to proceed messages
-    sleep 50m
+    sleep 150m
 
     call s:term_redraw(t:deol.bufnr)
   endwhile
