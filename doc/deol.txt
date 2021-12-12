@@ -96,7 +96,7 @@ OPTIONS							*deol-options*
 -edit-filetype
  		Specify 'filetype' in edit buffer.
 
-						*deol-option-edit-wineight*
+						*deol-option-edit-winheight*
 -edit-winheight={window-height}
 		Set the height of the deol edit window.
 
@@ -127,7 +127,7 @@ OPTIONS							*deol-options*
 
 		Default: v:false
 
-						*deol-option-wineight*
+						*deol-option-winheight*
 -winheight={window-height}
 		Set the height of the Deol window if |denite-option-split|
 		is "horizontal".
