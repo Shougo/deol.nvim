@@ -310,6 +310,8 @@ function! s:deol.init_deol_buffer() abort
     let options = {}
     let options.on_stdout = { j, d, e -> s:ddc_changed() }
 
+    " Note: termopen() replaces current buffer
+    enew
     call termopen(self.command, options)
 
     let self.jobid = b:terminal_job_id
