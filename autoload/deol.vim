@@ -374,7 +374,7 @@ function! s:deol.init_deol_buffer() abort
   setlocal filetype=deol
   setlocal filetype=deol
 
-  if exists('##DirChanged') && self.options.dir_changed
+  if exists('##DirChanged') && g:deol#enable_dir_changed
     if has('nvim')
       autocmd deol DirChanged <buffer>
             \ call deol#cd(v:event.cwd)
@@ -837,7 +837,6 @@ function! s:user_options() abort
         \ 'auto_cd': v:true,
         \ 'command': &shell,
         \ 'cwd': '',
-        \ 'dir_changed': v:true,
         \ 'edit': v:false,
         \ 'edit_filetype': '',
         \ 'edit_winheight': 1,
