@@ -70,6 +70,53 @@ export class Kind extends BaseKind<Params> {
 
       return Promise.resolve(ActionFlags.Persist | ActionFlags.RefreshItems);
     },
+    edit: async (args: { denops: Denops; items: DduItem[] }) => {
+      for (const item of args.items) {
+        const action = item?.action as ActionData;
+        const deol =
+          (await fn.gettabvar(args.denops, action.tabNr, "deol", null)) as {
+          cwd: string;
+        };
+
+        if (!deol?.cwd) {
+          continue;
+        }
+
+        const newCwd = await fn.input(
+          args.denops, "New deol cwd:", deol.cwd, "dir");
+        await args.denops.cmd("redraw");
+        if (newCwd == "") {
+          continue;
+        }
+
+        const fileInfo = await Deno.stat(newCwd);
+        if (fileInfo.isFile) {
+          await args.denops.call(
+            "ddu#util#print_error", `${newCwd} is not directory.`);
+          continue;
+        }
+        if (!fileInfo.isDirectory) {
+          const result = await fn.confirm(
+            args.denops,
+            `${newCwd} is not directory.  Create?`,
+            "&Yes\n&No\n&Cancel");
+          if (result != 1) {
+            continue;
+          }
+
+          await fn.mkdir(args.denops, newCwd, "p");
+        }
+
+        await args.denops.cmd(`tabnext ${action.tabNr}`);
+
+        // Move to deol buffer
+        await args.denops.call("deol#start", "");
+
+        await args.denops.call("deol#cd", newCwd);
+      }
+
+      return Promise.resolve(ActionFlags.None);
+    },
   };
 
   params(): Params {
