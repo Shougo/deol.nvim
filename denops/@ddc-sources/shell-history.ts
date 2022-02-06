@@ -4,10 +4,12 @@ import {
   Context,
   DdcOptions,
   SourceOptions,
-} from "https://deno.land/x/ddc_vim@v0.15.0/types.ts#^";
-import { Denops } from "https://deno.land/x/ddc_vim@v0.15.0/deps.ts#^";
+} from "https://deno.land/x/ddc_vim@v0.18.0/types.ts#^";
+import { Denops } from "https://deno.land/x/ddc_vim@v0.18.0/deps.ts#^";
 
-export class Source extends BaseSource<{}> {
+type Params = Record<string, never>;
+
+export class Source extends BaseSource<Params> {
   async gatherCandidates(args: {
     denops: Denops;
     context: Context;
@@ -25,7 +27,7 @@ export class Source extends BaseSource<{}> {
       .map((word) => ({ word: word.substring(inputLength) }));
   }
 
-  params(): {} {
+  params(): Params {
     return {};
   }
 }
