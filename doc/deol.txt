@@ -16,6 +16,7 @@ Interface		|deol-interface|
   Variables		  |deol-variables|
   Key mappings		  |deol-key-mappings|
 Denite Sources		|deol-denite-sources|
+Ddu Sources		|deol-ddu-sources|
 FAQ			|deol-faq|
 
 ==============================================================================
@@ -271,11 +272,17 @@ e			<Plug>(deol_edit)
 ==============================================================================
 DENITE SOURCES						*deol-denite-sources*
 
-						*deol-source-deol*
+						*deol-denite-source-deol*
 deol		Gather deol tabs.
 
-						*deol-source-deol/history*
+					*deol-denite-source-deol/history*
 deol/history	Gather deol histories from |g:deol#shell_history_path|.
+
+==============================================================================
+DDU SOURCES						*deol-ddu-sources*
+
+						*deol-source-deol*
+deol		Gather deol tabs.
 
 ==============================================================================
 FAQ							*deol-faq*
