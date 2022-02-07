@@ -3,8 +3,8 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v0.7.1/types.ts#^";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.7.1/deps.ts";
+} from "https://deno.land/x/ddu_vim@v0.8.0/types.ts#^";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.8.0/deps.ts";
 
 export type ActionData = {
   command: string;
@@ -40,8 +40,7 @@ export class Kind extends BaseKind<Params> {
         }
 
         await args.denops.cmd(`tabnext ${action.tabNr}`);
-        const deol =
-          (await fn.gettabvar(args.denops, action.tabNr, "deol", null)) as {
+        const deol = (await args.denops.call("deol#_get", action.tabNr)) as {
           options: {
             "start_insert": boolean,
           };
@@ -73,8 +72,7 @@ export class Kind extends BaseKind<Params> {
     edit: async (args: { denops: Denops; items: DduItem[] }) => {
       for (const item of args.items) {
         const action = item?.action as ActionData;
-        const deol =
-          (await fn.gettabvar(args.denops, action.tabNr, "deol", null)) as {
+        const deol = (await args.denops.call("deol#_get", action.tabNr)) as {
           cwd: string;
         };
 

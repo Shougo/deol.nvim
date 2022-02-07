@@ -1,8 +1,8 @@
 import {
   BaseSource,
   Item,
-} from "https://deno.land/x/ddu_vim@v0.7.1/types.ts#^";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.7.1/deps.ts#^";
+} from "https://deno.land/x/ddu_vim@v0.8.0/types.ts#^";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.8.0/deps.ts#^";
 import { ActionData } from "../@ddu-kinds/deol.ts";
 
 type Params = {
@@ -22,10 +22,9 @@ export class Source extends BaseSource<Params> {
           [...Array(await fn.tabpagenr(args.denops, "$"))].map(
             async (_, i) => {
               const tabNr = i + 1;
-              const deol =
-                (await fn.gettabvar(args.denops, tabNr, "deol", null)) as {
-                  cwd: string;
-                };
+              const deol = (await args.denops.call("deol#_get", tabNr)) as {
+                cwd: string;
+              };
               return {
                 word: deol ? `${tabNr}: ${deol.cwd}` : `${tabNr}: [new]`,
                 action: {

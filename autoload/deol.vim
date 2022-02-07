@@ -969,3 +969,15 @@ function! s:ddc_changed() abort
 
   call ddc#_on_event('TextChangedI')
 endfunction
+
+function! deol#_get(tabnr) abort
+  let deol = gettabvar(a:tabnr, 'deol', v:null)
+  if deol is v:null
+    return deol
+  endif
+
+  return {
+        \ 'cwd': deol.cwd,
+        \ 'options': deol.options,
+        \ }
+endfunction
