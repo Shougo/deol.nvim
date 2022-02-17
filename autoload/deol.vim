@@ -219,7 +219,7 @@ endfunction
 
 function! deol#_new(cwd, options) abort
   let deol = copy(s:deol)
-  let deol.command = a:options.command
+  let deol.commands = a:options.commands
   let deol.edit_winid = -1
   let deol.edit_bufnr = -1
   let deol.edit_filetype = a:options.edit_filetype
@@ -312,7 +312,7 @@ function! s:deol.init_deol_buffer() abort
 
     " Note: termopen() replaces current buffer
     enew
-    call termopen(self.command, options)
+    call termopen(self.commands, options)
 
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
@@ -320,7 +320,7 @@ function! s:deol.init_deol_buffer() abort
     let options = extend(g:deol#_term_options,
           \ get(b:, 'deol_extra_options', {}))
     let options.out_cb = { c, m -> s:ddc_changed() }
-    call term_start(self.command, options)
+    call term_start(self.commands, options)
     let self.pid = job_info(term_getjob(bufnr('%'))).process
   endif
 
@@ -443,7 +443,7 @@ function! s:deol.init_edit_buffer() abort
   execute 'resize' self.options.edit_winheight
 
   " Set filetype
-  let command = fnamemodify(self.command, ':t:r')
+  let command = fnamemodify(self.commands[0], ':t:r')
   let filetype = self.edit_filetype
   let default_filetype = {
         \ 'ash': 'sh',
@@ -835,7 +835,7 @@ endfunction
 function! s:user_options() abort
   return {
         \ 'auto_cd': v:true,
-        \ 'command': &shell,
+        \ 'commands': [],
         \ 'cwd': '',
         \ 'edit': v:false,
         \ 'edit_filetype': '',
@@ -868,9 +868,13 @@ function! s:parse_options(cmdline) abort
     if index(keys(s:user_options()), name) >= 0
       let options[name] = value
     else
-      let options['command'] = arg
+      call add(options.commands, arg)
     endif
   endfor
+
+  if empty(options.commands)
+    let options.commands = [&shell]
+  endif
 
   return options
 endfunction

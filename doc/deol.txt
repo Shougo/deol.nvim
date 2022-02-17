@@ -41,6 +41,7 @@ COMMANDS 						*deol-commands*
 	Create a deol buffer using {command}.
 	If another deol buffer exists in the current tab, it will switch to
 	the buffer.
+	If {command} is omit, 'shell' is used.
 
 :DeolCd {directory}					*:DeolCd*
 	Change the deol buffer directory to {directory}.
@@ -68,12 +69,6 @@ OPTIONS							*deol-options*
 		Note: It is only available for deol edit buffer.
 
 		Default: v:true
-
-							*deol-options-command*
--command
-		Execute the command.
-
-		Default: Use 'shell' value
 
 							*deol-options-cwd*
 -cwd={directory}
