@@ -7,7 +7,7 @@ import {
 import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.8.0/deps.ts";
 
 export type ActionData = {
-  command: string;
+  command: string[];
   tabNr: number;
   existsDeol: boolean;
 };
@@ -25,7 +25,7 @@ export class Kind extends BaseKind<Params> {
         await args.denops.cmd(`tabnext ${action.tabNr}`);
 
         if (!action.existsDeol) {
-          await args.denops.cmd(`Deol ${action.command}`);
+          await args.denops.cmd(`Deol ${action.command.join(" ")}`);
         }
       }
 

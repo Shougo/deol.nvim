@@ -6,7 +6,7 @@ import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.8.0/deps.ts#^";
 import { ActionData } from "../@ddu-kinds/deol.ts";
 
 type Params = {
-  command: string;
+  command: string[];
 };
 
 export class Source extends BaseSource<Params> {
@@ -48,7 +48,7 @@ export class Source extends BaseSource<Params> {
 
   params(): Params {
     return {
-      command: "",
+      command: [],
     };
   }
 }

@@ -60,7 +60,7 @@ class Kind(BaseK):
                              target['action__tabnr'], 'deol')
         options = {'start_insert': deol['options']['start_insert']}
         if target['action__command']:
-            options['command'] = target['action__command']
+            options['command'] = [target['action__command']]
         self.vim.call('deol#new', options)
 
     def action_delete(self, context):
