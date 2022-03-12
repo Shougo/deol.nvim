@@ -190,6 +190,12 @@ g:deol#extra_options					*g:deol#extra_options*
 <
 	Default: { "curwin": v:true }
 
+g:deol#nvim_server					*g:deol#nvim_server*
+
+	The path of neovim server.
+	Please see |client-server|.
+	Note: It is neovim only.
+
 g:deol#password_pattern				*g:deol#password_pattern*
 
 	Sets the pattern which matches password input.

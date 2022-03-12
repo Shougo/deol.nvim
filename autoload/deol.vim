@@ -19,6 +19,7 @@ let g:deol#password_pattern = get(g:, 'deol#password_pattern',
       \ s:default_password_pattern)
 let g:deol#shell_history_path = get(g:, 'deol#shell_history_path', '')
 let g:deol#shell_history_max = get(g:, 'deol#shell_history_max', 500)
+let g:deol#nvim_server = get(g:, 'deol#nvim_server', '')
 
 let s:default_term_options = {
       \ 'curwin': v:true,
@@ -233,6 +234,11 @@ function! deol#_new(cwd, options) abort
   elseif exists('g:edita_loaded')
     " Use edita instead
     let editor_command = edita#EDITOR()
+  "elseif v:progname ==# 'nvim' && g:deol#nvim_server !=# '' && has('nvim-0.7')
+  "  " Use clientserver for neovim
+  "  let editor_command =
+  "        \ printf('%s --server %s --remote-tab-wait-silent',
+  "        \   v:progpath, s:expand(g:deol#nvim_server))
   elseif v:progname ==# 'nvim' && executable('nvr')
     " Use neovim-remote for neovim
     let editor_command = 'nvr --remote-tab-wait-silent'
