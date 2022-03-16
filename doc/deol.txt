@@ -125,7 +125,7 @@ OPTIONS							*deol-options*
 
 						*deol-option-winheight*
 -winheight={window-height}
-		Set the height of the Deol window if |denite-option-split|
+		Set the height of the Deol window if |deol-option-split|
 		is "horizontal".
 		if |deol-option-split| is "floating", set the height of the
 		floating window.
@@ -134,7 +134,7 @@ OPTIONS							*deol-options*
 
 						*deol-option-winwidth*
 -winwidth={window-width}
-		Set the width of the Deol window if |denite-option-split|
+		Set the width of the Deol window if |deol-option-split|
 		is "vertical".
 		if |deol-option-split| is "floating", set the width of the
 		floating window.
@@ -146,9 +146,8 @@ OPTIONS							*deol-options*
 VARIABLES 						*deol-variables*
 
 g:deol#custom_map					*g:deol#custom_map*
-
-	Customize the mappings for deol.  See |deol-key-mappings| for default
-	mappings.
+		Customize the mappings for deol.  See |deol-key-mappings| for
+		default mappings.
 >
 		let g:deol#custom_map = {
 			\ 'edit': 'e',
@@ -166,60 +165,67 @@ g:deol#custom_map					*g:deol#custom_map*
 <
 					    	*g:deol#enable_ddc_completion*
 g:deol#enable_ddc_completion
-	Enable ddc.vim completion feature.
-	Note: It is experimental feature.
-	Note: Both ddc.vim and pum.vim are needed.
-	https://github.com/Shougo/ddc.vim
-	https://github.com/Shougo/pum.vim
+		Enable ddc.vim completion feature.
+		Note: It is experimental feature.
+		Note: Both ddc.vim and pum.vim are needed.
+		https://github.com/Shougo/ddc.vim
+		https://github.com/Shougo/pum.vim
 
-	Default: v:false
+		Default: v:false
 
 					    	*g:deol#enable_dir_changed*
 g:deol#enable_dir_changed
-	Enable |DirChanged| autocmd detection.
+		Enable |DirChanged| autocmd detection.
 
-	Default: v:true
+		Default: v:true
 
 g:deol#extra_options					*g:deol#extra_options*
-
-	Set the extra options for gvim terminal. See |term_start()|.
-	`b:deol_extra_options` can overide it in a buffer.
-	Note: It is available in Vim8 only.
+		Set the extra options for gvim terminal. See |term_start()|.
+		`b:deol_extra_options` can overide it in a buffer.
+		Note: It is available in Vim8 only.
 >
 		let g:deol#extra_options = {'term_finish': 'close'}
 <
-	Default: { "curwin": v:true }
+		Default: { "curwin": v:true }
+
+g:deol#floating_border				*g:deol#floating_border*
+		The border if |deol-option-split| is "floating".
+		Please see |nvim_open_win()| for available options.
+
+		Default: "none"
+
 
 g:deol#nvim_server					*g:deol#nvim_server*
+		The path of neovim server.
+		Please see |client-server|.
+		Note: It is neovim only.
 
-	The path of neovim server.
-	Please see |client-server|.
-	Note: It is neovim only.
+		Default: ""
 
 g:deol#password_pattern				*g:deol#password_pattern*
+		Sets the pattern which matches password input.
 
-	Sets the pattern which matches password input.
+		Default pattern is complex.  Please see the source code.
 
 g:deol#prompt_pattern				*g:deol#prompt_pattern*
-
-	Sets the pattern which matches the shell prompt.
-	Note: The right prompt is not supported.
+		Sets the pattern which matches the shell prompt.
+		Note: The right prompt is not supported.
 >
 		let g:deol#prompt_pattern = '% \|%$'
+<
+		Default: "" ('\f\+>' for Windows)
 
 g:deol#shell_history_max			*g:deol#shell_history_max*
+		The max history of external shell history.
+		Note: It is only used when |g:deol#shell_history_path| is set.
 
-	Max history of external shell history.
-	It is only used when |g:deol#shell_history_path| is set.
-
-	Default: 500
+		Default: 500
 
 g:deol#shell_history_path			*g:deol#shell_history_path*
+		The external shell history path. If it is set, the external
+		histories are loaded in deol edit buffer.
 
-	The external shell history path.
-	If it is set, the external histories are loaded in deol edit buffer.
-
-	Default: ""
+		Default: ""
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS 						*deol-key-mappings*

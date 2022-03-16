@@ -20,6 +20,7 @@ let g:deol#password_pattern = get(g:, 'deol#password_pattern',
 let g:deol#shell_history_path = get(g:, 'deol#shell_history_path', '')
 let g:deol#shell_history_max = get(g:, 'deol#shell_history_max', 500)
 let g:deol#nvim_server = get(g:, 'deol#nvim_server', '')
+let g:deol#floating_border = get(g:, 'deol#floating_border', 'none')
 
 let s:default_term_options = {
       \ 'curwin': v:true,
@@ -413,6 +414,7 @@ function! s:deol.switch_edit_buffer() abort
           \ 'col': str2nr(self.options.wincol),
           \ 'width': winwidth(0),
           \ 'height': 1,
+          \ 'border': g:deol#floating_border,
           \ })
     if exists('*bufadd')
       let bufnr = bufadd(edit_bufname)
@@ -774,6 +776,7 @@ function! s:split(options) abort
           \ 'col': str2nr(a:options.wincol),
           \ 'width': str2nr(a:options.winwidth),
           \ 'height': str2nr(a:options.winheight),
+          \ 'border': g:deol#floating_border,
           \ })
   elseif a:options.split ==# 'vertical'
     vsplit
