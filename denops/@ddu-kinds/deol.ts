@@ -3,8 +3,8 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v0.8.0/types.ts#^";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v0.8.0/deps.ts";
+} from "https://deno.land/x/ddu_vim@v1.5.0/types.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v1.5.0/deps.ts";
 
 export type ActionData = {
   command: string[];
@@ -42,7 +42,7 @@ export class Kind extends BaseKind<Params> {
         await args.denops.cmd(`tabnext ${action.tabNr}`);
         const deol = (await args.denops.call("deol#_get", action.tabNr)) as {
           options: {
-            "start_insert": boolean,
+            "start_insert": boolean;
           };
         };
         const options = {
@@ -81,7 +81,11 @@ export class Kind extends BaseKind<Params> {
         }
 
         const newCwd = await fn.input(
-          args.denops, "New deol cwd:", deol.cwd, "dir");
+          args.denops,
+          "New deol cwd:",
+          deol.cwd,
+          "dir",
+        );
         await args.denops.cmd("redraw");
         if (newCwd == "") {
           continue;
@@ -90,14 +94,17 @@ export class Kind extends BaseKind<Params> {
         const fileInfo = await Deno.stat(newCwd);
         if (fileInfo.isFile) {
           await args.denops.call(
-            "ddu#util#print_error", `${newCwd} is not directory.`);
+            "ddu#util#print_error",
+            `${newCwd} is not directory.`,
+          );
           continue;
         }
         if (!fileInfo.isDirectory) {
           const result = await fn.confirm(
             args.denops,
             `${newCwd} is not directory.  Create?`,
-            "&Yes\n&No\n&Cancel");
+            "&Yes\n&No\n&Cancel",
+          );
           if (result != 1) {
             continue;
           }

@@ -1,22 +1,22 @@
 import {
   BaseSource,
-  Candidate,
+  Item,
   Context,
   DdcOptions,
   SourceOptions,
-} from "https://deno.land/x/ddc_vim@v0.18.0/types.ts#^";
-import { Denops } from "https://deno.land/x/ddc_vim@v0.18.0/deps.ts#^";
+} from "https://deno.land/x/ddc_vim@v2.2.0/types.ts";
+import { Denops } from "https://deno.land/x/ddc_vim@v2.2.0/deps.ts";
 
 type Params = Record<string, never>;
 
 export class Source extends BaseSource<Params> {
-  async gatherCandidates(args: {
+  async gather(args: {
     denops: Denops;
     context: Context;
     options: DdcOptions;
     sourceOptions: SourceOptions;
     completeStr: string;
-  }): Promise<Candidate[]> {
+  }): Promise<Item[]> {
     const histories = await args.denops.call(
       "deol#_get_histories",
     ) as string[];
