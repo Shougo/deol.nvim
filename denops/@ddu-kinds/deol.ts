@@ -82,7 +82,7 @@ export class Kind extends BaseKind<Params> {
 
         const newCwd = await fn.input(
           args.denops,
-          "New deol cwd:",
+          "New deol cwd: ",
           deol.cwd,
           "dir",
         );
