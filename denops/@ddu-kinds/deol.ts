@@ -91,15 +91,18 @@ export class Kind extends BaseKind<Params> {
           continue;
         }
 
-        const fileInfo = await Deno.stat(newCwd);
-        if (fileInfo.isFile) {
-          await args.denops.call(
-            "ddu#util#print_error",
-            `${newCwd} is not directory.`,
-          );
-          continue;
-        }
-        if (!fileInfo.isDirectory) {
+        // Note: Deno.stat() may be failed
+        try {
+          const fileInfo = await Deno.stat(newCwd);
+
+          if (fileInfo.isFile) {
+            await args.denops.call(
+              "ddu#util#print_error",
+              `${newCwd} is not directory.`,
+            );
+            continue;
+          }
+        } catch (_e: unknown) {
           const result = await fn.confirm(
             args.denops,
             `${newCwd} is not directory.  Create?`,
