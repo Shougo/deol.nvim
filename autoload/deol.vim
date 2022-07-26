@@ -243,12 +243,6 @@ function! deol#_new(cwd, options) abort
   elseif v:progname ==# 'nvim' && executable('nvr')
     " Use neovim-remote for neovim
     let editor_command = 'nvr --remote-tab-wait-silent'
-
-    if !exists('$NVIM_LISTEN_ADDRESS') && g:deol#nvim_server !=# ''
-      " The latest neovim does not set $NVIM_LISTEN_ADDRESS
-      " But neovim-remote uses it
-      let $NVIM_LISTEN_ADDRESS = s:expand(g:deol#nvim_server)
-    endif
   elseif executable(v:progpath) && has('clientserver')
     " Use clientserver for Vim8
     let editor_command =
