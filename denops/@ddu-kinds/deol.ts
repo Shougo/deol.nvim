@@ -3,8 +3,8 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v1.5.0/types.ts";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v1.5.0/deps.ts";
+} from "https://deno.land/x/ddu_vim@v2.0.0/types.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.0.0/deps.ts";
 
 export type ActionData = {
   command: string[];
@@ -15,7 +15,7 @@ export type ActionData = {
 type Params = Record<string, never>;
 
 export class Kind extends BaseKind<Params> {
-  actions: Record<
+  override actions: Record<
     string,
     (args: ActionArguments<Params>) => Promise<ActionFlags>
   > = {
@@ -127,7 +127,7 @@ export class Kind extends BaseKind<Params> {
     },
   };
 
-  params(): Params {
+  override params(): Params {
     return {};
   }
 }

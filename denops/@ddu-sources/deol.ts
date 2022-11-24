@@ -1,8 +1,8 @@
 import {
   BaseSource,
   Item,
-} from "https://deno.land/x/ddu_vim@v1.5.0/types.ts";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v1.5.0/deps.ts";
+} from "https://deno.land/x/ddu_vim@v2.0.0/types.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.0.0/deps.ts";
 import { ActionData } from "../@ddu-kinds/deol.ts";
 
 type Params = {
@@ -10,9 +10,9 @@ type Params = {
 };
 
 export class Source extends BaseSource<Params> {
-  kind = "deol";
+  override kind = "deol";
 
-  gather(args: {
+  override gather(args: {
     denops: Denops;
     sourceParams: Params;
   }): ReadableStream<Item<ActionData>[]> {
@@ -48,7 +48,7 @@ export class Source extends BaseSource<Params> {
     });
   }
 
-  params(): Params {
+  override params(): Params {
     return {
       command: [],
     };
