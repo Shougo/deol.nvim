@@ -149,18 +149,18 @@ g:deol#custom_map					*g:deol#custom_map*
 		Customize the mappings for deol.  See |deol-key-mappings| for
 		default mappings.
 >
-		let g:deol#custom_map = {
-			\ 'edit': 'e',
-			\ 'start_insert': 'i',
-			\ 'start_insert_first': 'I',
-			\ 'start_append': 'a',
-			\ 'start_append_last': 'A',
-			\ 'execute_line': '<CR>',
-			\ 'previous_prompt': '<C-p>',
-			\ 'next_prompt': '<C-n>',
-			\ 'paste_prompt': '<C-y>',
-			\ 'bg': '<C-z>',
-			\ 'quit': 'q',
+		let g:deol#custom_map = #{
+			\   edit: 'e',
+			\   start_insert: 'i',
+			\   start_insert_first: 'I',
+			\   start_append: 'a',
+			\   start_append_last: 'A',
+			\   execute_line: '<CR>',
+			\   previous_prompt: '<C-p>',
+			\   next_prompt: '<C-n>',
+			\   paste_prompt: '<C-y>',
+			\   bg: '<C-z>',
+			\   quit: 'q',
 			\ }
 <
 					    	*g:deol#enable_ddc_completion*
@@ -184,9 +184,9 @@ g:deol#extra_options					*g:deol#extra_options*
 		`b:deol_extra_options` can overide it in a buffer.
 		Note: It is available in Vim8 only.
 >
-		let g:deol#extra_options = {'term_finish': 'close'}
+		let g:deol#extra_options = #{ term_finish: 'close' }
 <
-		Default: { "curwin": v:true }
+		Default: #{ curwin: v:true }
 
 g:deol#floating_border				*g:deol#floating_border*
 		The border if |deol-option-split| is "floating".
@@ -315,7 +315,7 @@ A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
 Q: I want to start Deol in the directory where the current buffer belongs to.
 
 A: >
-	execute 'Deol' '-cwd='.fnamemodify(expand('%'), ':h')
+	execute 'Deol' '-cwd='.('%'->expand()->fnamemodify(':h'))
 
 Q: I want to use current vim when "git commit".
 
@@ -328,12 +328,12 @@ Q. How to enable shell history completion in ddc.vim?
 A. >
 
 	call ddc#custom#patch_filetype(['deol'], 'sources', ['shell-history'])
-	call ddc#custom#patch_global('sourceOptions', {
-	    \ '_': {
-	    \   'matchers': ['matcher_head'],
-	    \   'sorters': ['sorter_rank']
-	    \ },
-	    \ 'shell-history': {'mark': 'shell'},
+	call ddc#custom#patch_global('sourceOptions', #{
+	    \   _: #{
+	    \     matchers: ['matcher_head'],
+	    \     sorters: ['sorter_rank']
+	    \   },
+	    \   shell-history: {'mark': 'shell'},
 	    \ })
 <
 ==============================================================================

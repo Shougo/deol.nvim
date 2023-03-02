@@ -1,15 +1,9 @@
-"=============================================================================
-" FILE: deol.vim
-" AUTHOR:  Shougo Matsushita <Shougo.Matsu at gmail.com>
-" License: MIT license
-"=============================================================================
-
-if !has('nvim-0.3') && !has('patch-8.2.1978')
-  echomsg 'deol.nvim requires Neovim 0.3+ or Vim 8.2.1978+.'
+if !has('nvim-0.8') && !has('patch-8.2.1978')
+  echomsg 'deol.nvim requires Neovim 0.8+ or Vim 8.2.1978+.'
   finish
 endif
 
-if exists('g:loaded_deol')
+if 'g:loaded_deol'->exists()
   finish
 endif
 let g:loaded_deol = 1
