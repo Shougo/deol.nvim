@@ -5,14 +5,14 @@ let s:default_password_pattern =
         \   '\|^\|\n\|''s \)\%([Pp]assword\|[Pp]assphrase\)\>'
 
 let g:deol#_prev_deol = -1
-let g:deol#enable_dir_changed = g:->get(
-      \ 'deol#enable_dir_changed', v:true)
-let g:deol#enable_ddc_completion = g:->get(
-      \ 'deol#enable_ddc_completion', v:false)
-let g:deol#prompt_pattern = g:->get(
-      \ 'deol#prompt_pattern', s:is_windows ? '\f\+>' : '')
-let g:deol#password_pattern = g:->get(
-      \ 'deol#password_pattern', s:default_password_pattern)
+let g:deol#enable_dir_changed = g:
+      \ ->get('deol#enable_dir_changed', v:true)
+let g:deol#enable_ddc_completion = g:
+      \ ->get('deol#enable_ddc_completion', v:false)
+let g:deol#prompt_pattern = g:
+      \ ->get('deol#prompt_pattern', s:is_windows ? '\f\+>' : '')
+let g:deol#password_pattern = g:
+      \ ->get('deol#password_pattern', s:default_password_pattern)
 let g:deol#shell_history_path = g:->get('deol#shell_history_path', '')
 let g:deol#shell_history_max = g:->get('deol#shell_history_max', 500)
 let g:deol#nvim_server = g:->get('deol#nvim_server', '')
@@ -68,8 +68,8 @@ function! deol#_start(options) abort
   let cwd = s:expand(options.cwd)
   if !(cwd->isdirectory())
     redraw
-    let result = printf('[deol] %s is not directory.  Create?', cwd)->confirm(
-          \ "&Yes\n&No\n&Cancel")
+    let result = printf('[deol] %s is not directory.  Create?', cwd)
+          \ ->confirm("&Yes\n&No\n&Cancel")
     if result != 1
       return
     endif
@@ -134,8 +134,8 @@ function! deol#new(options) abort
   let cwd = s:expand(options.cwd)
   if !(cwd->isdirectory())
     redraw
-    let result = printf('[deol] %s is not directory.  Create?', cwd)->confirm(
-          \ "&Yes\n&No\n&Cancel")
+    let result = printf('[deol] %s is not directory.  Create?', cwd)
+          \ ->confirm("&Yes\n&No\n&Cancel")
     if result != 1
       return
     endif
@@ -185,8 +185,8 @@ function! deol#edit() abort
   call t:deol.init_edit_buffer()
 
   " Set the current command line
-  let buflines = t:deol.bufnr->getbufline(1, '$')->filter(
-        \ { _, val -> val !=# '' })
+  let buflines = t:deol.bufnr->getbufline(1, '$')
+        \ ->filter({ _, val -> val !=# '' })
   let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
   if !(buflines->empty()) && buflines[-1] =~# pattern
     let cmdline = buflines[-1]->substitute(pattern, '', '')
@@ -658,8 +658,8 @@ function! s:check_password() abort
 
   while 1
     " Get the last non empty line
-    let lines = t:deol.bufnr->getbufline(1, '$')->filter(
-          \ { _, val -> val !=# '' })
+    let lines = t:deol.bufnr->getbufline(1, '$')
+          \ ->filter({ _, val -> val !=# '' })
     if lines->empty() || lines[-1] !~? g:deol#password_pattern
       break
     endif
@@ -899,13 +899,13 @@ function! deol#_complete(arglead, cmdline, cursorpos) abort
   let _ = []
 
   " Option names completion.
-  let bool_options = s:user_options()->copy()->filter(
-        \ { _, val -> type(val) == v:t_bool })->keys()
+  let bool_options = s:user_options()->copy()
+        \ ->filter({ _, val -> type(val) == v:t_bool })->keys()
   let _ += bool_options->copy()->map({ _, val -> '-' . tr(val, '_', '-') })
-  let string_options = s:user_options()->copy()->filter(
-        \ { _, val -> type(val) != v:t_bool })->keys()
-  let _ += string_options->copy()->map(
-        \ { _, val -> '-' . tr(val, '_', '-') . '=' })
+  let string_options = s:user_options()->copy()
+        \ ->filter({ _, val -> type(val) != v:t_bool })->keys()
+  let _ += string_options->copy()
+        \ ->map({ _, val -> '-' . tr(val, '_', '-') . '=' })
 
   " Add "-no-" option names completion.
   let _ += bool_options->copy()->map({ _, val -> '-no-' . tr(val, '_', '-') })
