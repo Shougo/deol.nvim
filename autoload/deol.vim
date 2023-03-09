@@ -152,7 +152,7 @@ function! deol#send(string) abort
     return ''
   endif
 
-  call t:deol.jobsend(s:cleanup() . a:string . "\<CR>")
+  call t:deol.jobsend(s:cleanup() .. a:string .. "\<CR>")
   return ''
 endfunction
 
@@ -187,7 +187,7 @@ function! deol#edit() abort
   " Set the current command line
   let buflines = t:deol.bufnr->getbufline(1, '$')
         \ ->filter({ _, val -> val !=# '' })
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   if !(buflines->empty()) && buflines[-1] =~# pattern
     let cmdline = buflines[-1]->substitute(pattern, '', '')
     if '$'->getline() ==# ''
@@ -211,7 +211,7 @@ function! deol#get_cmdline() abort
     return '.'->getline()
   endif
 
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   return '.'->getline()->substitute(pattern, '', '')
 endfunction
 
@@ -351,11 +351,11 @@ function! s:deol.init_deol_buffer() abort
   nnoremap <buffer><expr> <Plug>(deol_start_insert)
         \ <SID>start_insert('i')
   nnoremap <buffer><expr> <Plug>(deol_start_insert_first)
-        \ 'i' . ("\<Left>"->repeat(, '.'->getline()->len()))
+        \ 'i' .. ("\<Left>"->repeat(, '.'->getline()->len()))
   nnoremap <buffer><expr> <Plug>(deol_start_append)
         \ <SID>start_insert('A')
   nnoremap <buffer><expr> <Plug>(deol_start_append_last)
-        \ 'i' . ("\<Right>"->repeat('.'->getline()->len()))
+        \ 'i' .. ("\<Right>"->repeat('.'->getline()->len()))
   nnoremap <buffer> <Plug>(deol_quit)
         \ <Cmd>call deol#quit()<CR>
 
@@ -370,7 +370,7 @@ function! s:deol.init_deol_buffer() abort
   setlocal norelativenumber
 
   for [rhs, lhs] in g:deol#_maps->items()
-    execute 'nmap <buffer> ' . lhs . ' <Plug>(deol_' . rhs . ')'
+    execute 'nmap <buffer> ' .. lhs .. ' <Plug>(deol_' .. rhs .. ')'
   endfor
 
   " set filetype twice to load after/ftplugin in Vim8
@@ -402,7 +402,7 @@ function! s:deol.switch_edit_buffer() abort
 
   let cwd = getcwd()
 
-  let edit_bufname = 'deol-edit@' . t:deol.bufnr->bufname()
+  let edit_bufname = 'deol-edit@' .. t:deol.bufnr->bufname()
   if self.options.split ==# 'floating' && '*nvim_open_win'->exists()
     call nvim_open_win('%'->bufnr(), v:true, {
           \ 'relative': 'editor',
@@ -474,9 +474,9 @@ function! s:deol.init_edit_buffer() abort
   nnoremap <buffer><expr> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>")
   inoremap <buffer><expr> <Plug>(deol_ctrl_c)
-        \ deol#send("\<C-c>") . "\<ESC>a"
+        \ deol#send("\<C-c>") .. "\<ESC>a"
   inoremap <buffer><expr> <Plug>(deol_ctrl_d)
-        \ deol#send("\<C-d>") . "\<ESC>a"
+        \ deol#send("\<C-d>") .. "\<ESC>a"
 
   nmap <buffer> <CR>  <Plug>(deol_execute_line)
   nmap <buffer> <BS>  <Plug>(deol_backspace)
@@ -623,8 +623,8 @@ function! s:eval_commands(cmdline, is_insert) abort
   " If the current line is the last line, deol must send <CR> only
   let cmdline = (&l:filetype ==# 'deol' &&
         \ ('.'->line() == '$'->line() || mode() ==# 't')) ?
-        \ '' : s:cleanup() . a:cmdline
-  call deol.jobsend(cmdline . "\<CR>")
+        \ '' : s:cleanup() .. a:cmdline
+  call deol.jobsend(cmdline .. "\<CR>")
 
   " Note: Needs wait to proceed messages
   sleep 100m
@@ -675,7 +675,7 @@ function! s:check_password() abort
       break
     endif
 
-    call t:deol.jobsend(secret . "\<CR>")
+    call t:deol.jobsend(secret .. "\<CR>")
 
     " Note: Needs wait to proceed messages
     sleep 150m
@@ -724,7 +724,7 @@ function! s:search_prompt(flag) abort
 
   let col = '.'->col()
   call cursor(0, 1)
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\).\?'
+  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\).\?'
   let pos = pattern->searchpos(a:flag)
   if pos[0] != 0
     call cursor(pos[0], pos[0]->getline()->matchend(pattern))
@@ -739,7 +739,7 @@ function! s:paste_prompt() abort
   endif
 
   let cmdline = deol#get_cmdline()
-  call t:deol.jobsend(s:cleanup() . cmdline)
+  call t:deol.jobsend(s:cleanup() .. cmdline)
   call s:insert_mode(t:deol)
 endfunction
 
@@ -803,8 +803,8 @@ function! s:start_insert(mode) abort
   endif
 
   let cmdline_len = deol#get_cmdline()->len()
-  return 'i' . repeat("\<Right>", cmdline_len)
-        \ . repeat("\<Left>", cmdline_len - deol#get_input()->len()
+  return 'i' .. repeat("\<Right>", cmdline_len)
+        \ .. repeat("\<Left>", cmdline_len - deol#get_input()->len()
         \ + (a:mode ==# 'i' ? 1 : 0))
 endfunction
 
@@ -813,7 +813,7 @@ function! deol#get_prompt() abort
     return ''
   endif
 
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   return s:get_text(mode())->matchstr(pattern)
 endfunction
 
@@ -827,7 +827,7 @@ function! deol#get_input() abort
   let col = mode ==# 't' && !has('nvim') ?
         \ term_getcursor(bufnr('%'))[1] : col('.')
   let input = s:get_text(mode)->matchstr('^.*\%' .
-        \ ((mode ==# 'i' || mode ==# 't') ? col : col + 1) . 'c')
+        \ ((mode ==# 'i' || mode ==# 't') ? col : col + 1) .. 'c')
   return input[deol#get_prompt()->len():]
 endfunction
 
@@ -901,14 +901,14 @@ function! deol#_complete(arglead, cmdline, cursorpos) abort
   " Option names completion.
   let bool_options = s:user_options()->copy()
         \ ->filter({ _, val -> type(val) == v:t_bool })->keys()
-  let _ += bool_options->copy()->map({ _, val -> '-' . tr(val, '_', '-') })
+  let _ += bool_options->copy()->map({ _, val -> '-' .. tr(val, '_', '-') })
   let string_options = s:user_options()->copy()
         \ ->filter({ _, val -> type(val) != v:t_bool })->keys()
   let _ += string_options->copy()
-        \ ->map({ _, val -> '-' . tr(val, '_', '-') . '=' })
+        \ ->map({ _, val -> '-' .. tr(val, '_', '-') .. '=' })
 
   " Add "-no-" option names completion.
-  let _ += bool_options->copy()->map({ _, val -> '-no-' . tr(val, '_', '-') })
+  let _ += bool_options->copy()->map({ _, val -> '-no-' .. tr(val, '_', '-') })
 
   let _ += a:arglead->getcompletion('shellcmd')
 
@@ -963,7 +963,7 @@ function! s:ddc_changed() abort
   endif
 
   " It must be prompt
-  let pattern = '^\%(' . g:deol#prompt_pattern . '\m\)'
+  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   if s:get_text(mode()) !~# pattern || deol#get_input() ==# ''
     return
   endif
