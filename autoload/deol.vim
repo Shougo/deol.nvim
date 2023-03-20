@@ -51,7 +51,7 @@ function! deol#_start(options) abort
   let options = a:options->copy()
 
   if 't:deol'->exists() && t:deol.bufnr->bufexists()
-    let ids = t:deol.bufnr->win_findbuf()
+    const ids = t:deol.bufnr->win_findbuf()
     if !(ids->empty()) && options.toggle
       call deol#quit()
     else
@@ -65,10 +65,10 @@ function! deol#_start(options) abort
     let options.cwd = getcwd()
   endif
 
-  let cwd = s:expand(options.cwd)
+  const cwd = s:expand(options.cwd)
   if !(cwd->isdirectory())
     redraw
-    let result = printf('[deol] %s is not directory.  Create?', cwd)
+    const result = printf('[deol] %s is not directory.  Create?', cwd)
           \ ->confirm("&Yes\n&No\n&Cancel")
     if result != 1
       return
@@ -95,11 +95,11 @@ function! deol#_start(options) abort
 endfunction
 
 function! s:switch(options) abort
-  let options = a:options->copy()
+  const options = a:options->copy()
   let deol = t:deol
   let deol.prev_bufnr = '%'->bufnr()
 
-  let ids = deol.bufnr->win_findbuf()
+  const ids = deol.bufnr->win_findbuf()
   if ids->empty()
     call s:split(options)
     execute 'buffer' deol.bufnr
@@ -131,10 +131,10 @@ function! deol#new(options) abort
   if options.cwd ==# ''
     return
   endif
-  let cwd = s:expand(options.cwd)
+  const cwd = s:expand(options.cwd)
   if !(cwd->isdirectory())
     redraw
-    let result = printf('[deol] %s is not directory.  Create?', cwd)
+    const result = printf('[deol] %s is not directory.  Create?', cwd)
           \ ->confirm("&Yes\n&No\n&Cancel")
     if result != 1
       return
@@ -174,7 +174,7 @@ function! deol#edit() abort
     Deol
   endif
 
-  let ids = win_findbuf(t:deol.bufnr)
+  const ids = win_findbuf(t:deol.bufnr)
   if !(ids->empty()) && win_getid() != ids[0]
     call win_gotoid(ids[0])
     call cursor(line('$'), 0)
@@ -185,11 +185,11 @@ function! deol#edit() abort
   call t:deol.init_edit_buffer()
 
   " Set the current command line
-  let buflines = t:deol.bufnr->getbufline(1, '$')
+  const buflines = t:deol.bufnr->getbufline(1, '$')
         \ ->filter({ _, val -> val !=# '' })
-  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
+  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   if !(buflines->empty()) && buflines[-1] =~# pattern
-    let cmdline = buflines[-1]->substitute(pattern, '', '')
+    const cmdline = buflines[-1]->substitute(pattern, '', '')
     if '$'->getline() ==# ''
       call setline('$', cmdline)
     else
@@ -211,7 +211,7 @@ function! deol#get_cmdline() abort
     return '.'->getline()
   endif
 
-  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
+  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   return '.'->getline()->substitute(pattern, '', '')
 endfunction
 
@@ -294,7 +294,7 @@ endfunction
 let s:deol = {}
 
 function! s:deol.cd(directory) abort
-  let directory = a:directory->fnamemodify(':p')
+  const directory = a:directory->fnamemodify(':p')
   if (self->has_key('cwd') && self.cwd ==# directory)
         \ || !(directory->isdirectory())
     return
@@ -303,7 +303,7 @@ function! s:deol.cd(directory) abort
   let self.cwd = directory
   call s:cd(self.cwd)
 
-  let quote = s:is_windows ? '"' : "'"
+  const quote = s:is_windows ? '"' : "'"
   call self.jobsend(printf('%scd %s%s%s%s',
         \ s:cleanup(), quote, self.cwd, quote, "\<CR>"))
 endfunction
@@ -400,9 +400,9 @@ function! s:deol.switch_edit_buffer() abort
     return
   endif
 
-  let cwd = getcwd()
+  const cwd = getcwd()
 
-  let edit_bufname = 'deol-edit@' .. t:deol.bufnr->bufname()
+  const edit_bufname = 'deol-edit@' .. t:deol.bufnr->bufname()
   if self.options.split ==# 'floating' && '*nvim_open_win'->exists()
     call nvim_open_win('%'->bufnr(), v:true, {
           \ 'relative': 'editor',
@@ -442,7 +442,7 @@ function! s:deol.init_edit_buffer() abort
   execute 'resize' self.options.edit_winheight
 
   " Set filetype
-  let command = self.command[0]->fnamemodify(':t:r')
+  const command = self.command[0]->fnamemodify(':t:r')
   let filetype = self.edit_filetype
   let default_filetype = #{
         \   ash: 'sh',
@@ -522,7 +522,7 @@ function! s:deol.jobsend(keys) abort
 endfunction
 
 function! s:set_prev_deol(deol) abort
-  let ids = a:deol.bufnr->win_findbuf()
+  const ids = a:deol.bufnr->win_findbuf()
   if !(ids->empty())
     let g:deol#_prev_deol = ids[0]
   endif
@@ -536,13 +536,13 @@ function! s:term_redraw(bufnr) abort
 
   " Note: In Vim8, auto redraw does not work!
 
-  let ids = a:bufnr->win_findbuf()
+  const ids = a:bufnr->win_findbuf()
   if ids->empty()
     return
   endif
 
-  let prev_mode = mode()
-  let prev_winid = win_getid()
+  const prev_mode = mode()
+  const prev_winid = win_getid()
   call win_gotoid(ids[0])
 
   " Goto insert mode
@@ -590,7 +590,7 @@ endfunction
 function! s:eval_commands(cmdline, is_insert) abort
   let deol = t:deol
 
-  let ex_command = a:cmdline->matchstr('^:\zs.*')
+  const ex_command = a:cmdline->matchstr('^:\zs.*')
   if ex_command !=# ''
     " Execute as Ex command
 
@@ -607,7 +607,7 @@ function! s:eval_commands(cmdline, is_insert) abort
     return v:true
   endif
 
-  let path = a:cmdline->matchstr('^vim\s\+\zs\%(\S\|\\\s\)\+')
+  const path = a:cmdline->matchstr('^vim\s\+\zs\%(\S\|\\\s\)\+')
   if path !=# ''
     " file edit by Vim
 
@@ -621,7 +621,7 @@ function! s:eval_commands(cmdline, is_insert) abort
   endif
 
   " If the current line is the last line, deol must send <CR> only
-  let cmdline = (&l:filetype ==# 'deol' &&
+  const cmdline = (&l:filetype ==# 'deol' &&
         \ ('.'->line() == '$'->line() || mode() ==# 't')) ?
         \ '' : s:cleanup() .. a:cmdline
   call deol.jobsend(cmdline .. "\<CR>")
@@ -634,12 +634,12 @@ function! s:eval_commands(cmdline, is_insert) abort
   call s:check_password()
 
   if deol.options.auto_cd
-    let cwd = printf('/proc/%d/cwd', deol.pid)
+    const cwd = printf('/proc/%d/cwd', deol.pid)
     if cwd->isdirectory()
       " Use directory tracking
-      let directory = cwd->resolve()
+      const directory = cwd->resolve()
     else
-      let directory = s:expand(
+      const directory = s:expand(
             \ a:cmdline->matchstr('^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
     endif
 
@@ -722,10 +722,10 @@ function! s:search_prompt(flag) abort
     return
   endif
 
-  let col = '.'->col()
+  const col = '.'->col()
   call cursor(0, 1)
-  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\).\?'
-  let pos = pattern->searchpos(a:flag)
+  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\).\?'
+  const pos = pattern->searchpos(a:flag)
   if pos[0] != 0
     call cursor(pos[0], pos[0]->getline()->matchend(pattern))
   else
@@ -738,8 +738,7 @@ function! s:paste_prompt() abort
     return
   endif
 
-  let cmdline = deol#get_cmdline()
-  call t:deol.jobsend(s:cleanup() .. cmdline)
+  call t:deol.jobsend(s:cleanup() .. deol#get_cmdline())
   call s:insert_mode(t:deol)
 endfunction
 
@@ -748,7 +747,7 @@ function! s:bg() abort
     return
   endif
 
-  let options = t:deol.options
+  const options = t:deol.options
   unlet t:deol
   call deol#_start(options)
 endfunction
@@ -797,12 +796,12 @@ function! s:insert_mode(deol) abort
 endfunction
 
 function! s:start_insert(mode) abort
-  let prompt = deol#get_prompt()
+  const prompt = deol#get_prompt()
   if prompt ==# ''
     return a:mode
   endif
 
-  let cmdline_len = deol#get_cmdline()->len()
+  const cmdline_len = deol#get_cmdline()->len()
   return 'i' .. repeat("\<Right>", cmdline_len)
         \ .. repeat("\<Left>", cmdline_len - deol#get_input()->len()
         \ + (a:mode ==# 'i' ? 1 : 0))
@@ -813,7 +812,7 @@ function! deol#get_prompt() abort
     return ''
   endif
 
-  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
+  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   return s:get_text(mode())->matchstr(pattern)
 endfunction
 
@@ -823,10 +822,10 @@ function! s:get_text(mode) abort
         \ : '.'->getline()
 endfunction
 function! deol#get_input() abort
-  let mode = mode()
-  let col = mode ==# 't' && !has('nvim') ?
+  const mode = mode()
+  const col = mode ==# 't' && !has('nvim') ?
         \ term_getcursor(bufnr('%'))[1] : col('.')
-  let input = s:get_text(mode)->matchstr('^.*\%' .
+  const input = s:get_text(mode)->matchstr('^.*\%' .
         \ ((mode ==# 'i' || mode ==# 't') ? col : col + 1) .. 'c')
   return input[deol#get_prompt()->len():]
 endfunction
@@ -879,7 +878,7 @@ function! s:parse_options(cmdline) abort
 endfunction
 
 function! deol#_get_histories() abort
-  let history_path = s:expand(g:deol#shell_history_path)
+  const history_path = s:expand(g:deol#shell_history_path)
   if !(history_path->filereadable())
     return []
   endif
@@ -899,10 +898,10 @@ function! deol#_complete(arglead, cmdline, cursorpos) abort
   let _ = []
 
   " Option names completion.
-  let bool_options = s:user_options()->copy()
+  const bool_options = s:user_options()->copy()
         \ ->filter({ _, val -> type(val) == v:t_bool })->keys()
   let _ += bool_options->copy()->map({ _, val -> '-' .. tr(val, '_', '-') })
-  let string_options = s:user_options()->copy()
+  const string_options = s:user_options()->copy()
         \ ->filter({ _, val -> type(val) != v:t_bool })->keys()
   let _ += string_options->copy()
         \ ->map({ _, val -> '-' .. tr(val, '_', '-') .. '=' })
@@ -963,7 +962,7 @@ function! s:ddc_changed() abort
   endif
 
   " It must be prompt
-  let pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
+  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
   if s:get_text(mode()) !~# pattern || deol#get_input() ==# ''
     return
   endif
@@ -972,7 +971,7 @@ function! s:ddc_changed() abort
 endfunction
 
 function! deol#_get(tabnr) abort
-  let deol = a:tabnr->gettabvar('deol', v:null)
+  const deol = a:tabnr->gettabvar('deol', v:null)
   if deol is v:null
     return deol
   endif
