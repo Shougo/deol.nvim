@@ -1,8 +1,8 @@
 let s:is_windows = has('win32') || has('win64')
-let s:default_password_pattern =
-        \   '\%(Enter \|Repeat \|[Oo]ld \|[Nn]ew \|login ' .
-        \   '\|Kerberos \|EncFS \|CVS \|UNIX \| SMB \|LDAP \|\[sudo] ' .
-        \   '\|^\|\n\|''s \)\%([Pp]assword\|[Pp]assphrase\)\>'
+let s:default_password_pattern
+      \ = '\%(Enter \|Repeat \|[Oo]ld \|[Nn]ew \|login '
+      \   .. '\|Kerberos \|EncFS \|CVS \|UNIX \| SMB \|LDAP \|\[sudo] '
+      \   .. '\|^\|\n\|''s \)\%([Pp]assword\|[Pp]assphrase\)\>'
 
 let g:deol#_prev_deol = -1
 let g:deol#enable_dir_changed = g:
@@ -621,8 +621,8 @@ function! s:eval_commands(cmdline, is_insert) abort
   endif
 
   " If the current line is the last line, deol must send <CR> only
-  const cmdline = (&l:filetype ==# 'deol' &&
-        \ ('.'->line() == '$'->line() || mode() ==# 't')) ?
+  const cmdline = (&l:filetype ==# 'deol'
+        \ && ('.'->line() == '$'->line() || mode() ==# 't')) ?
         \ '' : s:cleanup() .. a:cmdline
   call deol.jobsend(cmdline .. "\<CR>")
 
@@ -817,8 +817,10 @@ function! deol#get_prompt() abort
 endfunction
 
 function! s:get_text(mode) abort
-  return a:mode ==# 'c' ? getcmdline() :
-        \ a:mode ==# 't' && !has('nvim') ? term_getline('', '.')
+  return a:mode ==# 'c'
+        \ ? getcmdline()
+        \ : a:mode ==# 't' && !has('nvim')
+        \ ? term_getline('', '.')
         \ : '.'->getline()
 endfunction
 function! deol#get_input() abort
@@ -951,8 +953,8 @@ function! s:ddc_changed() abort
   if '*pum#_get'->exists() && mode() ==# 't'
     silent doautocmd <nomodeline> User PumTextChanged
 
-    if pum#map#_skip_count() <= 0 &&
-          \ (s:row() != pum#_get().startrow || deol#get_input() =~# '\s$')
+    if pum#map#_skip_count() <= 0
+          \ && (s:row() != pum#_get().startrow || deol#get_input() =~# '\s$')
       call pum#close()
     endif
   endif
