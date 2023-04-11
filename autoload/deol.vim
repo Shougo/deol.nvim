@@ -308,19 +308,15 @@ endfunction
 
 function! s:deol.init_deol_buffer() abort
   if has('nvim')
-    let options = {}
-    let options.on_stdout = { j, d, e -> s:ddc_changed() }
-
     " Note: termopen() replaces current buffer
     enew
-    call termopen(self.command, options)
+    call termopen(self.command)
 
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
   else
     let options = g:deol#_term_options->extend(
           \ b:->get('deol_extra_options', {}))
-    let options.out_cb = { c, m -> s:ddc_changed() }
     call term_start(self.command, options)
     let self.pid = term_getjob('%'->bufnr())->job_info().process
   endif
@@ -941,25 +937,6 @@ function! s:expand(path) abort
 endfunction
 function! s:substitute_path_separator(path) abort
   return s:is_windows ? a:path->substitute('\\', '/', 'g') : a:path
-endfunction
-
-function! s:ddc_changed() abort
-  if '*pum#_get'->exists() && mode() ==# 't'
-    silent doautocmd <nomodeline> User PumTextChanged
-
-    if pum#map#_skip_count() <= 0
-          \ && (s:row() != pum#_get().startrow || deol#get_input() =~# '\s$')
-      call pum#close()
-    endif
-  endif
-
-  " It must be prompt
-  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
-  if s:get_text(mode()) !~# pattern || deol#get_input() ==# ''
-    return
-  endif
-
-  call ddc#_on_event('TextChangedI')
 endfunction
 
 function! deol#_get(tabnr) abort
