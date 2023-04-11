@@ -7,8 +7,6 @@ let s:default_password_pattern
 let g:deol#_prev_deol = -1
 let g:deol#enable_dir_changed = g:
       \ ->get('deol#enable_dir_changed', v:true)
-let g:deol#enable_ddc_completion = g:
-      \ ->get('deol#enable_ddc_completion', v:false)
 let g:deol#prompt_pattern = g:
       \ ->get('deol#prompt_pattern', s:is_windows ? '\f\+>' : '')
 let g:deol#password_pattern = g:
@@ -325,10 +323,6 @@ function! s:deol.init_deol_buffer() abort
     let options.out_cb = { c, m -> s:ddc_changed() }
     call term_start(self.command, options)
     let self.pid = term_getjob('%'->bufnr())->job_info().process
-  endif
-
-  if g:deol#enable_ddc_completion
-    call ddc#custom#patch_buffer('specialBufferCompletion', v:true)
   endif
 
   let self.bufnr = '%'->bufnr()
@@ -957,10 +951,6 @@ function! s:ddc_changed() abort
           \ && (s:row() != pum#_get().startrow || deol#get_input() =~# '\s$')
       call pum#close()
     endif
-  endif
-
-  if !g:deol#enable_ddc_completion
-    return
   endif
 
   " It must be prompt

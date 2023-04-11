@@ -163,16 +163,6 @@ g:deol#custom_map					*g:deol#custom_map*
 			\   quit: 'q',
 			\ }
 <
-					    	*g:deol#enable_ddc_completion*
-g:deol#enable_ddc_completion
-		Enable ddc.vim completion feature.
-		Note: It is experimental feature.
-		Note: Both ddc.vim and pum.vim are needed.
-		https://github.com/Shougo/ddc.vim
-		https://github.com/Shougo/pum.vim
-
-		Default: v:false
-
 					    	*g:deol#enable_dir_changed*
 g:deol#enable_dir_changed
 		Enable |DirChanged| autocmd detection.
