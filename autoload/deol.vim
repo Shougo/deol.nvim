@@ -369,19 +369,17 @@ function! s:deol.init_deol_buffer() abort
 
   if g:deol#enable_dir_changed
     if has('nvim')
-      autocmd deol DirChanged <buffer>
-            \ call deol#cd(v:event.cwd)
+      autocmd deol DirChanged <buffer> call deol#cd(v:event.cwd)
     else
       " Note: Use <afile> does not work...
-      autocmd deol DirChanged <buffer>
-            \ call deol#cd(getcwd())
+      autocmd deol DirChanged <buffer> call deol#cd(getcwd())
     endif
   endif
 
   if '##TermClose'->exists()
     autocmd deol TermClose <buffer> unlet! t:deol
   endif
-  autocmd deol InsertEnter <buffer> call <SID>set_prev_deol(t:deol)
+  autocmd deol InsertEnter <buffer> call s:set_prev_deol(t:deol)
 endfunction
 
 function! s:deol.switch_edit_buffer() abort
@@ -394,13 +392,13 @@ function! s:deol.switch_edit_buffer() abort
 
   const edit_bufname = 'deol-edit@' .. t:deol.bufnr->bufname()
   if self.options.split ==# 'floating' && '*nvim_open_win'->exists()
-    call nvim_open_win('%'->bufnr(), v:true, {
-          \ 'relative': 'editor',
-          \ 'row': (self.options.winrow + winheight(0))->str2nr(),
-          \ 'col': self.options.wincol->str2nr(),
-          \ 'width': 0->winwidth(),
-          \ 'height': 1,
-          \ 'border': g:deol#floating_border,
+    call nvim_open_win('%'->bufnr(), v:true, #{
+          \   relative: 'editor',
+          \   row: (self.options.winrow + winheight(0))->str2nr(),
+          \   col: self.options.wincol->str2nr(),
+          \   width: 0->winwidth(),
+          \   height: 1,
+          \   border: g:deol#floating_border,
           \ })
     execute edit_bufname->bufadd() 'buffer'
   else
@@ -748,13 +746,13 @@ function! s:split(options) abort
   endif
 
   if a:options.split ==# 'floating' && '*nvim_open_win'->exists()
-    call nvim_open_win(bufnr('%'), v:true, {
-          \ 'relative': 'editor',
-          \ 'row': a:options.winrow->str2nr(),
-          \ 'col': a:options.wincol->str2nr(),
-          \ 'width': a:options.winwidth->str2nr(),
-          \ 'height': a:options.winheight->str2nr(),
-          \ 'border': g:deol#floating_border,
+    call nvim_open_win(bufnr('%'), v:true, #{
+          \   relative: 'editor',
+          \   row: a:options.winrow->str2nr(),
+          \   col: a:options.wincol->str2nr(),
+          \   width: a:options.winwidth->str2nr(),
+          \   height: a:options.winheight->str2nr(),
+          \   border: g:deol#floating_border,
           \ })
   elseif a:options.split ==# 'vertical'
     vsplit
