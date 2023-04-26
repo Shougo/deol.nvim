@@ -271,7 +271,9 @@ function! deol#quit() abort
     execute deolwin 'wincmd w'
   endif
 
-  if winnr('$') == 1
+  if winnr('$') > 1
+    close!
+  else
     " Move to alternate buffer
     if 't:deol'->exists() && s:check_buffer(t:deol.prev_bufnr)
       execute 'buffer' t:deol.prev_bufnr
@@ -280,8 +282,6 @@ function! deol#quit() abort
     else
       enew
     endif
-  else
-    close!
   endif
 endfunction
 
