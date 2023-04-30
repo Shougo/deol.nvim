@@ -22,7 +22,7 @@ FAQ			|deol-faq|
 ==============================================================================
 INTRODUCTION						*deol-introduction*
 
-|Deol.nvim| is a dark powered shell both for Neovim and Vim. It is based on
+*deol* is a dark powered shell both for Neovim and Vim. It is based on
 neovim or Vim terminal feature.
 
 ==============================================================================
@@ -40,7 +40,7 @@ EXAMPLES						*deol-examples*
 INTERFACE						*deol-interface*
 
 ------------------------------------------------------------------------------
-COMMANDS 						*deol-commands*
+COMMANDS						*deol-commands*
 
 :Deol [{command}] [{options}]				*:Deol*
 	Create a deol buffer using {command}.
@@ -89,13 +89,13 @@ OPTIONS							*deol-options*
 
 							*deol-options-edit*
 -edit
- 		Open edit buffer in default.
+		Open edit buffer in default.
 
 		Default: v:false
 
 						*deol-options-edit-filetype*
 -edit-filetype
- 		Specify 'filetype' in edit buffer.
+		Specify 'filetype' in edit buffer.
 
 						*deol-option-edit-winheight*
 -edit-winheight={window-height}
@@ -148,7 +148,7 @@ OPTIONS							*deol-options*
 
 
 ------------------------------------------------------------------------------
-VARIABLES 						*deol-variables*
+VARIABLES						*deol-variables*
 
 g:deol#custom_map					*g:deol#custom_map*
 		Customize the mappings for deol.  See |deol-key-mappings| for
@@ -168,7 +168,7 @@ g:deol#custom_map					*g:deol#custom_map*
 			\   quit: 'q',
 			\ }
 <
-					    	*g:deol#enable_dir_changed*
+						*g:deol#enable_dir_changed*
 g:deol#enable_dir_changed
 		Enable |DirChanged| autocmd detection.
 
@@ -223,7 +223,7 @@ g:deol#shell_history_path			*g:deol#shell_history_path*
 		Default: ""
 
 ------------------------------------------------------------------------------
-KEY MAPPINGS 						*deol-key-mappings*
+KEY MAPPINGS						*deol-key-mappings*
 
 						*<Plug>(deol_edit)*
 <Plug>(deol_edit)
