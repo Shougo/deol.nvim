@@ -566,11 +566,11 @@ function! s:eval_edit(is_insert) abort
   endif
 
   if s:eval_commands(deol#get_cmdline(), a:is_insert)
-    call s:auto_cd()
+    call s:auto_cd(a:is_insert)
     return
   endif
 
-  call s:auto_cd()
+  call s:auto_cd(a:is_insert)
 
   if a:is_insert
     call append('$'->line(), '')
@@ -687,7 +687,7 @@ function! s:eval_deol(is_insert) abort
     call t:deol.jobsend("\<CR>")
   endif
 
-  call s:auto_cd()
+  call s:auto_cd(a:is_insert)
 
   if a:is_insert
     call s:start_insert_term()
@@ -940,7 +940,7 @@ function! deol#_get(tabnr) abort
         \ }
 endfunction
 
-function! s:auto_cd() abort
+function! s:auto_cd(is_insert) abort
   if !t:deol.options.auto_cd
     return
   endif
@@ -956,5 +956,10 @@ function! s:auto_cd() abort
 
   if directory->isdirectory() && getcwd() !=# directory
     call s:cd(directory)
+
+    " NOTE: Need to back normal mode to update the title string
+    if has('nvim') && a:is_insert
+      call feedkeys("\<C-\>\<C-n>i", 'n')
+    endif
   endif
 endfunction
