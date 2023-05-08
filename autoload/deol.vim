@@ -81,11 +81,12 @@ function! deol#_start(options) abort
   let t:deol.prev_bufnr = '%'->bufnr()
   call t:deol.init_deol_buffer()
 
-  if !has('nvim')
-    " Vim8 takes initialization...
-    sleep 150m
+  if has('nvim')
+    call s:insert_mode(t:deol)
+  else
+    " In Vim8, must be insert mode to redraw
+    startinsert
   endif
-  call s:insert_mode(t:deol)
 
   if options.edit
     call deol#edit()
@@ -565,8 +566,11 @@ function! s:eval_edit(is_insert) abort
   endif
 
   if s:eval_commands(deol#get_cmdline(), a:is_insert)
+    call s:auto_cd()
     return
   endif
+
+  call s:auto_cd()
 
   if a:is_insert
     call append('$'->line(), '')
@@ -620,21 +624,6 @@ function! s:eval_commands(cmdline, is_insert) abort
 
   " Password check
   call s:check_password()
-
-  if deol.options.auto_cd
-    const cwd = printf('/proc/%d/cwd', deol.pid)
-    if cwd->isdirectory()
-      " Use directory tracking
-      const directory = cwd->resolve()
-    else
-      const directory = s:expand(
-            \ a:cmdline->matchstr('^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
-    endif
-
-    if directory->isdirectory() && getcwd() !=# directory
-      noautocmd call s:cd(directory)
-    endif
-  endif
 
   return v:false
 endfunction
@@ -697,6 +686,8 @@ function! s:eval_deol(is_insert) abort
   else
     call t:deol.jobsend("\<CR>")
   endif
+
+  call s:auto_cd()
 
   if a:is_insert
     call s:start_insert_term()
@@ -947,4 +938,23 @@ function! deol#_get(tabnr) abort
         \   cwd: deol.cwd,
         \   options: deol.options,
         \ }
+endfunction
+
+function! s:auto_cd() abort
+  if !t:deol.options.auto_cd
+    return
+  endif
+
+  const cwd = printf('/proc/%d/cwd', t:deol.pid)
+  if cwd->isdirectory()
+    " Use directory tracking
+    const directory = cwd->resolve()
+  else
+    const directory = s:expand(
+          \ a:cmdline->matchstr('^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
+  endif
+
+  if directory->isdirectory() && getcwd() !=# directory
+    call s:cd(directory)
+  endif
 endfunction

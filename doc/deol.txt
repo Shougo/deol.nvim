@@ -119,6 +119,8 @@ OPTIONS							*deol-options*
 						*deol-options-start-insert*
 -start-insert
 		Start the insert mode in deol buffer.
+		Note: In Vim, the option is ignored if new terminal buffer is
+		created.
 
 		Default: v:true
 
