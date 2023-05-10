@@ -957,6 +957,8 @@ function! s:auto_cd(is_insert) abort
   if directory->isdirectory() && getcwd() !=# directory
     call s:cd(directory)
 
+    let t:deol.cwd = directory
+
     " NOTE: Need to back normal mode to update the title string
     if has('nvim') && a:is_insert
       call feedkeys("\<C-\>\<C-n>i", 'n')
