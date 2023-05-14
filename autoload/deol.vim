@@ -359,6 +359,10 @@ function! s:deol.init_deol_buffer() abort
   setlocal colorcolumn=
   setlocal nonumber
   setlocal norelativenumber
+  if '+smoothscroll'->exists()
+    " NOTE: If smoothscroll is set in neovim, freezed in terminal buffer.
+    setlocal nosmoothscroll
+  endif
 
   for [rhs, lhs] in g:deol#_maps->items()
     execute 'nmap <buffer> ' .. lhs .. ' <Plug>(deol_' .. rhs .. ')'
