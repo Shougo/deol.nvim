@@ -691,6 +691,11 @@ function! s:eval_deol(is_insert) abort
     call t:deol.jobsend("\<CR>")
   endif
 
+  " NOTE: t:deol may be not found.
+  if !('t:deol'->exists())
+    return
+  endif
+
   call s:auto_cd(a:is_insert)
 
   if a:is_insert
@@ -945,7 +950,7 @@ function! deol#_get(tabnr) abort
 endfunction
 
 function! s:auto_cd(is_insert) abort
-  if !t:deol.options.auto_cd
+  if !('t:deol'->exists()) || !t:deol.options.auto_cd
     return
   endif
 
