@@ -3,8 +3,8 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v2.8.3/types.ts";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.8.3/deps.ts";
+} from "https://deno.land/x/ddu_vim@v2.8.4/types.ts";
+import { Denops, fn, op } from "https://deno.land/x/ddu_vim@v2.8.4/deps.ts";
 
 export type ActionData = {
   command: string[];
@@ -24,7 +24,10 @@ export class Kind extends BaseKind<Params> {
         const action = item?.action as ActionData;
         await args.denops.cmd(`tabnext ${action.tabNr}`);
 
-        if (!action.existsDeol) {
+        if (
+          !action.existsDeol ||
+          (await op.filetype.getLocal(args.denops)) === "deol"
+        ) {
           await args.denops.cmd(`Deol ${action.command.join(" ")}`);
         }
       }

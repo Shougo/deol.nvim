@@ -1,8 +1,8 @@
 import {
   BaseSource,
-  Item,
   Context,
   DdcOptions,
+  Item,
   SourceOptions,
 } from "https://deno.land/x/ddc_vim@v3.4.0/types.ts";
 import { Denops } from "https://deno.land/x/ddc_vim@v3.4.0/deps.ts";

@@ -1,8 +1,5 @@
-import {
-  BaseSource,
-  Item,
-} from "https://deno.land/x/ddu_vim@v2.8.3/types.ts";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.8.3/deps.ts";
+import { BaseSource, Item } from "https://deno.land/x/ddu_vim@v2.8.4/types.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.8.4/deps.ts";
 import { ActionData } from "../@ddu-kinds/deol.ts";
 
 type Params = {
@@ -26,9 +23,8 @@ export class Source extends BaseSource<Params> {
                 cwd: string;
               };
               return {
-                word: (tabNr < 10 ? " " : "") + (deol
-                  ? `${tabNr}: ${deol.cwd}`
-                  : `${tabNr}: [new]`),
+                word: (tabNr < 10 ? " " : "") +
+                  (deol ? `${tabNr}: ${deol.cwd}` : `${tabNr}: [new]`),
                 action: {
                   command: args.sourceParams.command,
                   tabNr: tabNr,
