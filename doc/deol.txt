@@ -199,11 +199,6 @@ g:deol#nvim_server					*g:deol#nvim_server*
 
 		Default: ""
 
-g:deol#password_pattern				*g:deol#password_pattern*
-		Sets the pattern which matches password input.
-
-		Default pattern is complex.  Please see the source code.
-
 g:deol#prompt_pattern				*g:deol#prompt_pattern*
 		Sets the pattern which matches the shell prompt.
 		Note: The right prompt is not supported.

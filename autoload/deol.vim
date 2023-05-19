@@ -1,16 +1,10 @@
 let s:is_windows = has('win32') || has('win64')
-let s:default_password_pattern
-      \ = '\%(Enter \|Repeat \|[Oo]ld \|[Nn]ew \|login '
-      \   .. '\|Kerberos \|EncFS \|CVS \|UNIX \| SMB \|LDAP \|\[sudo] '
-      \   .. '\|^\|\n\|''s \)\%([Pp]assword\|[Pp]assphrase\)\>'
 
 let g:deol#_prev_deol = -1
 let g:deol#enable_dir_changed = g:
       \ ->get('deol#enable_dir_changed', v:true)
 let g:deol#prompt_pattern = g:
       \ ->get('deol#prompt_pattern', s:is_windows ? '\f\+>' : '')
-let g:deol#password_pattern = g:
-      \ ->get('deol#password_pattern', s:default_password_pattern)
 let g:deol#shell_history_path = g:->get('deol#shell_history_path', '')
 let g:deol#shell_history_max = g:->get('deol#shell_history_max', 500)
 let g:deol#nvim_server = g:->get('deol#nvim_server', '')
@@ -626,43 +620,7 @@ function! s:eval_commands(cmdline, is_insert) abort
   sleep 100m
   call s:term_redraw(deol.bufnr)
 
-  " Password check
-  call s:check_password()
-
   return v:false
-endfunction
-
-function! s:check_password() abort
-  if !('t:deol'->exists())
-    return
-  endif
-
-  while 1
-    " Get the last non empty line
-    let lines = t:deol.bufnr->getbufline(1, '$')
-          \ ->filter({ _, val -> val !=# '' })
-    if lines->empty() || lines[-1] !~? g:deol#password_pattern
-      break
-    endif
-
-    " Password input.
-    set imsearch=0
-    " Note: call inputsave() to clear input queue.
-    call inputsave()
-    redraw | echo ''
-    let secret = 'Input Secret : '->inputsecret()
-    redraw | echo ''
-    if secret ==# ''
-      break
-    endif
-
-    call t:deol.jobsend(secret .. "\<CR>")
-
-    " Note: Needs wait to proceed messages
-    sleep 150m
-
-    call s:term_redraw(t:deol.bufnr)
-  endwhile
 endfunction
 
 function! s:deol_backspace() abort
