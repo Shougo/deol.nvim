@@ -197,6 +197,11 @@ g:deol#floating_border				*g:deol#floating_border*
 
 		Default: "none"
 
+g:deol#internal_history_path		*g:deol#internal_history_path*
+		The internal shell history path. If it is set, the internal
+		histories are saved.
+
+		Default: ""
 
 g:deol#nvim_server					*g:deol#nvim_server*
 		The path of neovim server.
@@ -215,8 +220,8 @@ g:deol#prompt_pattern				*g:deol#prompt_pattern*
 
 g:deol#shell_history_max			*g:deol#shell_history_max*
 		The max history of external shell history.
-		Note: It is only used when |g:deol#external_history_path| is
-		set.
+		Note: It is only used when |g:deol#external_history_path| or
+		|g:deol#internal_history_path| is set.
 
 		Default: 500
 
@@ -276,7 +281,8 @@ DENITE SOURCES						*deol-denite-sources*
 deol		Gather deol tabs.
 
 					*deol-denite-source-deol/history*
-deol/history	Gather deol histories from |g:deol#external_history_path|.
+deol/history	Gather deol histories from |g:deol#external_history_path| or
+		|g:deol#internal_history_path|.
 
 ==============================================================================
 DDU SOURCES						*deol-ddu-sources*

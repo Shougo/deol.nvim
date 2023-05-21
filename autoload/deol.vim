@@ -581,6 +581,17 @@ endfunction
 function! s:eval_commands(cmdline, is_insert) abort
   let deol = t:deol
 
+  if g:deol#internal_history_path !=# ''
+    " Add to history
+    let history_path = s:expand(g:deol#internal_history_path)
+
+    call mkdir(history_path->fnamemodify(':h'), 'p')
+
+    let histories = s:get_histories(history_path)
+    call insert(histories, a:cmdline)
+    call writefile(histories, history_path)
+  endif
+
   const ex_command = a:cmdline->matchstr('^:\zs.*')
   if ex_command !=# ''
     " Execute as Ex command
