@@ -589,7 +589,7 @@ function! s:eval_commands(cmdline, is_insert) abort
 
     let histories = s:get_histories(history_path)
     call add(histories, a:cmdline)
-    call writefile(histories, history_path)
+    call writefile(s:uniq(histories->reverse())->reverse(), history_path)
   endif
 
   const ex_command = a:cmdline->matchstr('^:\zs.*')
@@ -948,4 +948,22 @@ function! s:auto_cd(is_insert) abort
       call feedkeys("\<C-\>\<C-n>i", 'n')
     endif
   endif
+endfunction
+
+function! s:uniq(list) abort
+  let list = a:list->copy()
+  let i = 0
+  let seen = {}
+  while i < list->len()
+    let key = list[i]
+    if key !=# '' && seen->has_key(key)
+      call remove(list, i)
+    else
+      if key !=# ''
+        let seen[key] = 1
+      endif
+      let i += 1
+    endif
+  endwhile
+  return list
 endfunction
