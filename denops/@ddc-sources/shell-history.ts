@@ -23,7 +23,7 @@ export class Source extends BaseSource<Params> {
     const input = await args.denops.call("deol#get_input") as string;
     const inputLength = input.length - args.completeStr.length;
     const filterInput = input.substring(0, inputLength);
-    return histories.filter((word) => word.startsWith(filterInput))
+    return histories.reverse().filter((word) => word.startsWith(filterInput))
       .map((word) => ({ word: word.substring(inputLength) }));
   }
 
