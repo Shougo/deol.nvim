@@ -918,7 +918,7 @@ function! s:auto_cd(is_insert) abort
     const directory = cwd->resolve()
   else
     const directory = s:expand(
-          \ deol#get_cmdline()->matchstr('^\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
+          \ deol#get_cmdline()->matchstr('\W\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+'))
   endif
 
   if directory->isdirectory() && getcwd() !=# directory
