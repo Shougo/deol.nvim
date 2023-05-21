@@ -588,7 +588,7 @@ function! s:eval_commands(cmdline, is_insert) abort
     call mkdir(history_path->fnamemodify(':h'), 'p')
 
     let histories = s:get_histories(history_path)
-    call insert(histories, a:cmdline)
+    call add(histories, a:cmdline)
     call writefile(histories, history_path)
   endif
 
