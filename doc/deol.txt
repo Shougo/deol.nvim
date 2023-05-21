@@ -185,6 +185,12 @@ g:deol#extra_options					*g:deol#extra_options*
 <
 		Default: #{ curwin: v:true }
 
+g:deol#external_history_path		*g:deol#external_history_path*
+		The external shell history path. If it is set, the external
+		histories are loaded in deol edit buffer.
+
+		Default: ""
+
 g:deol#floating_border				*g:deol#floating_border*
 		The border if |deol-option-split| is "floating".
 		Please see |nvim_open_win()| for available options.
@@ -209,15 +215,10 @@ g:deol#prompt_pattern				*g:deol#prompt_pattern*
 
 g:deol#shell_history_max			*g:deol#shell_history_max*
 		The max history of external shell history.
-		Note: It is only used when |g:deol#shell_history_path| is set.
+		Note: It is only used when |g:deol#external_history_path| is
+		set.
 
 		Default: 500
-
-g:deol#shell_history_path			*g:deol#shell_history_path*
-		The external shell history path. If it is set, the external
-		histories are loaded in deol edit buffer.
-
-		Default: ""
 
 ------------------------------------------------------------------------------
 KEY MAPPINGS						*deol-key-mappings*
@@ -275,7 +276,7 @@ DENITE SOURCES						*deol-denite-sources*
 deol		Gather deol tabs.
 
 					*deol-denite-source-deol/history*
-deol/history	Gather deol histories from |g:deol#shell_history_path|.
+deol/history	Gather deol histories from |g:deol#external_history_path|.
 
 ==============================================================================
 DDU SOURCES						*deol-ddu-sources*

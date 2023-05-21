@@ -5,7 +5,8 @@ let g:deol#enable_dir_changed = g:
       \ ->get('deol#enable_dir_changed', v:true)
 let g:deol#prompt_pattern = g:
       \ ->get('deol#prompt_pattern', s:is_windows ? '\f\+>' : '')
-let g:deol#shell_history_path = g:->get('deol#shell_history_path', '')
+let g:deol#internal_history_path = g:->get('deol#internal_history_path', '')
+let g:deol#external_history_path = g:->get('deol#external_history_path', '')
 let g:deol#shell_history_max = g:->get('deol#shell_history_max', 500)
 let g:deol#nvim_server = g:->get('deol#nvim_server', '')
 let g:deol#floating_border = g:->get('deol#floating_border', 'none')
@@ -826,7 +827,11 @@ function! s:parse_options(cmdline) abort
 endfunction
 
 function! deol#_get_histories() abort
-  const history_path = s:expand(g:deol#shell_history_path)
+  return s:get_histories(g:deol#internal_history_path)
+        \ + s:get_histories(g:deol#external_history_path)
+endfunction
+function! s:get_histories(path) abort
+  const history_path = s:expand(a:path)
   if !(history_path->filereadable())
     return []
   endif
