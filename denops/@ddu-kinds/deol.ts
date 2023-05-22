@@ -59,15 +59,12 @@ export class Kind extends BaseKind<Params> {
     },
     delete: async (args: { denops: Denops; items: DduItem[] }) => {
       const currentTab = await fn.tabpagenr(args.denops);
-      for (const item of args.items) {
-        const action = item?.action as ActionData;
+      const tabNrs = args.items
+        .map((item) => (item?.action as ActionData)?.tabNr)
+        .filter((tabNr) => tabNr !== undefined && tabNr != currentTab);
 
-        // Skip current tab
-        if (action.tabNr == currentTab) {
-          continue;
-        }
-
-        await args.denops.cmd(`silent! tabclose ${action.tabNr}`);
+      for (const tabNr of tabNrs.sort().reverse()) {
+        await args.denops.cmd(`silent! tabclose ${tabNr}`);
       }
 
       return Promise.resolve(ActionFlags.Persist | ActionFlags.RefreshItems);
