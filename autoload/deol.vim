@@ -360,7 +360,7 @@ function! s:deol.init_deol_buffer() abort
   endif
 
   for [rhs, lhs] in g:deol#_maps->items()
-    execute 'nmap <buffer> ' .. lhs .. ' <Plug>(deol_' .. rhs .. ')'
+    execute 'nnoremap <buffer> ' .. lhs .. ' <Plug>(deol_' .. rhs .. ')'
   endfor
 
   " set filetype twice to load after/ftplugin in Vim8
@@ -466,17 +466,17 @@ function! s:deol.init_edit_buffer() abort
   inoremap <buffer><expr> <Plug>(deol_ctrl_d)
         \ deol#send("\<C-d>") .. "\<ESC>a"
 
-  nmap <buffer> <CR>  <Plug>(deol_execute_line)
-  nmap <buffer> <BS>  <Plug>(deol_backspace)
-  nmap <buffer> <C-h> <Plug>(deol_backspace)
-  nmap <buffer> q     <Plug>(deol_quit)
-  nmap <buffer> <C-c> <Plug>(deol_ctrl_c)
+  nnoremap <buffer> <CR>  <Plug>(deol_execute_line)
+  nnoremap <buffer> <BS>  <Plug>(deol_backspace)
+  nnoremap <buffer> <C-h> <Plug>(deol_backspace)
+  nnoremap <buffer> q     <Plug>(deol_quit)
+  nnoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
 
-  imap <buffer> <CR>  <Plug>(deol_execute_line)
-  imap <buffer> <BS>  <Plug>(deol_backspace)
-  imap <buffer> <C-h> <Plug>(deol_backspace)
-  imap <buffer> <C-c> <Plug>(deol_ctrl_c)
-  imap <buffer> <C-d> <Plug>(deol_ctrl_d)
+  inoremap <buffer> <CR>  <Plug>(deol_execute_line)
+  inoremap <buffer> <BS>  <Plug>(deol_backspace)
+  inoremap <buffer> <C-h> <Plug>(deol_backspace)
+  inoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
+  inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
 
   let &l:filetype = filetype
 
