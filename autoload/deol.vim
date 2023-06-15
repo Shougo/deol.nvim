@@ -36,11 +36,11 @@ augroup deol
   autocmd!
 augroup END
 
-function! deol#start(cmdline) abort
+function deol#start(cmdline) abort
   return deol#_start(s:parse_options(a:cmdline))
 endfunction
 
-function! deol#_start(options) abort
+function deol#_start(options) abort
   let options = a:options->copy()
 
   if 't:deol'->exists() && t:deol.bufnr->bufexists()
@@ -88,7 +88,7 @@ function! deol#_start(options) abort
   endif
 endfunction
 
-function! s:switch(options) abort
+function s:switch(options) abort
   const options = a:options->copy()
   let deol = t:deol
   let deol.prev_bufnr = '%'->bufnr()
@@ -116,7 +116,7 @@ function! s:switch(options) abort
   endif
 endfunction
 
-function! deol#new(options) abort
+function deol#new(options) abort
   let options = s:user_options()->extend(copy(a:options))
   if options->get('cwd', '') ==# ''
     let options.cwd = 'Current directory: '->input(getcwd(), 'dir')
@@ -141,7 +141,7 @@ function! deol#new(options) abort
   return deol#_start(options)
 endfunction
 
-function! deol#send(string) abort
+function deol#send(string) abort
   if !('t:deol'->exists())
     return ''
   endif
@@ -150,7 +150,7 @@ function! deol#send(string) abort
   return ''
 endfunction
 
-function! deol#cd(directory) abort
+function deol#cd(directory) abort
   if !('t:deol'->exists()) || t:deol.bufnr->bufwinnr() < 0
     return
   endif
@@ -163,7 +163,7 @@ function! deol#cd(directory) abort
   endif
 endfunction
 
-function! deol#edit() abort
+function deol#edit() abort
   if !('t:deol'->exists())
     Deol
   endif
@@ -195,12 +195,12 @@ function! deol#edit() abort
   startinsert!
 endfunction
 
-function! deol#kill_editor() abort
+function deol#kill_editor() abort
   bdelete
   call win_gotoid(g:deol#_prev_deol)
 endfunction
 
-function! deol#get_cmdline() abort
+function deol#get_cmdline() abort
   if &l:filetype !=# 'deol'
     return '.'->getline()
   endif
@@ -209,7 +209,7 @@ function! deol#get_cmdline() abort
   return '.'->getline()->substitute(pattern, '', '')
 endfunction
 
-function! deol#_new(cwd, options) abort
+function deol#_new(cwd, options) abort
   let deol = s:deol->copy()
   let deol.command = a:options.command
   let deol.edit_winid = -1
@@ -251,7 +251,7 @@ function! deol#_new(cwd, options) abort
   return deol
 endfunction
 
-function! deol#quit() abort
+function deol#quit() abort
   if 't:deol'->exists()
     if t:deol.edit_bufnr->bufwinnr() > 0
       " Close edit buffer in the first
@@ -281,13 +281,13 @@ function! deol#quit() abort
   endif
 endfunction
 
-function! s:cd(directory) abort
+function s:cd(directory) abort
   execute 'tchdir' fnameescape(a:directory)
 endfunction
 
 let s:deol = {}
 
-function! s:deol.cd(directory) abort
+function s:deol.cd(directory) abort
   const directory = a:directory->fnamemodify(':p')
   if (self->has_key('cwd') && self.cwd ==# directory)
         \ || !(directory->isdirectory())
@@ -302,7 +302,7 @@ function! s:deol.cd(directory) abort
         \ s:cleanup(), quote, self.cwd, quote, "\<CR>"))
 endfunction
 
-function! s:deol.init_deol_buffer() abort
+function s:deol.init_deol_buffer() abort
   if has('nvim')
     " Note: termopen() replaces current buffer
     enew
@@ -382,7 +382,7 @@ function! s:deol.init_deol_buffer() abort
   autocmd deol InsertEnter <buffer> call s:set_prev_deol(t:deol)
 endfunction
 
-function! s:deol.switch_edit_buffer() abort
+function s:deol.switch_edit_buffer() abort
   if self.edit_bufnr->win_findbuf() == [self.edit_winid]
     call win_gotoid(self.edit_winid)
     return
@@ -415,7 +415,7 @@ function! s:deol.switch_edit_buffer() abort
   let self.edit_bufnr = '%'->bufnr()
 endfunction
 
-function! s:deol.init_edit_buffer() abort
+function s:deol.init_edit_buffer() abort
   setlocal bufhidden=hide
   setlocal buftype=nofile
   setlocal nolist
@@ -490,7 +490,7 @@ function! s:deol.init_edit_buffer() abort
   endif
 endfunction
 
-function! s:deol.jobsend(keys) abort
+function s:deol.jobsend(keys) abort
   if !(self->has_key('bufnr'))
     return
   endif
@@ -509,14 +509,14 @@ function! s:deol.jobsend(keys) abort
   call s:set_prev_deol(self)
 endfunction
 
-function! s:set_prev_deol(deol) abort
+function s:set_prev_deol(deol) abort
   const ids = a:deol.bufnr->win_findbuf()
   if !(ids->empty())
     let g:deol#_prev_deol = ids[0]
   endif
 endfunction
 
-function! s:term_redraw(bufnr) abort
+function s:term_redraw(bufnr) abort
   if has('nvim')
     redraw
     return
@@ -542,7 +542,7 @@ function! s:term_redraw(bufnr) abort
   call win_gotoid(prev_winid)
 endfunction
 
-function! s:start_insert_term() abort
+function s:start_insert_term() abort
   if has('nvim')
     startinsert
   else
@@ -550,7 +550,7 @@ function! s:start_insert_term() abort
     call feedkeys('i', 'n')
   endif
 endfunction
-function! s:stop_insert_term() abort
+function s:stop_insert_term() abort
   if has('nvim')
     stopinsert
   else
@@ -559,7 +559,7 @@ function! s:stop_insert_term() abort
   endif
 endfunction
 
-function! s:eval_edit(is_insert) abort
+function s:eval_edit(is_insert) abort
   if !('t:deol'->exists())
     return
   endif
@@ -578,7 +578,7 @@ function! s:eval_edit(is_insert) abort
   endif
 endfunction
 
-function! s:eval_commands(cmdline, is_insert) abort
+function s:eval_commands(cmdline, is_insert) abort
   let deol = t:deol
 
   if g:deol#internal_history_path !=# ''
@@ -635,7 +635,7 @@ function! s:eval_commands(cmdline, is_insert) abort
   return v:false
 endfunction
 
-function! s:deol_backspace() abort
+function s:deol_backspace() abort
   if '.'->getline() ==# '' && t:deol.options.toggle
     stopinsert
     call deol#quit()
@@ -648,7 +648,7 @@ function! s:deol_backspace() abort
   endif
 endfunction
 
-function! s:eval_deol(is_insert) abort
+function s:eval_deol(is_insert) abort
   if g:deol#prompt_pattern ==# '' || !('t:deol'->exists())
     return
   endif
@@ -675,7 +675,7 @@ function! s:eval_deol(is_insert) abort
   endif
 endfunction
 
-function! s:search_prompt(flag) abort
+function s:search_prompt(flag) abort
   if g:deol#prompt_pattern ==# ''
     return
   endif
@@ -691,7 +691,7 @@ function! s:search_prompt(flag) abort
   endif
 endfunction
 
-function! s:paste_prompt() abort
+function s:paste_prompt() abort
   if g:deol#prompt_pattern ==# '' || !('t:deol'->exists())
     return
   endif
@@ -700,7 +700,7 @@ function! s:paste_prompt() abort
   call s:insert_mode(t:deol)
 endfunction
 
-function! s:bg() abort
+function s:bg() abort
   if !('t:deol'->exists())
     return
   endif
@@ -710,7 +710,7 @@ function! s:bg() abort
   call deol#_start(options)
 endfunction
 
-function! s:split(options) abort
+function s:split(options) abort
   if a:options.split ==# ''
     return
   endif
@@ -745,7 +745,7 @@ function! s:split(options) abort
 endfunction
 
 
-function! s:insert_mode(deol) abort
+function s:insert_mode(deol) abort
   if a:deol.options.start_insert
     startinsert
   else
@@ -753,7 +753,7 @@ function! s:insert_mode(deol) abort
   endif
 endfunction
 
-function! s:start_insert(mode) abort
+function s:start_insert(mode) abort
   const prompt = deol#get_prompt()
   if prompt ==# ''
     return a:mode
@@ -765,7 +765,7 @@ function! s:start_insert(mode) abort
         \ + (a:mode ==# 'i' ? 1 : 0))
 endfunction
 
-function! deol#get_prompt() abort
+function deol#get_prompt() abort
   if &filetype !=# 'deol'
     return ''
   endif
@@ -774,14 +774,14 @@ function! deol#get_prompt() abort
   return s:get_text(mode())->matchstr(pattern)
 endfunction
 
-function! s:get_text(mode) abort
+function s:get_text(mode) abort
   return a:mode ==# 'c'
         \ ? getcmdline()
         \ : a:mode ==# 't' && !has('nvim')
         \ ? term_getline('', '.')
         \ : '.'->getline()
 endfunction
-function! deol#get_input() abort
+function deol#get_input() abort
   const mode = mode()
   const col = mode ==# 't' && !has('nvim') ?
         \ term_getcursor(bufnr('%'))[1] : col('.')
@@ -790,7 +790,7 @@ function! deol#get_input() abort
   return input[deol#get_prompt()->len():]
 endfunction
 
-function! s:user_options() abort
+function s:user_options() abort
   return #{
         \   auto_cd: v:true,
         \   command: [],
@@ -808,7 +808,7 @@ function! s:user_options() abort
         \ }
 endfunction
 
-function! s:parse_options(cmdline) abort
+function s:parse_options(cmdline) abort
   let options = s:user_options()
 
   for arg in a:cmdline->split('\%(\\\@<!\s\)\+')
@@ -837,11 +837,11 @@ function! s:parse_options(cmdline) abort
   return options
 endfunction
 
-function! deol#_get_histories() abort
+function deol#_get_histories() abort
   return s:get_histories(g:deol#internal_history_path)
         \ + s:get_histories(g:deol#external_history_path)
 endfunction
-function! s:get_histories(path) abort
+function s:get_histories(path) abort
   const history_path = s:expand(a:path)
   if !(history_path->filereadable())
     return []
@@ -858,7 +858,7 @@ function! s:get_histories(path) abort
         \ })
 endfunction
 
-function! deol#_complete(arglead, cmdline, cursorpos) abort
+function deol#_complete(arglead, cmdline, cursorpos) abort
   let _ = []
 
   " Option names completion.
@@ -878,40 +878,40 @@ function! deol#_complete(arglead, cmdline, cursorpos) abort
   return _->filter({ key, val -> stridx(val, a:arglead) == 0 })->sort()->uniq()
 endfunction
 
-function! s:cleanup() abort
+function s:cleanup() abort
   return has('win32') ? '' : "\<C-u>"
 endfunction
 
-function! deol#abbrev(check, lhs, rhs) abort
+function deol#abbrev(check, lhs, rhs) abort
   return '.'->getline() ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
 endfunction
 
-function! s:check_buffer(bufnr) abort
+function s:check_buffer(bufnr) abort
   return a:bufnr->buflisted()
         \ && a:bufnr !=# t:deol.edit_bufnr
         \ && a:bufnr !=# t:deol.bufnr
 endfunction
 
-function! s:is_deol_edit_buffer() abort
+function s:is_deol_edit_buffer() abort
   return '%'->bufname() =~# '^deol-edit@'
 endfunction
 
-function! s:row() abort
+function s:row() abort
   return (!has('nvim') && mode() ==# 't') ?
         \ term_getcursor('%'->bufnr())[0] : '.'->line()
 endfunction
 
-function! s:expand(path) abort
+function s:expand(path) abort
   return s:substitute_path_separator(
         \ (a:path =~# '^\~') ? a:path->fnamemodify(':p') :
         \ (a:path =~# '^\$') ? a:path->expand() :
         \ a:path)
 endfunction
-function! s:substitute_path_separator(path) abort
+function s:substitute_path_separator(path) abort
   return s:is_windows ? a:path->substitute('\\', '/', 'g') : a:path
 endfunction
 
-function! deol#_get(tabnr) abort
+function deol#_get(tabnr) abort
   const deol = a:tabnr->gettabvar('deol', v:null)
   if deol is v:null
     return deol
@@ -923,7 +923,7 @@ function! deol#_get(tabnr) abort
         \ }
 endfunction
 
-function! s:auto_cd(is_insert) abort
+function s:auto_cd(is_insert) abort
   if !('t:deol'->exists()) || !t:deol.options.auto_cd
     return
   endif
@@ -950,7 +950,7 @@ function! s:auto_cd(is_insert) abort
   endif
 endfunction
 
-function! s:uniq(list) abort
+function s:uniq(list) abort
   let list = a:list->copy()
   let i = 0
   let seen = {}
