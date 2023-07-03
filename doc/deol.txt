@@ -19,22 +19,27 @@ Denite Sources		|deol-denite-sources|
 Ddu Sources		|deol-ddu-sources|
 FAQ			|deol-faq|
 
+
 ==============================================================================
 INTRODUCTION						*deol-introduction*
 
 *deol* is a dark powered shell both for Neovim and Vim. It is based on
 neovim or Vim terminal feature.
 
+
 ==============================================================================
 USAGE							*deol-usage*
+
 
 ==============================================================================
 INSTALL							*deol-install*
 
 deol requires Neovim 0.8.0 or Vim 8.2.1978+.
 
+
 ==============================================================================
 EXAMPLES						*deol-examples*
+
 
 ==============================================================================
 INTERFACE						*deol-interface*
@@ -65,6 +70,7 @@ COMMANDS						*deol-commands*
 	if you use Deol with -command zsh or if you set 'shell' to zsh.
 	https://github.com/Shougo/deoplete.nvim
 	https://github.com/zchee/deoplete-zsh
+
 
 ------------------------------------------------------------------------------
 OPTIONS							*deol-options*
@@ -225,6 +231,7 @@ g:deol#shell_history_max			*g:deol#shell_history_max*
 
 		Default: 500
 
+
 ------------------------------------------------------------------------------
 KEY MAPPINGS						*deol-key-mappings*
 
@@ -274,6 +281,7 @@ e			<Plug>(deol_edit)
 <C-c>			<Plug>(deol_ctrl_c)
 <C-d>			<Plug>(deol_ctrl_d)
 
+
 ==============================================================================
 DENITE SOURCES						*deol-denite-sources*
 
@@ -284,15 +292,39 @@ deol		Gather deol tabs.
 deol/history	Gather deol histories from |g:deol#external_history_path| or
 		|g:deol#internal_history_path|.
 
+
 ==============================================================================
 DDU SOURCES						*deol-ddu-sources*
 
 						*deol-source-deol*
 deol		Gather deol tabs.
 
+
 ==============================================================================
 FAQ							*deol-faq*
 
+FAQ 1:							|deol-faq-1|
+	How to donate money to you?
+
+FAQ 2:							|deol-faq-2|
+	What is the difference neoterm and deol.nvim?
+
+FAQ 3:							|deol-faq-3|
+	How to exit terminal mode in deol buffer?
+
+FAQ 4:							|deol-faq-4|
+	I want to start Deol in the directory where the current buffer belongs
+	to.
+
+FAQ 5:							|deol-faq-5|
+	I want to use current vim when "git commit".
+
+FAQ 6:							|deol-faq-6|
+	How to enable shell history completion in ddc.vim?
+
+
+------------------------------------------------------------------------------
+							*deol-faq-1*
 Q: How to donate money to you?
 
 A: I have started github sponsorship to spend more time for Vim/neovim
@@ -300,28 +332,33 @@ plugins.  You can donate money to help me!
 
 https://github.com/sponsors/Shougo
 
+							*deol-faq-2*
 Q: What is the difference neoterm and deol.nvim?
 
 A: neoterm is specialized for interpreter execution in the buffer.
 deol.nvim is specialized for shell environment in each tab.
 
+							*deol-faq-3*
 Q: How to exit terminal mode in deol buffer?
 
 A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
 >
 	tnoremap <ESC>   <C-\><C-n>
 <
+							*deol-faq-4*
 Q: I want to start Deol in the directory where the current buffer belongs to.
 
 A: >
 	execute 'Deol' '-cwd='.('%'->expand()->fnamemodify(':h'))
-
+<
+							*deol-faq-5*
 Q: I want to use current vim when "git commit".
 
 A: You should install "guise" plugin for it.
 
 https://github.com/lambdalisue/guise.vim
 
+							*deol-faq-6*
 Q. How to enable shell history completion in ddc.vim?
 
 A. >
