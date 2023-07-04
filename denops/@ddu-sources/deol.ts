@@ -1,5 +1,5 @@
-import { BaseSource, Item } from "https://deno.land/x/ddu_vim@v2.8.4/types.ts";
-import { Denops, fn } from "https://deno.land/x/ddu_vim@v2.8.4/deps.ts";
+import { BaseSource, Item } from "https://deno.land/x/ddu_vim@v3.3.3/types.ts";
+import { Denops, fn } from "https://deno.land/x/ddu_vim@v3.3.3/deps.ts";
 import { ActionData } from "../@ddu-kinds/deol.ts";
 
 type Params = {
