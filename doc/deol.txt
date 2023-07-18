@@ -117,7 +117,7 @@ OPTIONS							*deol-options*
 		"floating": Use neovim floating window feature
 		"vertical": Split buffer vertically
 		"farleft": Split buffer far left, like |CTRL-W_H|
-		"farright": Split buffer far right, like |CTRL-W_H|
+		"farright": Split buffer far right, like |CTRL-W_L|
 		otherwise: Split buffer horizontally
 
 		Default: ""
@@ -184,7 +184,7 @@ g:deol#enable_dir_changed
 
 g:deol#extra_options					*g:deol#extra_options*
 		Set the extra options for gvim terminal. See |term_start()|.
-		`b:deol_extra_options` can overide it in a buffer.
+		`b:deol_extra_options` can override it in a buffer.
 		Note: It is available in Vim8 only.
 >
 		let g:deol#extra_options = #{ term_finish: 'close' }
