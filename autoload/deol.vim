@@ -930,23 +930,30 @@ function s:auto_cd(is_insert) abort
 
   const cwd = printf('/proc/%d/cwd', t:deol.pid)
   if cwd->isdirectory()
-    " Use directory tracking
+    " Use proc filesystem.
     const directory = cwd->resolve()
+  elseif 'lsof'->executable()
+    " Use lsof instead.
+    const directory = ('lsof -a -d cwd -p ' .. t:deol.pid)
+          \ ->system()->matchstr('\f\+\ze\n$')
   else
+    " Parse from prompt.
     const directory = s:expand(
           \ deol#get_cmdline()
           \ ->matchstr('\W\%(cd\s\+\)\?\zs\%(\S\|\\\s\)\+$'))
   endif
 
-  if directory->isdirectory() && getcwd() !=# directory
-    call s:cd(directory)
+  if !directory->isdirectory() || getcwd() ==# directory
+    return
+  endif
 
-    let t:deol.cwd = directory
+  call s:cd(directory)
 
-    " NOTE: Need to back normal mode to update the title string
-    if has('nvim') && a:is_insert
-      call feedkeys("\<C-\>\<C-n>i", 'n')
-    endif
+  let t:deol.cwd = directory
+
+  " NOTE: Need to back normal mode to update the title string
+  if has('nvim') && a:is_insert
+    call feedkeys("\<C-\>\<C-n>i", 'n')
   endif
 endfunction
 
