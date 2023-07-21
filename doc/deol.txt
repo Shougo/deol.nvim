@@ -4,7 +4,7 @@ Version: 1.0
 Author:  Shougo <Shougo.Matsu at gmail.com>
 License: MIT license
 
-CONTENTS						*deol-contents*
+CONTENTS                                                       *deol-contents*
 
 Introduction		|deol-introduction|
 Usage			|deol-usage|
@@ -21,31 +21,31 @@ FAQ			|deol-faq|
 
 
 ==============================================================================
-INTRODUCTION						*deol-introduction*
+INTRODUCTION                                               *deol-introduction*
 
 *deol* is a dark powered shell both for Neovim and Vim. It is based on
 neovim or Vim terminal feature.
 
 
 ==============================================================================
-USAGE							*deol-usage*
+USAGE                                                             *deol-usage*
 
 
 ==============================================================================
-INSTALL							*deol-install*
+INSTALL                                                         *deol-install*
 
 deol requires Neovim 0.8.0 or Vim 8.2.1978+.
 
 
 ==============================================================================
-EXAMPLES						*deol-examples*
+EXAMPLES                                                       *deol-examples*
 
 
 ==============================================================================
-INTERFACE						*deol-interface*
+INTERFACE                                                     *deol-interface*
 
 ------------------------------------------------------------------------------
-COMMANDS						*deol-commands*
+COMMANDS                                                       *deol-commands*
 
 :Deol [{command}] [{options}]				*:Deol*
 	Create a deol buffer using {command}.
@@ -56,7 +56,7 @@ COMMANDS						*deol-commands*
 :DeolCd {directory}					*:DeolCd*
 	Change the deol buffer directory to {directory}.
 
-:DeolEdit						*:DeolEdit*
+:DeolEdit                                                          *:DeolEdit*
 	Open a deol edit buffer.
 	You can edit and execute the deol command line in the buffer.
 
@@ -73,43 +73,43 @@ COMMANDS						*deol-commands*
 
 
 ------------------------------------------------------------------------------
-OPTIONS							*deol-options*
+OPTIONS                                                         *deol-options*
 
--auto-cd						*deol-options-auto-cd*
+-auto-cd                                                *deol-options-auto-cd*
 		Follow cd command in shell
 		Note: It is only available for deol edit buffer.
 
 		Default: v:true
 
-							*deol-options-cwd*
+                                                            *deol-options-cwd*
 -cwd={directory}
 		Current directory.
 
 		Default: Use |getcwd()| value
 
-						*deol-options-dir-changed*
+                                                    *deol-options-dir-changed*
 -dir-changed
 		Follow |DirChanged| event.
 
 		Default: v:true
 
-							*deol-options-edit*
+                                                           *deol-options-edit*
 -edit
 		Open edit buffer in default.
 
 		Default: v:false
 
-						*deol-options-edit-filetype*
+                                                  *deol-options-edit-filetype*
 -edit-filetype
 		Specify 'filetype' in edit buffer.
 
-						*deol-option-edit-winheight*
+                                                  *deol-option-edit-winheight*
 -edit-winheight={window-height}
 		Set the height of the deol edit window.
 
 		Default: 1
 
-							*deol-option-split*
+                                                           *deol-option-split*
 -split={direction}
 		Specify the split direction.
 
@@ -122,7 +122,7 @@ OPTIONS							*deol-options*
 
 		Default: ""
 
-						*deol-options-start-insert*
+                                                   *deol-options-start-insert*
 -start-insert
 		Start the insert mode in deol buffer.
 		Note: In Vim, the option is ignored if new terminal buffer is
@@ -130,13 +130,13 @@ OPTIONS							*deol-options*
 
 		Default: v:true
 
-						*deol-options-toggle*
+                                                         *deol-options-toggle*
 -toggle
 		Close deol buffer window if this deol window exists.
 
 		Default: v:false
 
-						*deol-option-winheight*
+                                                       *deol-option-winheight*
 -winheight={window-height}
 		Set the height of the Deol window if |deol-option-split|
 		is "horizontal".
@@ -145,7 +145,7 @@ OPTIONS							*deol-options*
 
 		Default: 15
 
-						*deol-option-winwidth*
+                                                        *deol-option-winwidth*
 -winwidth={window-width}
 		Set the width of the Deol window if |deol-option-split|
 		is "vertical".
@@ -156,9 +156,9 @@ OPTIONS							*deol-options*
 
 
 ------------------------------------------------------------------------------
-VARIABLES						*deol-variables*
+VARIABLES                                                     *deol-variables*
 
-g:deol#custom_map					*g:deol#custom_map*
+g:deol#custom_map                                          *g:deol#custom_map*
 		Customize the mappings for deol.  See |deol-key-mappings| for
 		default mappings.
 >
@@ -176,13 +176,13 @@ g:deol#custom_map					*g:deol#custom_map*
 			\   quit: 'q',
 			\ }
 <
-						*g:deol#enable_dir_changed*
+                                                   *g:deol#enable_dir_changed*
 g:deol#enable_dir_changed
 		Enable |DirChanged| autocmd detection.
 
 		Default: v:true
 
-g:deol#extra_options					*g:deol#extra_options*
+g:deol#extra_options                                    *g:deol#extra_options*
 		Set the extra options for gvim terminal. See |term_start()|.
 		`b:deol_extra_options` can override it in a buffer.
 		Note: It is available in Vim8 only.
@@ -191,32 +191,32 @@ g:deol#extra_options					*g:deol#extra_options*
 <
 		Default: #{ curwin: v:true }
 
-g:deol#external_history_path		*g:deol#external_history_path*
+g:deol#external_history_path                    *g:deol#external_history_path*
 		The external shell history path. If it is set, the external
 		histories are loaded in deol edit buffer.
 
 		Default: ""
 
-g:deol#floating_border				*g:deol#floating_border*
+g:deol#floating_border                                *g:deol#floating_border*
 		The border if |deol-option-split| is "floating".
 		Please see |nvim_open_win()| for available options.
 
 		Default: "none"
 
-g:deol#internal_history_path		*g:deol#internal_history_path*
+g:deol#internal_history_path                    *g:deol#internal_history_path*
 		The internal shell history path. If it is set, the internal
 		histories are saved.
 
 		Default: ""
 
-g:deol#nvim_server					*g:deol#nvim_server*
+g:deol#nvim_server                                        *g:deol#nvim_server*
 		The path of neovim server.
 		Please see |client-server|.
 		Note: It is neovim only.
 
 		Default: ""
 
-g:deol#prompt_pattern				*g:deol#prompt_pattern*
+g:deol#prompt_pattern                                  *g:deol#prompt_pattern*
 		Sets the pattern which matches the shell prompt.
 		Note: The right prompt is not supported.
 >
@@ -224,7 +224,7 @@ g:deol#prompt_pattern				*g:deol#prompt_pattern*
 <
 		Default: "" ('\f\+>' for Windows)
 
-g:deol#shell_history_max			*g:deol#shell_history_max*
+g:deol#shell_history_max                            *g:deol#shell_history_max*
 		The max history of external shell history.
 		Note: It is only used when |g:deol#external_history_path| or
 		|g:deol#internal_history_path| is set.
@@ -235,41 +235,41 @@ g:deol#shell_history_max			*g:deol#shell_history_max*
 ------------------------------------------------------------------------------
 KEY MAPPINGS						*deol-key-mappings*
 
-						*<Plug>(deol_edit)*
+                                                           *<Plug>(deol_edit)*
 <Plug>(deol_edit)
 		Open the edit buffer.
 		Note: |g:deol#prompt_pattern| must be set.
 
-<Plug>(deol_execute_line)			*<Plug>(deol_execute_line)*
+<Plug>(deol_execute_line)                          *<Plug>(deol_execute_line)*
 		Execute the command line.
 		Note: |g:deol#prompt_pattern| must be set.
 
-						*<Plug>(deol_previous_prompt)*
+                                                *<Plug>(deol_previous_prompt)*
 <Plug>(deol_previous_prompt)
 		Move to previous prompt from cursor.
 		Note: |g:deol#prompt_pattern| must be set.
 
-<Plug>(deol_next_prompt)			*<Plug>(deol_next_prompt)*
+<Plug>(deol_next_prompt)                            *<Plug>(deol_next_prompt)*
 		Move to next prompt from cursor.
 		Note: |g:deol#prompt_pattern| must be set.
 
-						*<Plug>(deol_paste_prompt)*
+                                                   *<Plug>(deol_paste_prompt)*
 <Plug>(deol_paste_prompt)
 		Paste the history to the command line.
 		Note: |g:deol#prompt_pattern| must be set.
 
-						*<Plug>(deol_bg)*
+                                                             *<Plug>(deol_bg)*
 <Plug>(deol_bg)
 		Create new deol buffer instead.
 
-						*<Plug>(deol_ctrl_c)*
+                                                         *<Plug>(deol_ctrl_c)*
 <Plug>(deol_ctrl_c)
 		Same as shell's CTRL-c; send an INT signal
-						*<Plug>(deol_ctrl_d)*
+                                                         *<Plug>(deol_ctrl_d)*
 <Plug>(deol_ctrl_d)
 		Same as shell's CTRL-d; send an EOF
 
-						*deol-default_key_mappings*
+                                                   *deol-default_key_mappings*
 {lhs}			{rhs}
 --------		-----------------------------
 <CR>			<Plug>(deol_execute_line)
@@ -285,10 +285,10 @@ e			<Plug>(deol_edit)
 ==============================================================================
 DENITE SOURCES						*deol-denite-sources*
 
-						*deol-denite-source-deol*
+                                                     *deol-denite-source-deol*
 deol		Gather deol tabs.
 
-					*deol-denite-source-deol/history*
+                                             *deol-denite-source-deol/history*
 deol/history	Gather deol histories from |g:deol#external_history_path| or
 		|g:deol#internal_history_path|.
 
@@ -296,12 +296,12 @@ deol/history	Gather deol histories from |g:deol#external_history_path| or
 ==============================================================================
 DDU SOURCES						*deol-ddu-sources*
 
-						*deol-source-deol*
+                                                            *deol-source-deol*
 deol		Gather deol tabs.
 
 
 ==============================================================================
-FAQ							*deol-faq*
+FAQ                                                                 *deol-faq*
 
 FAQ 1:							|deol-faq-1|
 	How to donate money to you?
@@ -324,7 +324,7 @@ FAQ 6:							|deol-faq-6|
 
 
 ------------------------------------------------------------------------------
-							*deol-faq-1*
+                                                                  *deol-faq-1*
 Q: How to donate money to you?
 
 A: I have started github sponsorship to spend more time for Vim/neovim
@@ -332,33 +332,33 @@ plugins.  You can donate money to help me!
 
 https://github.com/sponsors/Shougo
 
-							*deol-faq-2*
+                                                                  *deol-faq-2*
 Q: What is the difference neoterm and deol.nvim?
 
 A: neoterm is specialized for interpreter execution in the buffer.
 deol.nvim is specialized for shell environment in each tab.
 
-							*deol-faq-3*
+                                                                  *deol-faq-3*
 Q: How to exit terminal mode in deol buffer?
 
 A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
 >
 	tnoremap <ESC>   <C-\><C-n>
 <
-							*deol-faq-4*
+                                                                  *deol-faq-4*
 Q: I want to start Deol in the directory where the current buffer belongs to.
 
 A: >
 	execute 'Deol' '-cwd='.('%'->expand()->fnamemodify(':h'))
 <
-							*deol-faq-5*
+                                                                  *deol-faq-5*
 Q: I want to use current vim when "git commit".
 
 A: You should install "guise" plugin for it.
 
 https://github.com/lambdalisue/guise.vim
 
-							*deol-faq-6*
+                                                                  *deol-faq-6*
 Q. How to enable shell history completion in ddc.vim?
 
 A. >
