@@ -4,8 +4,8 @@ import {
   DdcOptions,
   Item,
   SourceOptions,
-} from "https://deno.land/x/ddc_vim@v3.8.2/types.ts";
-import { Denops } from "https://deno.land/x/ddc_vim@v3.8.2/deps.ts";
+} from "https://deno.land/x/ddc_vim@v3.9.2/types.ts";
+import { Denops } from "https://deno.land/x/ddc_vim@v3.9.2/deps.ts";
 
 type Params = Record<string, never>;
 
