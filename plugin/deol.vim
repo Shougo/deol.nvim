@@ -8,7 +8,7 @@ if 'g:loaded_deol'->exists()
 endif
 let g:loaded_deol = 1
 
-command! -nargs=* -range -bar -complete=customlist,deol#_complete
+command! -nargs=* -range -bar -complete=custom,deol#_complete
       \ Deol call deol#start(<q-args>)
 command! -nargs=1 -range -bar -complete=dir
       \ DeolCd call deol#cd(<q-args>)

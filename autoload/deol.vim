@@ -875,7 +875,7 @@ function deol#_complete(arglead, cmdline, cursorpos) abort
 
   let _ += a:arglead->getcompletion('shellcmd')
 
-  return _->filter({ key, val -> stridx(val, a:arglead) == 0 })->sort()->uniq()
+  return _->sort()->uniq()->join("\n")
 endfunction
 
 function s:cleanup() abort
