@@ -48,7 +48,9 @@ class Kind(BaseK):
         target = context['targets'][0]
         self.vim.command(f"tabnext {target['action__tabnr']}")
         if not target['action__is_deol']:
-            self.vim.command(f"Deol {target['action__command']}")
+            self.vim.call("deol#start", {
+                'command': target['action__command'],
+            })
 
     def action_new(self, context):
         target = context['targets'][0]

@@ -28,7 +28,9 @@ export class Kind extends BaseKind<Params> {
           !action.existsDeol ||
           (await op.filetype.getLocal(args.denops)) === "deol"
         ) {
-          await args.denops.cmd(`Deol ${action.command.join(" ")}`);
+          await args.denops.call("deol#start", {
+            command: action.command.join(" ")
+          });
         }
       }
 
