@@ -103,6 +103,6 @@ class Kind(BaseK):
         self.vim.command(f"tabnext {target['action__tabnr']}")
 
         # Move to deol buffer
-        self.vim.call('deol#start', '')
+        self.vim.call('deol#start')
 
         self.vim.call('deol#cd', cwd)

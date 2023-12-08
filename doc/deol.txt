@@ -11,7 +11,7 @@ Usage			|deol-usage|
 Install			|deol-install|
 Examples		|deol-examples|
 Interface		|deol-interface|
-  Commands		  |deol-commands|
+  Functions		  |deol-functions|
   Options		  |deol-options|
   Variables		  |deol-variables|
   Key mappings		  |deol-key-mappings|
@@ -45,72 +45,74 @@ EXAMPLES                                                       *deol-examples*
 INTERFACE                                                     *deol-interface*
 
 ------------------------------------------------------------------------------
-COMMANDS                                                       *deol-commands*
+FUNCTIONS                                                     *deol-functions*
 
-:Deol [{command}] [{options}]				*:Deol*
-	Create a deol buffer using {command}.
-	If another deol buffer exists in the current tab, it will switch to
-	the buffer.
-	If {command} is omit, 'shell' is used.
-
-:DeolCd {directory}					*:DeolCd*
+deol#cd({directory})                                               *deol#cd()*
 	Change the deol buffer directory to {directory}.
 
-:DeolEdit                                                          *:DeolEdit*
+deol#edit()                                                      *deol#edit()*
+
 	Open a deol edit buffer.
 	You can edit and execute the deol command line in the buffer.
 
 	Special commands in edit buffer:
 
 	":{command}"	Execute as Vim Ex-command
-	"cd {path}"	|:lcd| to {path} if |deol-options-auto-cd| is enabled
+	"cd {path}"	|:lcd| to {path} if |deol-option-auto_cd| is enabled
 	"vim {path}"	Quit deol buffer and |:edit| {path}
 
-	Note: deoplete + deoplete-zsh is recommended for auto completion,
-	if you use Deol with -command zsh or if you set 'shell' to zsh.
-	https://github.com/Shougo/deoplete.nvim
-	https://github.com/zchee/deoplete-zsh
-
+deol#start([{options}])                                         *deol#start()*
+	Create a deol buffer.
+	{options} is |deol-options| dictionary.
+	If another deol buffer exists in the current tab, it will switch to
+	the buffer.
+	If |deol-option-command| is omit, 'shell' is used.
 
 ------------------------------------------------------------------------------
 OPTIONS                                                         *deol-options*
 
--auto-cd                                                *deol-options-auto-cd*
+auto_cd                                                  *deol-option-auto_cd*
 		Follow cd command in shell
 		Note: It is only available for deol edit buffer.
 
 		Default: v:true
 
-                                                            *deol-options-cwd*
--cwd={directory}
+                                                         *deol-option-command*
+command
+		Shell command line.
+
+		Default: [&shell]
+
+                                                             *deol-option-cwd*
+cwd
 		Current directory.
 
 		Default: Use |getcwd()| value
 
-                                                    *deol-options-dir-changed*
--dir-changed
+                                                     *deol-option-dir_changed*
+dir_changed
 		Follow |DirChanged| event.
 
 		Default: v:true
 
-                                                           *deol-options-edit*
--edit
+                                                            *deol-option-edit*
+edit
 		Open edit buffer in default.
 
 		Default: v:false
 
-                                                  *deol-options-edit-filetype*
--edit-filetype
+                                                   *deol-option-edit_filetype*
+edit_filetype
 		Specify 'filetype' in edit buffer.
 
-                                                  *deol-option-edit-winheight*
--edit-winheight={window-height}
+                                                  *deol-option-edit_winheight*
+edit_winheight
 		Set the height of the deol edit window.
 
 		Default: 1
 
                                                            *deol-option-split*
--split={direction}
+split
 		Specify the split direction.
 
 		"": No split
@@ -122,22 +124,22 @@ OPTIONS                                                         *deol-options*
 
 		Default: ""
 
-                                                   *deol-options-start-insert*
--start-insert
+                                                    *deol-option-start_insert*
+start_insert
 		Start the insert mode in deol buffer.
 		Note: In Vim, the option is ignored if new terminal buffer is
 		created.
 
 		Default: v:true
 
-                                                         *deol-options-toggle*
--toggle
+                                                         *deol-option-toggle*
+toggle
 		Close deol buffer window if this deol window exists.
 
 		Default: v:false
 
                                                        *deol-option-winheight*
--winheight={window-height}
+winheight
 		Set the height of the Deol window if |deol-option-split|
 		is "horizontal".
 		if |deol-option-split| is "floating", set the height of the
@@ -146,7 +148,7 @@ OPTIONS                                                         *deol-options*
 		Default: 15
 
                                                         *deol-option-winwidth*
--winwidth={window-width}
+winwidth
 		Set the width of the Deol window if |deol-option-split|
 		is "vertical".
 		if |deol-option-split| is "floating", set the width of the
@@ -349,7 +351,7 @@ A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
 Q: I want to start Deol in the directory where the current buffer belongs to.
 
 A: >
-	execute 'Deol' '-cwd='.('%'->expand()->fnamemodify(':h'))
+	call deol#start(#{ cwd: '%'->expand()->fnamemodify(':h') })
 <
                                                                   *deol-faq-5*
 Q: I want to use current vim when "git commit".
@@ -372,5 +374,6 @@ A. >
 	    \   shell-history: {'mark': 'shell'},
 	    \ })
 <
+
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:

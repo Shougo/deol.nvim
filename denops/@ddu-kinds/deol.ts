@@ -118,7 +118,7 @@ export class Kind extends BaseKind<Params> {
         await args.denops.cmd(`tabnext ${action.tabNr}`);
 
         // Move to deol buffer
-        await args.denops.call("deol#start", "");
+        await args.denops.call("deol#start");
 
         await args.denops.call("deol#cd", newCwd);
       }

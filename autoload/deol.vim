@@ -36,12 +36,8 @@ augroup deol
   autocmd!
 augroup END
 
-function deol#start(cmdline) abort
-  return deol#_start(s:parse_options(a:cmdline))
-endfunction
-
-function deol#_start(options) abort
-  let options = a:options->copy()
+function deol#start(options = {}) abort
+  let options = extend(s:user_options(), a:options)
 
   if 't:deol'->exists() && t:deol.bufnr->bufexists()
     const ids = t:deol.bufnr->win_findbuf()
@@ -793,7 +789,7 @@ endfunction
 function s:user_options() abort
   return #{
         \   auto_cd: v:true,
-        \   command: [],
+        \   command: [&shell],
         \   cwd: '',
         \   edit: v:false,
         \   edit_filetype: '',
@@ -806,35 +802,6 @@ function s:user_options() abort
         \   winrow: &lines / 3,
         \   winwidth: 80,
         \ }
-endfunction
-
-function s:parse_options(cmdline) abort
-  let options = s:user_options()
-
-  for arg in a:cmdline->split('\%(\\\@<!\s\)\+')
-    let arg = arg->substitute('\\\( \)', '\1', 'g')
-    let arg_key = arg->substitute('=\zs.*$', '', '')
-
-    let name = arg_key->tr('-', '_')->substitute('=$', '', '')[1:]
-    if name =~# '^no_'
-      let name = name[3:]
-      let value = 0
-    else
-      let value = (arg_key =~# '=$') ? arg[arg_key->len() :] : 1
-    endif
-
-    if s:user_options()->keys()->index(name) >= 0
-      let options[name] = value
-    else
-      call add(options.command, arg)
-    endif
-  endfor
-
-  if options.command->empty()
-    let options.command = [&shell]
-  endif
-
-  return options
 endfunction
 
 function deol#_get_histories() abort
