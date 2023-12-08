@@ -134,7 +134,7 @@ function deol#new(options) abort
   endif
 
   tabnew
-  return deol#_start(options)
+  return deol#start(options)
 endfunction
 
 function deol#send(string) abort
@@ -703,7 +703,7 @@ function s:bg() abort
 
   const options = t:deol.options
   unlet t:deol
-  call deol#_start(options)
+  call deol#start(options)
 endfunction
 
 function s:split(options) abort
