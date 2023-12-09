@@ -54,8 +54,8 @@ function deol#start(options = {}) abort
     let options.cwd = getcwd()
   endif
 
-  const cwd = s:expand(options.cwd)
-  if !(cwd->isdirectory())
+  const cwd = options.cwd->s:expand()
+  if !cwd->isdirectory()
     redraw
     const result = printf('[deol] %s is not directory.  Create?', cwd)
           \ ->confirm("&Yes\n&No\n&Cancel")
@@ -121,8 +121,8 @@ function deol#new(options) abort
   if options.cwd ==# ''
     return
   endif
-  const cwd = s:expand(options.cwd)
-  if !(cwd->isdirectory())
+  const cwd = options.cwd->s:expand()
+  if !cwd->isdirectory()
     redraw
     const result = printf('[deol] %s is not directory.  Create?', cwd)
           \ ->confirm("&Yes\n&No\n&Cancel")
@@ -138,7 +138,7 @@ function deol#new(options) abort
 endfunction
 
 function deol#send(string) abort
-  if !('t:deol'->exists())
+  if !'t:deol'->exists()
     return ''
   endif
 
@@ -147,7 +147,7 @@ function deol#send(string) abort
 endfunction
 
 function deol#cd(directory) abort
-  if !('t:deol'->exists()) || t:deol.bufnr->bufwinnr() < 0
+  if !'t:deol'->exists() || t:deol.bufnr->bufwinnr() < 0
     return
   endif
 
@@ -160,12 +160,12 @@ function deol#cd(directory) abort
 endfunction
 
 function deol#edit() abort
-  if !('t:deol'->exists())
+  if !'t:deol'->exists()
     Deol
   endif
 
   const ids = win_findbuf(t:deol.bufnr)
-  if !(ids->empty()) && win_getid() != ids[0]
+  if !ids->empty() && win_getid() != ids[0]
     call win_gotoid(ids[0])
     call cursor(line('$'), 0)
   endif
@@ -178,7 +178,7 @@ function deol#edit() abort
   const buflines = t:deol.bufnr->getbufline(1, '$')
         \ ->filter({ _, val -> val !=# '' })
   const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
-  if !(buflines->empty()) && buflines[-1] =~# pattern
+  if !buflines->empty() && buflines[-1] =~# pattern
     const cmdline = buflines[-1]->substitute(pattern, '', '')
     if '$'->getline() ==# ''
       call setline('$', cmdline)
@@ -263,13 +263,13 @@ function deol#quit() abort
     execute deolwin 'wincmd w'
   endif
 
-  if winnr('$') > 1
+  if '$'->winnr() > 1
     close!
   else
     " Move to alternate buffer
-    if 't:deol'->exists() && s:check_buffer(t:deol.prev_bufnr)
+    if 't:deol'->exists() && t:deol.prev_bufnr->s:check_buffer()
       execute 'buffer' t:deol.prev_bufnr
-    elseif 't:deol'->exists() && s:check_buffer(bufnr('#'))
+    elseif 't:deol'->exists() && '#'->bufnr()->s:check_buffer()
       buffer #
     else
       enew
@@ -278,7 +278,7 @@ function deol#quit() abort
 endfunction
 
 function s:cd(directory) abort
-  execute 'tchdir' fnameescape(a:directory)
+  execute 'tchdir' a:directory->fnameescape()
 endfunction
 
 let s:deol = {}
@@ -286,7 +286,7 @@ let s:deol = {}
 function s:deol.cd(directory) abort
   const directory = a:directory->fnamemodify(':p')
   if (self->has_key('cwd') && self.cwd ==# directory)
-        \ || !(directory->isdirectory())
+        \ || !directory->isdirectory()
     return
   endif
 
@@ -487,7 +487,7 @@ function s:deol.init_edit_buffer() abort
 endfunction
 
 function s:deol.jobsend(keys) abort
-  if !(self->has_key('bufnr'))
+  if !self->has_key('bufnr')
     return
   endif
 
@@ -507,7 +507,7 @@ endfunction
 
 function s:set_prev_deol(deol) abort
   const ids = a:deol.bufnr->win_findbuf()
-  if !(ids->empty())
+  if !ids->empty()
     let g:deol#_prev_deol = ids[0]
   endif
 endfunction
@@ -556,11 +556,11 @@ function s:stop_insert_term() abort
 endfunction
 
 function s:eval_edit(is_insert) abort
-  if !('t:deol'->exists())
+  if !'t:deol'->exists()
     return
   endif
 
-  if s:eval_commands(deol#get_cmdline(), a:is_insert)
+  if deol#get_cmdline()->s:eval_commands(a:is_insert)
     call s:auto_cd(a:is_insert)
     return
   endif
@@ -579,11 +579,11 @@ function s:eval_commands(cmdline, is_insert) abort
 
   if g:deol#internal_history_path !=# ''
     " Add to history
-    let history_path = s:expand(g:deol#internal_history_path)
+    let history_path = g:deol#internal_history_path->s:expand()
 
     call mkdir(history_path->fnamemodify(':h'), 'p')
 
-    let histories = s:get_histories(history_path)
+    let histories = history_path->s:get_histories()
     call add(histories, a:cmdline)
     call writefile(s:uniq(histories->reverse())->reverse(), history_path)
   endif
@@ -645,12 +645,12 @@ function s:deol_backspace() abort
 endfunction
 
 function s:eval_deol(is_insert) abort
-  if g:deol#prompt_pattern ==# '' || !('t:deol'->exists())
+  if g:deol#prompt_pattern ==# '' || !'t:deol'->exists()
     return
   endif
 
   if '.'->getline() =~# g:deol#prompt_pattern
-    if s:eval_commands(deol#get_cmdline(), a:is_insert)
+    if deol#get_cmdline()->s:eval_commands(a:is_insert)
       return
     endif
   else
@@ -658,7 +658,7 @@ function s:eval_deol(is_insert) abort
   endif
 
   " NOTE: t:deol may be not found.
-  if !('t:deol'->exists())
+  if !'t:deol'->exists()
     return
   endif
 
@@ -688,7 +688,7 @@ function s:search_prompt(flag) abort
 endfunction
 
 function s:paste_prompt() abort
-  if g:deol#prompt_pattern ==# '' || !('t:deol'->exists())
+  if g:deol#prompt_pattern ==# '' || !'t:deol'->exists()
     return
   endif
 
@@ -767,7 +767,7 @@ function deol#get_prompt() abort
   endif
 
   const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
-  return s:get_text(mode())->matchstr(pattern)
+  return mode()->s:get_text()->matchstr(pattern)
 endfunction
 
 function s:get_text(mode) abort
@@ -780,7 +780,7 @@ endfunction
 function deol#get_input() abort
   const mode = mode()
   const col = mode ==# 't' && !has('nvim') ?
-        \ term_getcursor(bufnr('%'))[1] : col('.')
+        \ term_getcursor('%'->bufnr())[1] : col('.')
   const input = s:get_text(mode)->matchstr('^.*\%' .
         \ ((mode ==# 'i' || mode ==# 't') ? col : col + 1) .. 'c')
   return input[deol#get_prompt()->len():]
@@ -809,7 +809,7 @@ function deol#_get_histories() abort
         \ + s:get_histories(g:deol#external_history_path)
 endfunction
 function s:get_histories(path) abort
-  const history_path = s:expand(a:path)
+  const history_path = a:path->s:expand()
   if !(history_path->filereadable())
     return []
   endif
@@ -891,7 +891,7 @@ function deol#_get(tabnr) abort
 endfunction
 
 function s:auto_cd(is_insert) abort
-  if !('t:deol'->exists()) || !t:deol.options.auto_cd
+  if !'t:deol'->exists() || !t:deol.options.auto_cd
     return
   endif
 
