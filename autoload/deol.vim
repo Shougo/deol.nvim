@@ -41,7 +41,7 @@ function deol#start(options = {}) abort
 
   if 't:deol'->exists() && t:deol.bufnr->bufexists()
     const ids = t:deol.bufnr->win_findbuf()
-    if !(ids->empty()) && options.toggle
+    if !ids->empty() && options.toggle
       call deol#quit()
     else
       call s:switch(options)
@@ -697,7 +697,7 @@ function s:paste_prompt() abort
 endfunction
 
 function s:bg() abort
-  if !('t:deol'->exists())
+  if !'t:deol'->exists()
     return
   endif
 
@@ -810,7 +810,7 @@ function deol#_get_histories() abort
 endfunction
 function s:get_histories(path) abort
   const history_path = a:path->s:expand()
-  if !(history_path->filereadable())
+  if !history_path->filereadable()
     return []
   endif
 
