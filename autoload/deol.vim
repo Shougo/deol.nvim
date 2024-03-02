@@ -550,7 +550,7 @@ function s:stop_insert_term() abort
   if has('nvim')
     stopinsert
   else
-    sleep 100m
+    sleep 50m
     call feedkeys("\<C-\>\<C-n>", 'n')
   endif
 endfunction
@@ -625,7 +625,11 @@ function s:eval_commands(cmdline, is_insert) abort
   call deol.jobsend(cmdline .. "\<CR>")
 
   " Note: Needs wait to proceed messages
-  sleep 100m
+  if has('nvim')
+    sleep 10m
+  else
+    sleep 50m
+  endif
   call s:term_redraw(deol.bufnr)
 
   return v:false
