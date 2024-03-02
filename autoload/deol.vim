@@ -142,7 +142,15 @@ function deol#send(string) abort
     return ''
   endif
 
+  const prev_winid = win_getid()
+
+  call win_gotoid(t:deol.bufnr->bufwinid())
+  call cursor('$'->line(), 0)
+
   call t:deol.jobsend(s:cleanup() .. a:string .. "\<CR>")
+
+  call win_gotoid(prev_winid)
+
   return ''
 endfunction
 
@@ -560,12 +568,13 @@ function s:eval_edit(is_insert) abort
     return
   endif
 
-  if deol#get_cmdline()->s:eval_commands(a:is_insert)
+  try
+    if deol#get_cmdline()->s:eval_commands(a:is_insert)
+      return
+    endif
+  finally
     call s:auto_cd(a:is_insert)
-    return
-  endif
-
-  call s:auto_cd(a:is_insert)
+  endtry
 
   if a:is_insert
     call append('$'->line(), '')
@@ -622,7 +631,14 @@ function s:eval_commands(cmdline, is_insert) abort
   const cmdline = (&l:filetype ==# 'deol'
         \ && ('.'->line() == '$'->line() || mode() ==# 't')) ?
         \ '' : s:cleanup() .. a:cmdline
-  call deol.jobsend(cmdline .. "\<CR>")
+  const prev_winid = win_getid()
+
+  call win_gotoid(t:deol.bufnr->bufwinid())
+  call cursor('$'->line(), 0)
+
+  call t:deol.jobsend(cmdline .. "\<CR>")
+
+  call win_gotoid(prev_winid)
 
   " Note: Needs wait to proceed messages
   if has('nvim')
