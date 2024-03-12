@@ -70,7 +70,7 @@ function deol#start(options = {}) abort
 
   let t:deol = deol#_new(cwd, options)
   let t:deol.prev_bufnr = '%'->bufnr()
-  call t:deol.init_deol_buffer()
+  call t:deol.init_deol_buffer(options)
 
   if has('nvim')
     call s:insert_mode(t:deol)
@@ -306,7 +306,7 @@ function s:deol.cd(directory) abort
         \ s:cleanup(), quote, self.cwd, quote, "\<CR>"))
 endfunction
 
-function s:deol.init_deol_buffer() abort
+function s:deol.init_deol_buffer(options) abort
   if has('nvim')
     " Note: termopen() replaces current buffer
     enew
@@ -361,6 +361,9 @@ function s:deol.init_deol_buffer() abort
   if '+smoothscroll'->exists()
     " NOTE: If smoothscroll is set in neovim, freezed in terminal buffer.
     setlocal nosmoothscroll
+  endif
+  if '+winfixbuf'->exists() && a:options.split !=# ''
+    setlocal winfixbuf
   endif
 
   for [rhs, lhs] in g:deol#_maps->items()
@@ -430,6 +433,10 @@ function s:deol.init_edit_buffer() abort
   setlocal nonumber
   setlocal norelativenumber
   setlocal noswapfile
+
+  if '+winfixbuf'->exists()
+    setlocal winfixbuf
+  endif
 
   execute 'resize' self.options.edit_winheight
 
