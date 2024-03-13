@@ -235,7 +235,7 @@ g:deol#shell_history_max                            *g:deol#shell_history_max*
 
 
 ------------------------------------------------------------------------------
-KEY MAPPINGS						*deol-key-mappings*
+KEY MAPPINGS                                               *deol-key-mappings*
 
                                                            *<Plug>(deol_edit)*
 <Plug>(deol_edit)
@@ -285,7 +285,7 @@ e			<Plug>(deol_edit)
 
 
 ==============================================================================
-DENITE SOURCES						*deol-denite-sources*
+DENITE SOURCES                                           *deol-denite-sources*
 
                                                      *deol-denite-source-deol*
 deol		Gather deol tabs.
@@ -296,7 +296,7 @@ deol/history	Gather deol histories from |g:deol#external_history_path| or
 
 
 ==============================================================================
-DDU SOURCES						*deol-ddu-sources*
+DDU SOURCES                                                 *deol-ddu-sources*
 
                                                             *deol-source-deol*
 deol		Gather deol tabs.
@@ -305,23 +305,23 @@ deol		Gather deol tabs.
 ==============================================================================
 FAQ                                                                 *deol-faq*
 
-FAQ 1:							|deol-faq-1|
+FAQ 1:                                                            |deol-faq-1|
 	How to donate money to you?
 
-FAQ 2:							|deol-faq-2|
+FAQ 2:                                                            |deol-faq-2|
 	What is the difference neoterm and deol.nvim?
 
-FAQ 3:							|deol-faq-3|
+FAQ 3:                                                            |deol-faq-3|
 	How to exit terminal mode in deol buffer?
 
-FAQ 4:							|deol-faq-4|
+FAQ 4:                                                            |deol-faq-4|
 	I want to start Deol in the directory where the current buffer belongs
 	to.
 
-FAQ 5:							|deol-faq-5|
+FAQ 5:                                                            |deol-faq-5|
 	I want to use current vim when "git commit".
 
-FAQ 6:							|deol-faq-6|
+FAQ 6:                                                            |deol-faq-6|
 	How to enable shell history completion in ddc.vim?
 
 
