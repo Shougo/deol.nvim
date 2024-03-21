@@ -1,6 +1,6 @@
 *deol.txt*	Dark powered shell interface.
 
-Version: 1.0
+Version: 2.0
 Author:  Shougo <Shougo.Matsu at gmail.com>
 License: MIT license
 
@@ -15,7 +15,6 @@ Interface		|deol-interface|
   Options		  |deol-options|
   Variables		  |deol-variables|
   Key mappings		  |deol-key-mappings|
-Denite Sources		|deol-denite-sources|
 Ddu Sources		|deol-ddu-sources|
 FAQ			|deol-faq|
 
@@ -282,17 +281,6 @@ KEY MAPPINGS                                               *deol-key-mappings*
 e			<Plug>(deol_edit)
 <C-c>			<Plug>(deol_ctrl_c)
 <C-d>			<Plug>(deol_ctrl_d)
-
-
-==============================================================================
-DENITE SOURCES                                           *deol-denite-sources*
-
-                                                     *deol-denite-source-deol*
-deol		Gather deol tabs.
-
-                                             *deol-denite-source-deol/history*
-deol/history	Gather deol histories from |g:deol#external_history_path| or
-		|g:deol#internal_history_path|.
 
 
 ==============================================================================
