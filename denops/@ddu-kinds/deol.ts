@@ -3,8 +3,9 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v3.4.4/types.ts";
-import { Denops, fn, op } from "https://deno.land/x/ddu_vim@v3.4.4/deps.ts";
+} from "https://deno.land/x/ddu_vim@v4.0.0/types.ts";
+import { Denops, fn, op } from "https://deno.land/x/ddu_vim@v4.0.0/deps.ts";
+import { printError } from "https://deno.land/x/ddu_vim@v4.0.0/utils.ts";
 
 export type ActionData = {
   command: string[];
@@ -98,8 +99,8 @@ export class Kind extends BaseKind<Params> {
           const fileInfo = await Deno.stat(newCwd);
 
           if (fileInfo.isFile) {
-            await args.denops.call(
-              "ddu#util#print_error",
+            await printError(
+              args.denops,
               `${newCwd} is not directory.`,
             );
             continue;
