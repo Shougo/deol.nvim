@@ -1,6 +1,5 @@
 let s:is_windows = has('win32') || has('win64')
 
-let g:deol#_prev_deol = -1
 let g:deol#enable_dir_changed = g:
       \ ->get('deol#enable_dir_changed', v:true)
 let g:deol#prompt_pattern = g:
@@ -31,6 +30,7 @@ let s:default_maps = #{
       \   start_insert_first: 'I',
       \ }
 let g:deol#_maps = s:default_maps->extend(g:->get('deol#custom_map', {}))
+let g:deol#_prev_deol = -1
 
 augroup deol
   autocmd!
@@ -762,9 +762,6 @@ function s:split(options) abort
     split
     execute 'resize' a:options.winheight->str2nr()
   endif
-
-  " Open dummy buffer
-  enew
 endfunction
 
 
