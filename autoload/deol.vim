@@ -308,7 +308,7 @@ endfunction
 
 function s:deol.init_deol_buffer(options) abort
   if has('nvim')
-    " Note: termopen() replaces current buffer
+    " NOTE: termopen() replaces current buffer
     enew
     call termopen(self.command)
 
@@ -378,7 +378,7 @@ function s:deol.init_deol_buffer(options) abort
     if has('nvim')
       autocmd deol DirChanged <buffer> call deol#cd(v:event.cwd)
     else
-      " Note: Use <afile> does not work...
+      " NOTE: Use <afile> does not work...
       autocmd deol DirChanged <buffer> call deol#cd(getcwd())
     endif
   endif
@@ -495,7 +495,7 @@ function s:deol.init_edit_buffer() abort
     if has('nvim')
       autocmd deol DirChanged <buffer> call deol#cd(v:event.cwd)
     else
-      " Note: Use <afile> does not work...
+      " NOTE: Use <afile> does not work...
       autocmd deol DirChanged <buffer> call deol#cd(getcwd())
     endif
   endif
@@ -533,7 +533,7 @@ function s:term_redraw(bufnr) abort
     return
   endif
 
-  " Note: In Vim8, auto redraw does not work!
+  " NOTE: In Vim8, auto redraw does not work!
 
   const ids = a:bufnr->win_findbuf()
   if ids->empty()
@@ -647,7 +647,7 @@ function s:eval_commands(cmdline, is_insert) abort
 
   call win_gotoid(prev_winid)
 
-  " Note: Needs wait to proceed messages
+  " NOTE: Needs wait to proceed messages
   if has('nvim')
     sleep 10m
   else

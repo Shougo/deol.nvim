@@ -72,7 +72,7 @@ OPTIONS                                                         *deol-options*
 
 auto_cd                                                  *deol-option-auto_cd*
 		Follow cd command in shell
-		Note: It is only available for deol edit buffer.
+		NOTE: It is only available for deol edit buffer.
 
 		Default: v:true
 
@@ -126,7 +126,7 @@ split
                                                     *deol-option-start_insert*
 start_insert
 		Start the insert mode in deol buffer.
-		Note: In Vim, the option is ignored if new terminal buffer is
+		NOTE: In Vim, the option is ignored if new terminal buffer is
 		created.
 
 		Default: v:true
@@ -186,7 +186,7 @@ g:deol#enable_dir_changed
 g:deol#extra_options                                    *g:deol#extra_options*
 		Set the extra options for gvim terminal. See |term_start()|.
 		`b:deol_extra_options` can override it in a buffer.
-		Note: It is available in Vim8 only.
+		NOTE: It is available in Vim8 only.
 >
 		let g:deol#extra_options = #{ term_finish: 'close' }
 <
@@ -213,13 +213,13 @@ g:deol#internal_history_path                    *g:deol#internal_history_path*
 g:deol#nvim_server                                        *g:deol#nvim_server*
 		The path of neovim server.
 		Please see |client-server|.
-		Note: It is neovim only.
+		NOTE: It is neovim only.
 
 		Default: ""
 
 g:deol#prompt_pattern                                  *g:deol#prompt_pattern*
 		Sets the pattern which matches the shell prompt.
-		Note: The right prompt is not supported.
+		NOTE: The right prompt is not supported.
 >
 		let g:deol#prompt_pattern = '% \|%$'
 <
@@ -227,7 +227,7 @@ g:deol#prompt_pattern                                  *g:deol#prompt_pattern*
 
 g:deol#shell_history_max                            *g:deol#shell_history_max*
 		The max history of external shell history.
-		Note: It is only used when |g:deol#external_history_path| or
+		NOTE: It is only used when |g:deol#external_history_path| or
 		|g:deol#internal_history_path| is set.
 
 		Default: 500
@@ -239,25 +239,25 @@ KEY MAPPINGS                                               *deol-key-mappings*
                                                            *<Plug>(deol_edit)*
 <Plug>(deol_edit)
 		Open the edit buffer.
-		Note: |g:deol#prompt_pattern| must be set.
+		NOTE: |g:deol#prompt_pattern| must be set.
 
 <Plug>(deol_execute_line)                          *<Plug>(deol_execute_line)*
 		Execute the command line.
-		Note: |g:deol#prompt_pattern| must be set.
+		NOTE: |g:deol#prompt_pattern| must be set.
 
                                                 *<Plug>(deol_previous_prompt)*
 <Plug>(deol_previous_prompt)
 		Move to previous prompt from cursor.
-		Note: |g:deol#prompt_pattern| must be set.
+		NOTE: |g:deol#prompt_pattern| must be set.
 
 <Plug>(deol_next_prompt)                            *<Plug>(deol_next_prompt)*
 		Move to next prompt from cursor.
-		Note: |g:deol#prompt_pattern| must be set.
+		NOTE: |g:deol#prompt_pattern| must be set.
 
                                                    *<Plug>(deol_paste_prompt)*
 <Plug>(deol_paste_prompt)
 		Paste the history to the command line.
-		Note: |g:deol#prompt_pattern| must be set.
+		NOTE: |g:deol#prompt_pattern| must be set.
 
                                                              *<Plug>(deol_bg)*
 <Plug>(deol_bg)
