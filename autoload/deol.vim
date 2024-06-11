@@ -1,43 +1,47 @@
 let s:is_windows = has('win32') || has('win64')
 
-let g:deol#enable_dir_changed = g:
-      \ ->get('deol#enable_dir_changed', v:true)
-let g:deol#prompt_pattern = g:
-      \ ->get('deol#prompt_pattern', s:is_windows ? '\f\+>' : '')
-let g:deol#internal_history_path = g:->get('deol#internal_history_path', '')
-let g:deol#external_history_path = g:->get('deol#external_history_path', '')
-let g:deol#shell_history_max = g:->get('deol#shell_history_max', 500)
-let g:deol#nvim_server = g:->get('deol#nvim_server', '')
-let g:deol#floating_border = g:->get('deol#floating_border', 'none')
-
-let s:default_term_options = #{
-      \   curwin: v:true,
-      \   exit_cb: { job, status -> execute('unlet! t:deol') },
-      \ }
-let g:deol#_term_options = s:default_term_options->extend(
-      \ g:->get('deol#extra_options', {}))
-let s:default_maps = #{
-      \   bg: '<C-z>',
-      \   edit: 'e',
-      \   execute_line: '<CR>',
-      \   next_prompt: '<C-n>',
-      \   paste_prompt: '<C-y>',
-      \   previous_prompt: '<C-p>',
-      \   quit: 'q',
-      \   start_append: 'a',
-      \   start_append_last: 'A',
-      \   start_insert: 'i',
-      \   start_insert_first: 'I',
-      \ }
-let g:deol#_maps = s:default_maps->extend(g:->get('deol#custom_map', {}))
-let g:deol#_prev_deol = -1
-
 augroup deol
   autocmd!
 augroup END
 
+function deol#_options(name, user_options) abort
+  if !'s:options'->exists()
+    call s:init_options()
+  endif
+
+  let options = s:options->copy()
+  call extend(options, s:local_options->get(a:name, {}))
+  call extend(options, a:user_options)
+
+  return options
+endfunction
+
+function deol#set_option(key_or_dict, value = '') abort
+  if !'s:options'->exists()
+    call s:init_options()
+  endif
+
+  const dict = s:normalize_key_or_dict(a:key_or_dict, a:value)
+  call s:check_options(dict)
+
+  call extend(s:options, dict)
+endfunction
+function deol#set_local_option(name, key_or_dict, value = '') abort
+  if !'s:options'->exists()
+    call s:init_options()
+  endif
+
+  const dict = s:normalize_key_or_dict(a:key_or_dict, a:value)
+  call s:check_options(dict)
+
+  if !s:local_options->has_key(a:name)
+    let s:local_options[a:name] = {}
+  endif
+  call extend(s:local_options[a:name], dict)
+endfunction
+
 function deol#start(options = {}) abort
-  let options = extend(s:user_options(), a:options)
+  let options = deol#_options(a:options->get('name', ''), a:options)
 
   if 't:deol'->exists() && t:deol.bufnr->bufexists()
     const ids = t:deol.bufnr->win_findbuf()
@@ -113,7 +117,7 @@ function s:switch(options) abort
 endfunction
 
 function deol#new(options) abort
-  let options = s:user_options()->extend(copy(a:options))
+  let options = deol#_options(a:options->get('name', ''), a:options)
   if options->get('cwd', '') ==# ''
     let options.cwd = 'Current directory: '->input(getcwd(), 'dir')
   endif
@@ -185,7 +189,7 @@ function deol#edit() abort
   " Set the current command line
   const buflines = t:deol.bufnr->getbufline(1, '$')
         \ ->filter({ _, val -> val !=# '' })
-  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
+  const pattern = '^\%(' .. t:deol.options.prompt_pattern .. '\m\)'
   if !buflines->empty() && buflines[-1] =~# pattern
     const cmdline = buflines[-1]->substitute(pattern, '', '')
     if '$'->getline() ==# ''
@@ -200,7 +204,12 @@ function deol#edit() abort
 endfunction
 
 function deol#kill_editor() abort
+  if !'g:deol#_prev_deol'->exists()
+    return
+  endif
+
   bdelete
+
   call win_gotoid(g:deol#_prev_deol)
 endfunction
 
@@ -209,7 +218,7 @@ function deol#get_cmdline() abort
     return '.'->getline()
   endif
 
-  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
+  const pattern = '^\%(' .. t:deol.options.prompt_pattern .. '\m\)'
   return '.'->getline()->substitute(pattern, '', '')
 endfunction
 
@@ -229,11 +238,11 @@ function deol#_new(cwd, options) abort
   elseif 'g:edita_loaded'->exists()
     " Use edita instead
     let editor_command = edita#EDITOR()
-  "elseif v:progname ==# 'nvim' && g:deol#nvim_server !=# '' && has('nvim-0.7')
+  "elseif v:progname ==# 'nvim' && deol.options.nvim_server !=# '' && has('nvim-0.7')
   "  " Use clientserver for neovim
   "  let editor_command =
   "        \ printf('%s --server %s --remote-tab-wait-silent',
-  "        \   v:progpath, s:expand(g:deol#nvim_server))
+  "        \   v:progpath, deol.options.nvim_server->s:expand())
   elseif v:progname ==# 'nvim' && 'nvr'->executable()
     " Use neovim-remote for neovim
     let editor_command = 'nvr --remote-tab-wait-silent'
@@ -315,9 +324,9 @@ function s:deol.init_deol_buffer(options) abort
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
   else
-    let options = g:deol#_term_options->extend(
-          \ b:->get('deol_extra_options', {}))
-    call term_start(self.command, options)
+    const term_options = a:options.extra_term_options->extend(
+          \ b:->get('deol_extra_term_options', {}))
+    call term_start(self.command, term_options)
     let self.pid = term_getjob('%'->bufnr())->job_info().process
   endif
 
@@ -366,22 +375,13 @@ function s:deol.init_deol_buffer(options) abort
     setlocal winfixbuf
   endif
 
-  for [rhs, lhs] in g:deol#_maps->items()
+  for [rhs, lhs] in a:options.custom_maps->items()
     execute 'nnoremap <buffer> ' .. lhs .. ' <Plug>(deol_' .. rhs .. ')'
   endfor
 
   " set filetype twice to load after/ftplugin in Vim8
   setlocal filetype=deol
   setlocal filetype=deol
-
-  if g:deol#enable_dir_changed
-    if has('nvim')
-      autocmd deol DirChanged <buffer> call deol#cd(v:event.cwd)
-    else
-      " NOTE: Use <afile> does not work...
-      autocmd deol DirChanged <buffer> call deol#cd(getcwd())
-    endif
-  endif
 
   if '##TermClose'->exists()
     autocmd deol TermClose <buffer> unlet! t:deol
@@ -405,7 +405,7 @@ function s:deol.switch_edit_buffer() abort
           \   col: self.options.wincol->str2nr(),
           \   width: 0->winwidth(),
           \   height: 1,
-          \   border: g:deol#floating_border,
+          \   border: self.options.floating_border,
           \ })
     execute edit_bufname->bufadd() 'buffer'
   else
@@ -490,15 +490,6 @@ function s:deol.init_edit_buffer() abort
   inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
 
   let &l:filetype = filetype
-
-  if g:deol#enable_dir_changed
-    if has('nvim')
-      autocmd deol DirChanged <buffer> call deol#cd(v:event.cwd)
-    else
-      " NOTE: Use <afile> does not work...
-      autocmd deol DirChanged <buffer> call deol#cd(getcwd())
-    endif
-  endif
 endfunction
 
 function s:deol.jobsend(keys) abort
@@ -593,15 +584,16 @@ endfunction
 function s:eval_commands(cmdline, is_insert) abort
   let deol = t:deol
 
-  if g:deol#internal_history_path !=# ''
+  if deol.options.internal_history_path !=# ''
     " Add to history
-    let history_path = g:deol#internal_history_path->s:expand()
+    let history_path = deol.options.internal_history_path->s:expand()
 
     call mkdir(history_path->fnamemodify(':h'), 'p')
 
-    let histories = history_path->s:get_histories()
+    let histories = s:get_histories(
+          \ history_path, deol.options.shell_history_max)
     call add(histories, a:cmdline)
-    call writefile(s:uniq(histories->reverse())->reverse(), history_path)
+    call writefile(histories->reverse()->s:uniq()->reverse(), history_path)
   endif
 
   const ex_command = a:cmdline->matchstr('^:\zs.*')
@@ -672,11 +664,11 @@ function s:deol_backspace() abort
 endfunction
 
 function s:eval_deol(is_insert) abort
-  if g:deol#prompt_pattern ==# '' || !'t:deol'->exists()
+  if !'t:deol'->exists() || t:deol.options.prompt_pattern ==# ''
     return
   endif
 
-  if '.'->getline() =~# g:deol#prompt_pattern
+  if '.'->getline() =~# t:deol.options.prompt_pattern
     if deol#get_cmdline()->s:eval_commands(a:is_insert)
       return
     endif
@@ -699,13 +691,13 @@ function s:eval_deol(is_insert) abort
 endfunction
 
 function s:search_prompt(flag) abort
-  if g:deol#prompt_pattern ==# ''
+  if !'t:deol'->exists() || t:deol.options.prompt_pattern ==# ''
     return
   endif
 
   const col = '.'->col()
   call cursor(0, 1)
-  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\).\?'
+  const pattern = '^\%(' .. t:deol.options.prompt_pattern .. '\m\).\?'
   const pos = pattern->searchpos(a:flag)
   if pos[0] != 0
     call cursor(pos[0], pos[0]->getline()->matchend(pattern))
@@ -715,7 +707,7 @@ function s:search_prompt(flag) abort
 endfunction
 
 function s:paste_prompt() abort
-  if g:deol#prompt_pattern ==# '' || !'t:deol'->exists()
+  if !'t:deol'->exists() || t:deol.options.prompt_pattern ==# ''
     return
   endif
 
@@ -745,7 +737,7 @@ function s:split(options) abort
           \   col: a:options.wincol->str2nr(),
           \   width: a:options.winwidth->str2nr(),
           \   height: a:options.winheight->str2nr(),
-          \   border: g:deol#floating_border,
+          \   border: a:options.floating_border,
           \ })
   elseif a:options.split ==# 'vertical'
     vsplit
@@ -763,7 +755,6 @@ function s:split(options) abort
     execute 'resize' a:options.winheight->str2nr()
   endif
 endfunction
-
 
 function s:insert_mode(deol) abort
   if a:deol.options.start_insert
@@ -786,62 +777,49 @@ function s:start_insert(mode) abort
 endfunction
 
 function deol#get_prompt() abort
-  if &filetype !=# 'deol'
+  if &filetype !=# 'deol' || !'t:deol'->exists()
     return ''
   endif
 
-  const pattern = '^\%(' .. g:deol#prompt_pattern .. '\m\)'
+  const pattern = '^\%(' .. t:deol.options.prompt_pattern .. '\m\)'
   return mode()->s:get_text()->matchstr(pattern)
 endfunction
 
-function s:get_text(mode) abort
-  return a:mode ==# 'c'
-        \ ? getcmdline()
-        \ : a:mode ==# 't' && !has('nvim')
-        \ ? term_getline('', '.')
-        \ : '.'->getline()
-endfunction
 function deol#get_input() abort
   const mode = mode()
-  const col = mode ==# 't' && !has('nvim') ?
-        \ term_getcursor('%'->bufnr())[1] : col('.')
+  const col = mode ==# 't' && !has('nvim')
+        \ ? term_getcursor('%'->bufnr())[1]
+        \ : col('.')
   const input = s:get_text(mode)->matchstr('^.*\%' .
-        \ ((mode ==# 'i' || mode ==# 't') ? col : col + 1) .. 'c')
+        \ ((mode ==# 'i' || mode ==# 't')
+        \  ? col : col + 1) .. 'c')
   return input[deol#get_prompt()->len():]
 endfunction
 
-function s:user_options() abort
-  return #{
-        \   auto_cd: v:true,
-        \   command: [&shell],
-        \   cwd: '',
-        \   edit: v:false,
-        \   edit_filetype: '',
-        \   edit_winheight: 1,
-        \   split: '',
-        \   start_insert: v:true,
-        \   toggle: v:false,
-        \   wincol: &columns / 4,
-        \   winheight: 15,
-        \   winrow: &lines / 3,
-        \   winwidth: 80,
-        \ }
+function deol#abbrev(check, lhs, rhs) abort
+  return '.'->getline() ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
 endfunction
 
 function deol#_get_histories() abort
-  return s:get_histories(g:deol#internal_history_path)
-        \ + s:get_histories(g:deol#external_history_path)
+  const options = t:deol.options
+  return
+        \ s:get_histories(
+        \   options.internal_history_path, options.shell_history_max
+        \ ) +
+        \ s:get_histories(
+        \   options.external_history_path, options.shell_history_max
+        \ )
 endfunction
-function s:get_histories(path) abort
+function s:get_histories(path, history_max) abort
   const history_path = a:path->s:expand()
   if !history_path->filereadable()
     return []
   endif
 
   let histories = history_path->readfile()
-  if g:deol#shell_history_max > 0 &&
-      \ histories->len() > g:deol#shell_history_max
-      let histories = histories[-g:deol#shell_history_max :]
+  if a:history_max > 0 &&
+      \ histories->len() > a:history_max
+      let histories = histories[-a:history_max :]
   endif
   return map(histories,
         \ { _, val -> val->substitute(
@@ -853,30 +831,82 @@ function deol#_complete(arglead, cmdline, cursorpos) abort
   let _ = []
 
   " Option names completion.
-  const bool_options = s:user_options()->copy()
+  const bool_options = s:default_options()->copy()
         \ ->filter({ _, val -> type(val) == v:t_bool })->keys()
   let _ += bool_options->copy()->map({ _, val -> '-' .. tr(val, '_', '-') })
-  const string_options = s:user_options()->copy()
-        \ ->filter({ _, val -> type(val) != v:t_bool })->keys()
+  const string_options = s:default_options()->copy()
+        \ ->filter({ _, val ->
+        \          type(val) == v:t_string || type(val) == v:t_number })
+        \ ->keys()
   let _ += string_options->copy()
         \ ->map({ _, val -> '-' .. tr(val, '_', '-') .. '=' })
 
   " Add "-no-" option names completion.
-  let _ += bool_options->copy()->map({ _, val -> '-no-' .. tr(val, '_', '-') })
+  let _ += bool_options->copy()
+        \ ->map({ _, val -> '-no-' .. tr(val, '_', '-') })
 
   let _ += a:arglead->getcompletion('shellcmd')
 
   return _->sort()->uniq()->join("\n")
 endfunction
 
+function s:get_text(mode) abort
+  return a:mode ==# 'c'
+        \ ? getcmdline()
+        \ : a:mode ==# 't' && !has('nvim')
+        \ ? term_getline('', '.')
+        \ : '.'->getline()
+endfunction
 function s:cleanup() abort
   return has('win32') ? '' : "\<C-u>"
 endfunction
 
-function deol#abbrev(check, lhs, rhs) abort
-  return '.'->getline() ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
+function s:default_options() abort
+  return #{
+        \   auto_cd: v:true,
+        \   command: [&shell],
+        \   custom_maps: #{
+        \     bg: '<C-z>',
+        \     edit: 'e',
+        \     execute_line: '<CR>',
+        \     next_prompt: '<C-n>',
+        \     paste_prompt: '<C-y>',
+        \     previous_prompt: '<C-p>',
+        \     quit: 'q',
+        \     start_append: 'a',
+        \     start_append_last: 'A',
+        \     start_insert: 'i',
+        \     start_insert_first: 'I',
+        \   },
+        \   cwd: '',
+        \   edit: v:false,
+        \   edit_filetype: '',
+        \   edit_winheight: 1,
+        \   external_history_path: '',
+        \   extra_term_options: #{
+        \     curwin: v:true,
+        \     term_kill: 'kill',
+        \     exit_cb: { job, status -> execute('unlet! t:deol') },
+        \   },
+        \   floating_border: '',
+        \   internal_history_path: '',
+        \   name: '',
+        \   nvim_server: '',
+        \   prompt_pattern: s:is_windows ? '\f\+>' : '',
+        \   shell_history_max: 500,
+        \   split: '',
+        \   start_insert: v:true,
+        \   toggle: v:false,
+        \   wincol: &columns / 4,
+        \   winheight: 15,
+        \   winrow: &lines / 3,
+        \   winwidth: 80,
+        \ }
 endfunction
-
+function s:init_options() abort
+  let s:options = s:default_options()
+  let s:local_options = {}
+endfunction
 function s:check_buffer(bufnr) abort
   return a:bufnr->buflisted()
         \ && a:bufnr !=# t:deol.edit_bufnr
@@ -894,12 +924,16 @@ endfunction
 
 function s:expand(path) abort
   return s:substitute_path_separator(
-        \ (a:path =~# '^\~') ? a:path->fnamemodify(':p') :
-        \ (a:path =~# '^\$') ? a:path->expand() :
-        \ a:path)
+        \ (a:path =~# '^\~')
+        \ ? a:path->fnamemodify(':p')
+        \ : (a:path =~# '^\$')
+        \ ? a:path->expand()
+        \ : a:path)
 endfunction
 function s:substitute_path_separator(path) abort
-  return s:is_windows ? a:path->substitute('\\', '/', 'g') : a:path
+  return s:is_windows
+        \ ? a:path->substitute('\\', '/', 'g')
+        \ : a:path
 endfunction
 
 function deol#_get(tabnr) abort
@@ -964,4 +998,25 @@ function s:uniq(list) abort
     endif
   endwhile
   return list
+endfunction
+
+function s:normalize_key_or_dict(key_or_dict, value) abort
+  if a:key_or_dict->type() == v:t_dict
+    return a:key_or_dict
+  elseif a:key_or_dict->type() == v:t_string
+    let base = {}
+    let base[a:key_or_dict] = a:value
+    return base
+  endif
+  return {}
+endfunction
+
+function s:check_options(options) abort
+  const default_keys = s:options->keys()
+
+  for key in a:options->keys()
+    if default_keys->index(key) < 0
+      call pum#util#_print_error('Invalid option: ' .. key)
+    endif
+  endfor
 endfunction
