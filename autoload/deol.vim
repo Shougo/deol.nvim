@@ -347,6 +347,9 @@ function s:deol.init_deol_buffer(options) abort
         \ <Cmd>call <SID>paste_prompt()<CR>
   nnoremap <buffer> <Plug>(deol_edit)
         \ <Cmd>call deol#edit()<CR>
+  nnoremap <buffer> <Plug>(deol_quit)
+        \ <Cmd>call deol#quit()<CR>
+
   nnoremap <buffer><expr> <Plug>(deol_start_insert)
         \ <SID>start_insert('i')
   nnoremap <buffer><expr> <Plug>(deol_start_insert_first)
@@ -355,8 +358,6 @@ function s:deol.init_deol_buffer(options) abort
         \ <SID>start_insert('A')
   nnoremap <buffer><expr> <Plug>(deol_start_append_last)
         \ 'i' .. ("\<Right>"->repeat('.'->getline()->len()))
-  nnoremap <buffer> <Plug>(deol_quit)
-        \ <Cmd>call deol#quit()<CR>
 
   setlocal bufhidden=hide
   setlocal nolist
@@ -374,10 +375,6 @@ function s:deol.init_deol_buffer(options) abort
   if '+winfixbuf'->exists() && a:options.split !=# ''
     setlocal winfixbuf
   endif
-
-  for [rhs, lhs] in a:options.custom_maps->items()
-    execute 'nnoremap <buffer> ' .. lhs .. ' <Plug>(deol_' .. rhs .. ')'
-  endfor
 
   " set filetype twice to load after/ftplugin in Vim8
   setlocal filetype=deol
@@ -470,24 +467,15 @@ function s:deol.init_edit_buffer() abort
         \ <Cmd>call <SID>deol_backspace()<CR>
   inoremap <buffer> <Plug>(deol_backspace)
         \ <Cmd>call <SID>deol_backspace()<CR>
+
   nnoremap <buffer><expr> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>")
   inoremap <buffer><expr> <Plug>(deol_ctrl_c)
         \ deol#send("\<C-c>") .. "\<ESC>a"
+  nnoremap <buffer><expr> <Plug>(deol_ctrl_d)
+        \ deol#send("\<C-d>")
   inoremap <buffer><expr> <Plug>(deol_ctrl_d)
         \ deol#send("\<C-d>") .. "\<ESC>a"
-
-  nnoremap <buffer> <CR>  <Plug>(deol_execute_line)
-  nnoremap <buffer> <BS>  <Plug>(deol_backspace)
-  nnoremap <buffer> <C-h> <Plug>(deol_backspace)
-  nnoremap <buffer> q     <Plug>(deol_quit)
-  nnoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
-
-  inoremap <buffer> <CR>  <Plug>(deol_execute_line)
-  inoremap <buffer> <BS>  <Plug>(deol_backspace)
-  inoremap <buffer> <C-h> <Plug>(deol_backspace)
-  inoremap <buffer> <C-c> <Plug>(deol_ctrl_c)
-  inoremap <buffer> <C-d> <Plug>(deol_ctrl_d)
 
   let &l:filetype = filetype
 endfunction
@@ -865,19 +853,6 @@ function s:default_options() abort
   return #{
         \   auto_cd: v:true,
         \   command: [&shell],
-        \   custom_maps: #{
-        \     bg: '<C-z>',
-        \     edit: 'e',
-        \     execute_line: '<CR>',
-        \     next_prompt: '<C-n>',
-        \     paste_prompt: '<C-y>',
-        \     previous_prompt: '<C-p>',
-        \     quit: 'q',
-        \     start_append: 'a',
-        \     start_append_last: 'A',
-        \     start_insert: 'i',
-        \     start_insert_first: 'I',
-        \   },
         \   cwd: '',
         \   edit: v:false,
         \   edit_filetype: '',

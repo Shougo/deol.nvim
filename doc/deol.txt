@@ -38,7 +38,20 @@ deol requires Neovim 0.8.0 or Vim 8.2.1978+.
 
 ==============================================================================
 EXAMPLES                                                       *deol-examples*
-
+>
+	autocmd FileType deol call s:deol_settings()
+	function! s:deol_settings()
+	  nnoremap <buffer> <C-n>  <Plug>(deol_next_prompt)
+	  nnoremap <buffer> <C-p>  <Plug>(deol_previous_prompt)
+	  nnoremap <buffer> <CR>   <Plug>(deol_execute_line)
+	  nnoremap <buffer> A      <Plug>(deol_start_append_last)
+	  nnoremap <buffer> I      <Plug>(deol_start_insert_first)
+	  nnoremap <buffer> a      <Plug>(deol_start_append)
+	  nnoremap <buffer> e      <Plug>(deol_edit)
+	  nnoremap <buffer> i      <Plug>(deol_start_insert)
+	  nnoremap <buffer> q      <Plug>(deol_quit)
+	endfunction
+<
 
 ==============================================================================
 INTERFACE                                                     *deol-interface*
@@ -100,25 +113,6 @@ command
 
 		Default: [&shell]
 
-                                                     *deol-option-custom_maps*
-custom_maps
-		Customize the mappings for deol.  See |deol-key-mappings| for
-		default mappings.
->
-		call deol#set_options('custom_maps', #{
-			\   edit: 'e',
-			\   start_insert: 'i',
-			\   start_insert_first: 'I',
-			\   start_append: 'a',
-			\   start_append_last: 'A',
-			\   execute_line: '<CR>',
-			\   previous_prompt: '<C-p>',
-			\   next_prompt: '<C-n>',
-			\   paste_prompt: '<C-y>',
-			\   bg: '<C-z>',
-			\   quit: 'q',
-			\ })
-<
                                                              *deol-option-cwd*
 cwd
 		Current directory.
@@ -166,8 +160,8 @@ extra_term_options
 <
 		Default: #{
 		\   curwin: v:true,
-		\   term_kill: 'kill',
-		\   exit_cb: { job, status -> execute('unlet! t:deol') },
+		\   term_kill: "kill",
+		\   exit_cb: { job, status -> execute("unlet! t:deol") },
 		\ }
 
                                                  *deol-option-floating_border*
@@ -262,55 +256,78 @@ winwidth
 ------------------------------------------------------------------------------
 KEY MAPPINGS                                               *deol-key-mappings*
 
-                                                           *<Plug>(deol_edit)*
-<Plug>(deol_edit)
-		Open the edit buffer.
-		NOTE: |g:deol#prompt_pattern| must be set.
-
-                                                   *<Plug>(deol_execute_line)*
-<Plug>(deol_execute_line)
-		Execute the command line.
-		NOTE: |g:deol#prompt_pattern| must be set.
-
-                                                *<Plug>(deol_previous_prompt)*
-<Plug>(deol_previous_prompt)
-		Move to previous prompt from cursor.
-		NOTE: |g:deol#prompt_pattern| must be set.
-
-                                                    *<Plug>(deol_next_prompt)*
-<Plug>(deol_next_prompt)
-		Move to next prompt from cursor.
-		NOTE: |g:deol#prompt_pattern| must be set.
-
-                                                   *<Plug>(deol_paste_prompt)*
-<Plug>(deol_paste_prompt)
-		Paste the history to the command line.
-		NOTE: |g:deol#prompt_pattern| must be set.
+                                                      *<Plug>(deol_backspace)*
+<Plug>(deol_backspace)
+		Send backspace key.
+		NOTE: It is available in deol edit buffer.
 
                                                              *<Plug>(deol_bg)*
 <Plug>(deol_bg)
 		Create new deol buffer instead.
+		NOTE: It is available in deol buffer.
 
                                                          *<Plug>(deol_ctrl_c)*
 <Plug>(deol_ctrl_c)
 		Same as shell's CTRL-c; send an INT signal
+		NOTE: It is available in deol edit buffer.
 
                                                          *<Plug>(deol_ctrl_d)*
 <Plug>(deol_ctrl_d)
 		Same as shell's CTRL-d; send an EOF
+		NOTE: It is available in deol edit buffer.
 
-                                                   *deol-default_key_mappings*
-{lhs}			{rhs}
---------		-----------------------------
-<CR>			<Plug>(deol_execute_line)
-<C-p>			<Plug>(deol_previous_prompt)
-<C-n>			<Plug>(deol_next_prompt)
-<C-y>			<Plug>(deol_paste_prompt)
-<C-z>			<Plug>(deol_bg)
-e			<Plug>(deol_edit)
-<C-c>			<Plug>(deol_ctrl_c)
-<C-d>			<Plug>(deol_ctrl_d)
+                                                           *<Plug>(deol_edit)*
+<Plug>(deol_edit)
+		Open the edit buffer.
+		NOTE: |deol-option-prompt_pattern| must be set.
+		NOTE: It is available in deol buffer.
 
+                                                   *<Plug>(deol_execute_line)*
+<Plug>(deol_execute_line)
+		Execute the command line.
+		NOTE: |deol-option-prompt_pattern| must be set.
+
+                                                    *<Plug>(deol_next_prompt)*
+<Plug>(deol_next_prompt)
+		Move to next prompt from cursor.
+		NOTE: |deol-option-prompt_pattern| must be set.
+		NOTE: It is available in deol buffer.
+
+                                                   *<Plug>(deol_paste_prompt)*
+<Plug>(deol_paste_prompt)
+		Paste the history to the command line.
+		NOTE: |deol-option-prompt_pattern| must be set.
+		NOTE: It is available in deol buffer.
+
+                                                *<Plug>(deol_previous_prompt)*
+<Plug>(deol_previous_prompt)
+		Move to previous prompt from cursor.
+		NOTE: |deol-option-prompt_pattern| must be set.
+		NOTE: It is available in deol buffer.
+
+                                                           *<Plug>(deol_quit)*
+<Plug>(deol_quit)
+		Quit the deol window.
+
+                                                *<Plug>(deol_start_insert)*
+<Plug>(deol_start_insert)
+		Start insert mode.
+		NOTE: It is available in deol buffer.
+
+                                             *<Plug>(deol_start_insert_first)*
+<Plug>(deol_start_insert_first)
+		Start insert mode and move the cursor to the first column.
+		NOTE: It is available in deol buffer.
+
+                                                *<Plug>(deol_start_append)*
+<Plug>(deol_start_append)
+		Start insert mode and move the cursor to the next column.
+		NOTE: It is available in deol buffer.
+
+                                              *<Plug>(deol_start_append_last)*
+<Plug>(deol_start_append_last)
+		Start insert mode and move the cursor to the last column.
+		NOTE: It is available in deol buffer.
 
 ==============================================================================
 DDU SOURCES                                                 *deol-ddu-sources*
@@ -406,7 +423,11 @@ A. >
 ==============================================================================
 COMPATIBILITY                                             *deol-compatibility*
 
-2023.12.06
+2023.06.14
+* Remove custom_map option and default mappings.  You should set them
+  manually.
+
+2023.06.11
 * Remove g:deol#enable_dir_changed.  Please use |DirChanged| autocmd instead.
 * Remove all variables.  Please use |deol-options| instead.
 
