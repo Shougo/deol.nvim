@@ -394,7 +394,7 @@ function s:deol.switch_edit_buffer() abort
 
   const cwd = getcwd()
 
-  const edit_bufname = 'deol-edit@' .. t:deol.bufnr->bufname()
+  const edit_bufname = 'deol-edit@' .. self.options.name
   if self.options.split ==# 'floating' && '*nvim_open_win'->exists()
     call nvim_open_win('%'->bufnr(), v:true, #{
           \   relative: 'editor',
@@ -865,7 +865,7 @@ function s:default_options() abort
         \   },
         \   floating_border: '',
         \   internal_history_path: '',
-        \   name: '',
+        \   name: 'default',
         \   nvim_server: '',
         \   prompt_pattern: s:is_windows ? '\f\+>' : '',
         \   shell_history_max: 500,
