@@ -437,7 +437,7 @@ A. >
 ==============================================================================
 COMPATIBILITY                                             *deol-compatibility*
 
-2023.06.14
+2024.06.14
 * Remove custom_map option and default mappings.  You should set them
   manually.
 
