@@ -43,7 +43,7 @@ endfunction
 function deol#start(options = {}) abort
   let options = deol#_options(a:options->get('name', ''), a:options)
 
-  if 't:deol'->exists() && t:deol.bufnr->bufexists()
+  if 't:deol'->exists() && t:deol->get('bufnr', -1)->bufexists()
     const ids = t:deol.bufnr->win_findbuf()
     if !ids->empty() && options.toggle
       call deol#quit()
@@ -224,7 +224,6 @@ endfunction
 
 function deol#_new(cwd, options) abort
   let deol = s:deol->copy()
-  let deol.command = a:options.command
   let deol.edit_winid = -1
   let deol.edit_bufnr = -1
   let deol.edit_filetype = a:options.edit_filetype
@@ -265,7 +264,7 @@ function deol#_new(cwd, options) abort
 endfunction
 
 function deol#quit() abort
-  if 't:deol'->exists()
+  if 't:deol'->exists() && t:deol->get('bufnr', -1) > 0
     if t:deol.edit_bufnr->bufwinnr() > 0
       " Close edit buffer in the first
       execute t:deol.edit_bufnr->bufwinnr() 'wincmd w'
@@ -284,7 +283,9 @@ function deol#quit() abort
     close!
   else
     " Move to alternate buffer
-    if 't:deol'->exists() && t:deol.prev_bufnr->s:check_buffer()
+    if 't:deol'->exists()
+          \ && t:deol->get('prev_bufnr', -1) > 0
+          \ && t:deol.prev_bufnr->s:check_buffer()
       execute 'buffer' t:deol.prev_bufnr
     elseif 't:deol'->exists() && '#'->bufnr()->s:check_buffer()
       buffer #
@@ -319,14 +320,14 @@ function s:deol.init_deol_buffer(options) abort
   if has('nvim')
     " NOTE: termopen() replaces current buffer
     enew
-    call termopen(self.command)
+    call termopen(a:options.command)
 
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
   else
     const term_options = a:options.extra_term_options->extend(
           \ b:->get('deol_extra_term_options', {}))
-    call term_start(self.command, term_options)
+    call term_start(a:options.command, term_options)
     let self.pid = term_getjob('%'->bufnr())->job_info().process
   endif
 
@@ -438,7 +439,7 @@ function s:deol.init_edit_buffer() abort
   execute 'resize' self.options.edit_winheight
 
   " Set filetype
-  const command = self.command[0]->fnamemodify(':t:r')
+  const command = self.options.command[0]->fnamemodify(':t:r')
   let filetype = self.edit_filetype
   let default_filetype = #{
         \   ash: 'sh',

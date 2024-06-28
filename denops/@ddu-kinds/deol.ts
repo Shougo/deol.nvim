@@ -8,7 +8,6 @@ import { Denops, fn, op } from "https://deno.land/x/ddu_vim@v4.0.0/deps.ts";
 import { printError } from "https://deno.land/x/ddu_vim@v4.0.0/utils.ts";
 
 export type ActionData = {
-  command: string[];
   tabNr: number;
   existsDeol: boolean;
 };
@@ -51,11 +50,9 @@ export class Kind extends BaseKind<Params> {
             "start_insert": boolean;
           };
         };
-        const options = {
+        await args.denops.call("deol#new", {
           "start_insert": deol.options.start_insert,
-          command: action.command,
-        };
-        await args.denops.call("deol#new", options);
+        });
       }
 
       return Promise.resolve(ActionFlags.None);
