@@ -3,11 +3,12 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v4.0.0/types.ts";
-import { Denops, fn, op } from "https://deno.land/x/ddu_vim@v4.0.0/deps.ts";
-import { printError } from "https://deno.land/x/ddu_vim@v4.0.0/utils.ts";
+} from "https://deno.land/x/ddu_vim@v4.1.1/types.ts";
+import { Denops, fn, op } from "https://deno.land/x/ddu_vim@v4.1.1/deps.ts";
+import { printError } from "https://deno.land/x/ddu_vim@v4.1.1/utils.ts";
 
 export type ActionData = {
+  command: string[];
   tabNr: number;
   existsDeol: boolean;
 };
