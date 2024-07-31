@@ -3,9 +3,12 @@ import {
   ActionFlags,
   BaseKind,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v4.1.1/types.ts";
-import { Denops, fn, op } from "https://deno.land/x/ddu_vim@v4.1.1/deps.ts";
-import { printError } from "https://deno.land/x/ddu_vim@v4.1.1/utils.ts";
+  Denops,
+} from "jsr:@shougo/ddu-vim@5.0.0/types";
+import { printError } from "jsr:@shougo/ddu-vim@5.0.0/utils";
+
+import * as fn from "jsr:@denops/std@7.0.1/function";
+import * as op from "jsr:@denops/std@7.0.1/option";
 
 export type ActionData = {
   command: string[];
@@ -30,7 +33,7 @@ export class Kind extends BaseKind<Params> {
           (await op.filetype.getLocal(args.denops)) === "deol"
         ) {
           await args.denops.call("deol#start", {
-            command: action.command.join(" ")
+            command: action.command.join(" "),
           });
         }
       }
