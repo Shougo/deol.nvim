@@ -248,6 +248,13 @@ toggle
 
 		Default: v:false
 
+                                                          *deol-option-wincol*
+wincol
+		Set the column of the Deol window if |deol-option-split| is
+		"floating".
+
+		Default: &columns / 4
+
                                                        *deol-option-winheight*
 winheight
 		Set the height of the Deol window if |deol-option-split|
@@ -256,6 +263,13 @@ winheight
 		floating window.
 
 		Default: 15
+
+                                                          *deol-option-winrow*
+winrow
+		Set the row of the Deol window if |deol-option-split| is
+		"floating".
+
+		Default: &lines / 3
 
                                                         *deol-option-winwidth*
 winwidth
