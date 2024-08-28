@@ -1,7 +1,7 @@
 import { BaseSource, Denops, Item } from "jsr:@shougo/ddu-vim@5.0.0/types";
 import { ActionData } from "../@ddu-kinds/deol.ts";
 
-import * as fn from "jsr:@denops/std@7.0.1/function";
+import * as fn from "jsr:@denops/std@7.1.1/function";
 
 type Params = {
   command: string[];

@@ -5,7 +5,7 @@ import {
   Denops,
   Item,
   SourceOptions,
-} from "jsr:@shougo/ddc-vim@6.0.0/types";
+} from "jsr:@shougo/ddc-vim@6.0.1/types";
 
 type Params = Record<string, never>;
 
