@@ -1,14 +1,14 @@
 import {
-  ActionArguments,
+  type ActionArguments,
   ActionFlags,
-  BaseKind,
-  DduItem,
-  Denops,
-} from "jsr:@shougo/ddu-vim@5.0.0/types";
-import { printError } from "jsr:@shougo/ddu-vim@5.0.0/utils";
+  type DduItem,
+} from "jsr:@shougo/ddu-vim@~6.1.0/types";
+import { BaseKind } from "jsr:@shougo/ddu-vim@~6.1.0/kind";
+import { printError } from "jsr:@shougo/ddu-vim@~6.1.0/utils";
 
-import * as fn from "jsr:@denops/std@7.1.1/function";
-import * as op from "jsr:@denops/std@7.1.1/option";
+import type { Denops } from "jsr:@denops/core@~7.0.0";
+import * as fn from "jsr:@denops/std@~7.1.1/function";
+import * as op from "jsr:@denops/std@~7.1.1/option";
 
 export type ActionData = {
   command: string[];
