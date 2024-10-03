@@ -232,7 +232,7 @@ function deol#_new(cwd, options) abort
 
   " Set $EDITOR.
   let editor_command = ''
-  if 'g:guise_loaded'->exists()
+  if 'g:loaded_guise'->exists()
     " Use guise instead
   elseif 'g:edita_loaded'->exists()
     " Use edita instead
