@@ -1,6 +1,6 @@
 ## About
 
-Deol.nvim is a dark powered shell for Neovim. It is based on NeoVim or Vim
+Deol.nvim is a dark powered shell for Neovim. It is based on Vim or Neovim
 terminal feature.
 
 Please read [help](doc/deol.txt) for details.
