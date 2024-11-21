@@ -22,8 +22,8 @@ Compatibility		|deol-compatibility|
 ==============================================================================
 INTRODUCTION                                               *deol-introduction*
 
-*deol* is a dark powered shell both for NeoVim and Vim. It is based on
-NeoVim or Vim terminal feature.
+*deol* is a dark powered shell both for Neovim and Vim. It is based on
+Neovim or Vim terminal feature.
 
 
 ==============================================================================
@@ -33,7 +33,7 @@ USAGE                                                             *deol-usage*
 ==============================================================================
 INSTALL                                                         *deol-install*
 
-deol requires NeoVim 0.8.0 or Vim 8.2.1978+.
+deol requires Neovim 0.8.0 or Vim 8.2.1978+.
 
 
 ==============================================================================
@@ -200,9 +200,9 @@ name			(string)
 
                                                      *deol-option-nvim_server*
 nvim_server
-		The path of NeoVim server.
+		The path of Neovim server.
 		Please see |client-server|.
-		NOTE: It is NeoVim only.
+		NOTE: It is Neovim only.
 
 		Default: ""
 
@@ -226,7 +226,7 @@ split
 		Specify the split direction.
 
 		"": No split
-		"floating": Use NeoVim floating window feature
+		"floating": Use Neovim floating window feature
 		"vertical": Split buffer vertically
 		"farleft": Split buffer far left, like |CTRL-W_H|
 		"farright": Split buffer far right, like |CTRL-W_L|
@@ -394,7 +394,7 @@ FAQ 7:                                                            |deol-faq-7|
                                                                   *deol-faq-1*
 Q: How to donate money to you?
 
-A: I have started github sponsorship to spend more time for Vim/NeoVim
+A: I have started github sponsorship to spend more time for Vim/Neovim
 plugins.  You can donate money to help me!
 
 https://github.com/sponsors/Shougo
