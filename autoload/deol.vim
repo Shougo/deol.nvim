@@ -237,11 +237,12 @@ function deol#_new(cwd, options) abort
   elseif 'g:edita_loaded'->exists()
     " Use edita instead
     let editor_command = edita#EDITOR()
-  "elseif v:progname ==# 'nvim' && deol.options.nvim_server !=# '' && has('nvim-0.7')
-  "  " Use clientserver for neovim
-  "  let editor_command =
-  "        \ printf('%s --server %s --remote-tab-wait-silent',
-  "        \   v:progpath, deol.options.nvim_server->s:expand())
+  elseif v:progname ==# 'nvim' && has('nvim-0.7')
+        \ && deol.options.nvim_server->expand()->filereadable()
+    " Use clientserver for neovim
+    let editor_command =
+          \ printf('%s --server %s --remote-tab-wait-silent',
+          \   v:progpath, deol.options.nvim_server->s:expand())
   elseif v:progname ==# 'nvim' && 'nvr'->executable()
     " Use neovim-remote for neovim
     let editor_command = 'nvr --remote-tab-wait-silent'
