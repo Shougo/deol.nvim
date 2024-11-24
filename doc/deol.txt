@@ -200,8 +200,7 @@ name			(string)
 
                                                      *deol-option-nvim_server*
 nvim_server
-		The path of Neovim server.
-		Please see |client-server|.
+		The path of Neovim server.  Please see |client-server|.
 		NOTE: It is Neovim only.
 
 		Default: ""
