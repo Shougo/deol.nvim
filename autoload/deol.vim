@@ -926,6 +926,10 @@ function deol#_get(tabnr) abort
         \   options: deol.options,
         \ }
 endfunction
+function deol#_get_cwd(tabnr) abort
+  const deol = deol#_get(a:tabnr)
+  return deol is v:null ? v:null : deol.cwd
+endfunction
 
 function s:auto_cd(is_insert) abort
   if !'t:deol'->exists() || !t:deol.options.auto_cd
