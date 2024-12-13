@@ -49,13 +49,12 @@ export class Kind extends BaseKind<Params> {
         }
 
         await args.denops.cmd(`tabnext ${action.tabNr}`);
-        const deol = (await args.denops.call("deol#_get", action.tabNr)) as {
-          options: {
-            "start_insert": boolean;
-          };
-        };
+        const start_insert =
+          (await args.denops.call("deol#_get_start_insert", action.tabNr)) as
+            | boolean
+            | null;
         await args.denops.call("deol#new", {
-          "start_insert": deol.options.start_insert,
+          start_insert,
         });
       }
 
@@ -76,18 +75,18 @@ export class Kind extends BaseKind<Params> {
     edit: async (args: { denops: Denops; items: DduItem[] }) => {
       for (const item of args.items) {
         const action = item?.action as ActionData;
-        const deol = (await args.denops.call("deol#_get", action.tabNr)) as {
-          cwd: string;
-        };
+        const cwd = await args.denops.call("deol#_get_cwd", action.tabNr) as
+          | string
+          | null;
 
-        if (!deol?.cwd) {
+        if (!cwd) {
           continue;
         }
 
         const newCwd = await fn.input(
           args.denops,
           "New deol cwd: ",
-          deol.cwd,
+          cwd,
           "dir",
         );
         await args.denops.cmd("redraw");
