@@ -38,7 +38,7 @@ deol requires Neovim 0.8.0 or Vim 8.2.1978+.
 
 ==============================================================================
 EXAMPLES                                                       *deol-examples*
->
+>vim
 	autocmd FileType deol call s:deol_settings()
 	function! s:deol_settings()
 	  nnoremap <buffer> <C-n>  <Plug>(deol_next_prompt)
@@ -167,7 +167,7 @@ extra_term_options
 		Set the extra options for gvim terminal. See |term_start()|.
 		`b:deol_extra_term_options` can override it in a buffer.
 		NOTE: It is available in Vim only.
->
+>vim
 		call deol#set_option('extra_term_options', #{
 		    \   term_finish: 'close',
 		    \ })
@@ -408,13 +408,13 @@ deol.nvim is specialized for shell environment in each tab.
 Q: How to exit terminal mode in deol buffer?
 
 A: Press |CTRL-\_CTRL-N| key, or use <ESC> key with the following key mapping.
->
+>vim
 	tnoremap <ESC>   <C-\><C-n>
 <
                                                                   *deol-faq-4*
 Q: I want to start Deol in the directory where the current buffer belongs to.
 
-A: >
+A: >vim
 	call deol#start(#{ cwd: '%'->expand()->fnamemodify(':h') })
 <
                                                                   *deol-faq-5*
@@ -427,8 +427,7 @@ https://github.com/lambdalisue/guise.vim
                                                                   *deol-faq-6*
 Q. How to enable shell history completion in ddc.vim?
 
-A. >
-
+A. >vim
 	call ddc#custom#patch_filetype(['deol'], 'sources', ['shell-history'])
 	call ddc#custom#patch_global('sourceOptions', #{
 	    \   _: #{
@@ -442,7 +441,7 @@ A. >
                                                                   *deol-faq-7*
 Q. I want to cd automatically when Vim current directory is changed.
 
-A. >
+A. >vim
     autocmd DirChanged <buffer>
           \ call deol#cd(v:event->get('cwd', getcwd()))
 <
