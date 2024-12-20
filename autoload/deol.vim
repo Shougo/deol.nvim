@@ -321,9 +321,15 @@ endfunction
 
 function s:deol.init_deol_buffer(options) abort
   if has('nvim')
-    " NOTE: termopen() replaces current buffer
+    " NOTE: ":terminal" replaces current buffer
     enew
-    call termopen(a:options.command)
+
+    if has('nvim-0.11')
+      " Use jobstart() instead.
+      call jobstart(a:options.command, #{ term: v:true })
+    else
+      call termopen(a:options.command)
+    endif
 
     let self.jobid = b:terminal_job_id
     let self.pid = b:terminal_job_pid
