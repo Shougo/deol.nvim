@@ -22,8 +22,8 @@ Compatibility		|deol-compatibility|
 ==============================================================================
 INTRODUCTION                                               *deol-introduction*
 
-*deol* is a dark powered shell both for Neovim and Vim. It is based on
-Neovim or Vim terminal feature.
+*deol* is a dark powered shell both for Neovim and Vim. It is based on Neovim
+or Vim terminal feature.
 
 
 ==============================================================================
@@ -241,7 +241,7 @@ start_insert
 
 		Default: v:true
 
-                                                         *deol-option-toggle*
+                                                          *deol-option-toggle*
 toggle
 		Close deol buffer window if this deol window exists.
 
@@ -336,17 +336,7 @@ KEY MAPPINGS                                               *deol-key-mappings*
 <Plug>(deol_quit)
 		Quit the deol window.
 
-                                                *<Plug>(deol_start_insert)*
-<Plug>(deol_start_insert)
-		Start insert mode.
-		NOTE: It is available in deol buffer.
-
-                                             *<Plug>(deol_start_insert_first)*
-<Plug>(deol_start_insert_first)
-		Start insert mode and move the cursor to the first column.
-		NOTE: It is available in deol buffer.
-
-                                                *<Plug>(deol_start_append)*
+                                                   *<Plug>(deol_start_append)*
 <Plug>(deol_start_append)
 		Start insert mode and move the cursor to the next column.
 		NOTE: It is available in deol buffer.
@@ -354,6 +344,16 @@ KEY MAPPINGS                                               *deol-key-mappings*
                                               *<Plug>(deol_start_append_last)*
 <Plug>(deol_start_append_last)
 		Start insert mode and move the cursor to the last column.
+		NOTE: It is available in deol buffer.
+
+                                                   *<Plug>(deol_start_insert)*
+<Plug>(deol_start_insert)
+		Start insert mode.
+		NOTE: It is available in deol buffer.
+
+                                             *<Plug>(deol_start_insert_first)*
+<Plug>(deol_start_insert_first)
+		Start insert mode and move the cursor to the first column.
 		NOTE: It is available in deol buffer.
 
 ==============================================================================
