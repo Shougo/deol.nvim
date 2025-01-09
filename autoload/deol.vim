@@ -386,8 +386,6 @@ function s:deol.init_deol_buffer(options) abort
     setlocal winfixbuf
   endif
 
-  " set filetype twice to load after/ftplugin in Vim8
-  setlocal filetype=deol
   setlocal filetype=deol
 
   if '##TermClose'->exists()
@@ -529,7 +527,6 @@ function s:term_redraw(bufnr) abort
     return
   endif
 
-  const prev_mode = mode()
   const prev_winid = win_getid()
   call win_gotoid(ids[0])
 
