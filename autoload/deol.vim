@@ -417,10 +417,6 @@ function s:deol.switch_edit_buffer() abort
     execute 'split' edit_bufname->fnameescape()
   endif
 
-  if '$'->line() == 1
-    call append(0, deol#_get_histories())
-  endif
-
   call s:cd(cwd)
 
   let self.edit_winid = win_getid()
@@ -578,18 +574,6 @@ endfunction
 
 function s:eval_commands(cmdline, is_insert) abort
   let deol = t:deol
-
-  if deol.options.internal_history_path !=# ''
-    " Add to history
-    let history_path = deol.options.internal_history_path->s:expand()
-
-    call mkdir(history_path->fnamemodify(':h'), 'p')
-
-    let histories = s:get_histories(
-          \ history_path, deol.options.shell_history_max)
-    call add(histories, a:cmdline)
-    call writefile(histories->reverse()->s:uniq()->reverse(), history_path)
-  endif
 
   const ex_command = a:cmdline->matchstr('^:\zs.*')
   if ex_command !=# ''
@@ -795,33 +779,6 @@ function deol#abbrev(check, lhs, rhs) abort
   return '.'->getline() ==# a:check && v:char ==# ' ' ? a:rhs : a:lhs
 endfunction
 
-function deol#_get_histories() abort
-  const options = t:deol.options
-  return
-        \ s:get_histories(
-        \   options.internal_history_path, options.shell_history_max
-        \ ) +
-        \ s:get_histories(
-        \   options.external_history_path, options.shell_history_max
-        \ )
-endfunction
-function s:get_histories(path, history_max) abort
-  const history_path = a:path->s:expand()
-  if !history_path->filereadable()
-    return []
-  endif
-
-  let histories = history_path->readfile()
-  if a:history_max > 0 &&
-      \ histories->len() > a:history_max
-      let histories = histories[-a:history_max :]
-  endif
-  return map(histories,
-        \ { _, val -> val->substitute(
-        \  '^\%(\d\+/\)\+[:[:digit:]; ]\+\|^[:[:digit:]; ]\+', '', '')
-        \ })
-endfunction
-
 function deol#_complete(arglead, cmdline, cursorpos) abort
   let _ = []
 
@@ -864,18 +821,15 @@ function s:default_options() abort
         \   edit: v:false,
         \   edit_filetype: '',
         \   edit_winheight: 1,
-        \   external_history_path: '',
         \   extra_term_options: #{
         \     curwin: v:true,
         \     term_kill: 'kill',
         \     exit_cb: { job, status -> execute('unlet! t:deol') },
         \   },
         \   floating_border: '',
-        \   internal_history_path: '',
         \   name: 'default',
         \   nvim_server: '',
         \   prompt_pattern: s:is_windows ? '\f\+>' : '',
-        \   shell_history_max: 500,
         \   split: '',
         \   start_insert: v:true,
         \   toggle: v:false,

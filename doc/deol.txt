@@ -155,13 +155,6 @@ edit_winheight
 
 		Default: 1
 
-                                           *deol-option-external_history_path*
-external_history_path
-		The external shell history path. If it is set, the external
-		histories are loaded in deol edit buffer.
-
-		Default: ""
-
                                               *deol-option-extra_term_options*
 extra_term_options
 		Set the extra options for gvim terminal. See |term_start()|.
@@ -185,13 +178,6 @@ floating_border
 
 		Default: "none"
 
-                                           *deol-option-internal_history_path*
-internal_history_path
-		The internal shell history path. If it is set, the internal
-		histories are saved.
-
-		Default: ""
-
                                                             *deol-option-name*
 name			(string)
 		Specify the name.
@@ -211,14 +197,6 @@ prompt_pattern
 		NOTE: The right prompt is not supported.
 
 		Default: "" ('\f\+>' for Windows)
-
-                                               *deol-option-shell_history_max*
-shell_history_max
-		The max history of external shell history.
-		NOTE: It is only used when |deol-option-external_history_path|
-		or |deol-option-internal_history_path| is set.
-
-		Default: 500
 
                                                            *deol-option-split*
 split
@@ -427,14 +405,17 @@ https://github.com/lambdalisue/guise.vim
                                                                   *deol-faq-6*
 Q. How to enable shell history completion in ddc.vim?
 
-A. >vim
+A. You need to install "shell-history" source.
+https://github.com/Shougo/ddc-source-shell-history
+
+>vim
 	call ddc#custom#patch_filetype(['deol'], 'sources', ['shell-history'])
-	call ddc#custom#patch_global('sourceOptions', #{
-	    \   _: #{
+	call ddc#custom#patch_global('sourceOptions', {
+	    \   "_": #{
 	    \     matchers: ['matcher_head'],
 	    \     sorters: ['sorter_rank']
 	    \   },
-	    \   shell-history: {'mark': 'shell'},
+	    \   "shell-history": {'mark': 'history'},
 	    \ })
 <
 
@@ -448,6 +429,9 @@ A. >vim
 
 ==============================================================================
 COMPATIBILITY                                             *deol-compatibility*
+
+2025.01.15
+* Split history feature to "ddc-source-shell-history".
 
 2024.06.14
 * Remove custom_map option and default mappings.  You should set them
