@@ -960,7 +960,7 @@ function s:check_options(options) abort
 
   for key in a:options->keys()
     if default_keys->index(key) < 0
-      call pum#util#_print_error('Invalid option: ' .. key)
+      call deol#util#_print_error('Invalid option: ' .. key)
     endif
   endfor
 endfunction
