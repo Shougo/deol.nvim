@@ -304,14 +304,17 @@ function s:deol.init_deol_buffer(options) abort
     enew
 
     if has('nvim-0.11')
-      " Use jobstart() instead.
+      " termopen() is deprecated.  Use jobstart() instead.
       call jobstart(a:options.command, #{ term: v:true })
+
+      let self.jobid = &l:channel
+      let self.pid = jobpid(&l:channel)
     else
       call termopen(a:options.command)
-    endif
 
-    let self.jobid = b:terminal_job_id
-    let self.pid = b:terminal_job_pid
+      let self.jobid = b:terminal_job_id
+      let self.pid = b:terminal_job_pid
+    endif
   else
     const term_options = a:options.extra_term_options->extend(
           \ b:->get('deol_extra_term_options', {}))
