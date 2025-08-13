@@ -1,9 +1,9 @@
-import { type Item } from "jsr:@shougo/ddu-vim@~9.5.0/types";
-import { BaseSource } from "jsr:@shougo/ddu-vim@~9.5.0/source";
+import { type Item } from "jsr:@shougo/ddu-vim@~10.4.0/types";
+import { BaseSource } from "jsr:@shougo/ddu-vim@~10.4.0/source";
 import { ActionData } from "../@ddu-kinds/deol.ts";
 
 import type { Denops } from "jsr:@denops/core@~7.0.0";
-import * as fn from "jsr:@denops/std@~7.4.0/function";
+import * as fn from "jsr:@denops/std@~7.6.0/function";
 
 type Params = {
   command: string[];
