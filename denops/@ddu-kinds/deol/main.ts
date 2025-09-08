@@ -2,13 +2,13 @@ import {
   type ActionArguments,
   ActionFlags,
   type DduItem,
-} from "jsr:@shougo/ddu-vim@~10.4.0/types";
-import { BaseKind } from "jsr:@shougo/ddu-vim@~10.4.0/kind";
-import { printError } from "jsr:@shougo/ddu-vim@~10.4.0/utils";
+} from "@shougo/ddu-vim/types";
+import { BaseKind } from "@shougo/ddu-vim/kind";
+import { printError } from "@shougo/ddu-vim/utils";
 
-import type { Denops } from "jsr:@denops/core@~7.0.0";
-import * as fn from "jsr:@denops/std@~7.6.0/function";
-import * as op from "jsr:@denops/std@~7.6.0/option";
+import type { Denops } from "@denops/std";
+import * as fn from "@denops/std/function";
+import * as op from "@denops/std/option";
 
 export type ActionData = {
   command: string[];

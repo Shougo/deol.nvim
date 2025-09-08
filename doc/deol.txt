@@ -405,17 +405,17 @@ https://github.com/lambdalisue/guise.vim
                                                                   *deol-faq-6*
 Q. How to enable shell history completion in ddc.vim?
 
-A. You need to install "shell-history" source.
-https://github.com/Shougo/ddc-source-shell-history
+A. You need to install "shell_history" source.
+https://github.com/Shougo/ddc-source-shell_history
 
 >vim
-	call ddc#custom#patch_filetype(['deol'], 'sources', ['shell-history'])
-	call ddc#custom#patch_global('sourceOptions', {
-	    \   "_": #{
+	call ddc#custom#patch_filetype(['deol'], 'sources', ['shell_history'])
+	call ddc#custom#patch_global('sourceOptions', #{
+	    \   _: #{
 	    \     matchers: ['matcher_head'],
 	    \     sorters: ['sorter_rank']
 	    \   },
-	    \   "shell-history": {'mark': 'history'},
+	    \   shell_history: {'mark': 'history'},
 	    \ })
 <
 
@@ -431,7 +431,7 @@ A. >vim
 COMPATIBILITY                                             *deol-compatibility*
 
 2025.01.15
-* Split history feature to "ddc-source-shell-history".
+* Split history feature to "ddc-source-shell_history".
 
 2024.06.14
 * Remove custom_map option and default mappings.  You should set them
